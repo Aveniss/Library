@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <types>
+        <members>Item__c</members>
+        <members>Loan__c</members>
+        <members>Person__c</members>
+        <members>Supplier__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <name>RecordType</name>
+    </types>
+    <version>58.0</version>
+</Package>
