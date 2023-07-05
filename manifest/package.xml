@@ -4,6 +4,7 @@
         <members>*</members>
         <name>ApexClass</name>
     </types>
+    
     <types>
         <members>Admin</members>
         <name>Profile</name>
@@ -39,5 +40,14 @@
         <members>Supplier__c</members>
         <name>TopicsForObjects</name>
     </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexTrigger</name>
+    </types>
+   
     <version>58.0</version>
 </Package>
