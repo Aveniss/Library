@@ -26,6 +26,26 @@
         <field>Supplier__c.Email__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <layoutAssignments>
+        <layout>Item__c-Item Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Loan__c-Loan Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Person__c-Client Layout</layout>
+        <recordType>Person__c.Client</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Person__c-Employee Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Person__c-Employee Layout</layout>
+        <recordType>Person__c.Employee</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Supplier__c-Supplier Layout</layout>
+    </layoutAssignments>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
@@ -64,7 +84,13 @@
     </objectPermissions>
     <recordTypeVisibilities>
         <default>true</default>
+        <personAccountDefault>true</personAccountDefault>
         <recordType>Person__c.Client</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Person__c.Employee</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
     <userLicense>Salesforce</userLicense>
