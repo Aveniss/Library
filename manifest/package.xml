@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>ApexClass</name>
+    </types>
+    
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <types>
+        <members>Item__c</members>
+        <members>Loan__c</members>
+        <members>Person__c</members>
+        <members>Supplier__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <name>RecordType</name>
+    </types>
+    <types>
+        <members>Item__c-Item Layout</members>
+        <members>Loan__c-Loan Layout</members>
+        <members>Person__c-Client Layout</members>
+        <members>Person__c-Employee Layout</members>
+        <members>Supplier__c-Supplier Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>Item__c</members>
+        <members>Loan__c</members>
+        <members>Person__c</members>
+        <members>Supplier__c</members>
+        <name>TopicsForObjects</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexTrigger</name>
+    </types>
+   
+    <version>58.0</version>
+</Package>
