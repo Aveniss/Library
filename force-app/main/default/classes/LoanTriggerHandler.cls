@@ -71,16 +71,8 @@ public class LoanTriggerHandler {
         );
       }
     }
-    System.debug(borrowers);
 
     for (Loan__c loan : newLoans) {
-      System.debug(
-        loan.Borrower__c +
-          ' ' +
-          borrowers.get(loan.Borrower__c) +
-          ' ' +
-          maxLimitOfBooks.get(loan.Borrower__c)
-      );
       if (
         borrowers.containsKey(loan.Borrower__c) &&
         borrowers.get(loan.Borrower__c) >= maxLimitOfBooks.get(loan.Borrower__c)
