@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CurrentlyBorrowedItem</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CurrentlyBorrowedItem</shortDescription>
+        <value>This {0} is currently borrowed</value>
+    </labels>
+    <labels>
+        <fullName>MaxNumberOfBorrowing</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MaxNumberOfBorrowing</shortDescription>
+        <value>You have achieved maximum number of borrowing items</value>
+    </labels>
+</CustomLabels>

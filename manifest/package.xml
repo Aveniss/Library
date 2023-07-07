@@ -4,7 +4,6 @@
         <members>*</members>
         <name>ApexClass</name>
     </types>
-    
     <types>
         <members>Admin</members>
         <name>Profile</name>
@@ -41,13 +40,13 @@
         <name>TopicsForObjects</name>
     </types>
     <types>
-        
-        <name>CustomTab</name>
-    </types>
-    <types>
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
-   
+    <types>
+        <members>MaxNumberOfBorrowing</members>
+        <members>CurrentlyBorrowedItem</members>
+        <name>CustomLabel</name>
+    </types>
     <version>58.0</version>
 </Package>
