@@ -73,6 +73,7 @@ public class LoanTriggerHandler {
     }
 
     for (Loan__c loan : newLoans) {
+      System.debug('Max wyporzyczen: ' + maxLimitOfBooks.get(loan.Borrower__c));
       if (
         borrowers.containsKey(loan.Borrower__c) &&
         borrowers.get(loan.Borrower__c) >= maxLimitOfBooks.get(loan.Borrower__c)

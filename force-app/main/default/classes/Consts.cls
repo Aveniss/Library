@@ -4,4 +4,10 @@ public class Consts {
       return LoanConst.INSTANCE;
     }
   }
+
+  public static final ItemConst ITEMS {
+    get {
+      return ItemConst.INSTANCE;
+    }
+  }
 }
