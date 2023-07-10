@@ -2,25 +2,28 @@
 private class LoanTriggerHandlerTest {
   private static final Date RENTAL_DATE = Date.newInstance(2023, 7, 15);
   private static final Date END_OF_RENTAL = Date.newInstance(2023, 7, 20);
+  private static final String unavailableBookName = 'Unavailable Book';
+  private static final String availableBookName = 'Available Book';
+  private static final String borrowerName = 'Test';
 
   @TestSetup
   private static void insertBasicData() {
     Item__c book = new Item__c(
-      Name = 'Unavailable Book',
+      Name = unavailableBookName,
       Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
       Genre__c = Consts.ITEMS.GENRE.SCIENCE_FICTIN
     );
     insert book;
 
     Item__c availableBook = new Item__c(
-      Name = 'Available Book',
+      Name = availableBookName,
       Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
       Genre__c = Consts.ITEMS.GENRE.NOVEL
     );
     insert availableBook;
 
     Person__c borrower = new Person__c(
-      Name = 'Test',
+      Name = borrowerName,
       Last_Name__c = 'Borrower',
       Email__c = 'testEmail@gmail.com',
       Maximum_Number_Of_Rentals__c = 2
@@ -43,12 +46,12 @@ private class LoanTriggerHandlerTest {
     Item__c book = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :'Available Book'
+      WHERE Name = :availableBookName
     ];
     Person__c borrower = [
       SELECT Id, Maximum_Number_Of_Rentals__c
       FROM Person__c
-      WHERE Name = :'Test'
+      WHERE Name = :borrowerName
     ];
 
     Loan__c newLoan = new Loan__c(
@@ -72,12 +75,12 @@ private class LoanTriggerHandlerTest {
     Item__c book = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :'Unavailable Book'
+      WHERE Name = :unavailableBookName
     ];
     Person__c borrower = [
       SELECT Id, Maximum_Number_Of_Rentals__c
       FROM Person__c
-      WHERE Name = :'Test'
+      WHERE Name = :borrowerName
     ];
 
     Loan__c newLoan = new Loan__c(
@@ -109,12 +112,12 @@ private class LoanTriggerHandlerTest {
     Item__c book = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :'Unavailable Book'
+      WHERE Name = :unavailableBookName
     ];
     Person__c borrower = [
       SELECT Id, Maximum_Number_Of_Rentals__c
       FROM Person__c
-      WHERE Name = :'Test'
+      WHERE Name = :borrowerName
     ];
 
     Loan__c newLoan = new Loan__c(
@@ -139,12 +142,12 @@ private class LoanTriggerHandlerTest {
     Item__c book = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :'Unavailable Book'
+      WHERE Name = :unavailableBookName
     ];
     Person__c borrower = [
       SELECT Id, Maximum_Number_Of_Rentals__c
       FROM Person__c
-      WHERE Name = :'Test'
+      WHERE Name = :borrowerName
     ];
     borrower.Maximum_Number_Of_Rentals__c = 1;
     update borrower;
