@@ -11,8 +11,8 @@ global class ParseEmail implements Messaging.InboundEmailHandler {
     emailMessage.FromAddress = email.fromAddress;
 
     Case newCase = new Case(
-      Status = 'New',
-      Reason = 'Email',
+      Status = CaseConst.INSTANCE.STATUS.NEW_CASE,
+      Reason = CaseConst.INSTANCE.CASE_ORIGIN.EMAIL,
       SuppliedEmail = email.fromAddress,
       Subject = email.subject,
       Description = email.htmlBody.stripHtmlTags()

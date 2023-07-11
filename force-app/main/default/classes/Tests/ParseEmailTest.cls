@@ -21,10 +21,10 @@ public class ParseEmailTest {
       FROM Case
     ];
 
-    System.assertEquals('New', newCase.Status);
-    System.assertEquals('Email', newCase.Reason);
-    System.assertEquals('test@example.com', newCase.SuppliedEmail);
-    System.assertEquals('Test Subject', newCase.Subject);
-    System.assertEquals('This is a test email.', newCase.Description);
+    Assert.areEqual('New', newCase.Status);
+    Assert.areEqual('Email', newCase.Reason);
+    Assert.areEqual('test@example.com', newCase.SuppliedEmail);
+    Assert.areEqual('Test Subject', newCase.Subject);
+    Assert.areEqual('This is a test email.', newCase.Description);
   }
 }
