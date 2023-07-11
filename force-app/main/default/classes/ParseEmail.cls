@@ -5,6 +5,11 @@ global class ParseEmail implements Messaging.InboundEmailHandler {
   ) {
     Messaging.InboundEmailResult result = new Messaging.InboundEmailResult();
 
+    EmailMessage emailMessage = new EmailMessage();
+    emailMessage.Subject = email.subject;
+    emailMessage.TextBody = email.htmlBody.stripHtmlTags();
+    emailMessage.FromAddress = email.fromAddress;
+
     Case newCase = new Case(
       Status = 'New',
       Reason = 'Email',
@@ -13,6 +18,10 @@ global class ParseEmail implements Messaging.InboundEmailHandler {
       Description = email.htmlBody.stripHtmlTags()
     );
     insert newCase;
+
+    emailMessage.ParentId = newCase.Id;
+
+    insert emailMessage;
 
     return result;
   }
