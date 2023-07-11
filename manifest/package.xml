@@ -48,10 +48,5 @@
         <members>CurrentlyBorrowedItem</members>
         <name>CustomLabel</name>
     </types>
-    <types>
-        <members>ParseEmail</members>
-        <members>EmailToCase</members>
-        <name>EmailServicesFunction</name>
-    </types>
     <version>58.0</version>
 </Package>
