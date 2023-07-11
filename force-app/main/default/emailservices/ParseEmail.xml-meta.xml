@@ -19,4 +19,5 @@
     <isTextAttachmentsAsBinary>false</isTextAttachmentsAsBinary>
     <isTlsRequired>false</isTlsRequired>
     <overLimitAction>Discard</overLimitAction>
+
 </EmailServicesFunction>
