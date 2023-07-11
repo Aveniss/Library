@@ -63,7 +63,7 @@ private class DelayedItemsTest {
     ];
 
     for (Loan__c updatedLoan : updatedLoans) {
-      System.assertEquals(Consts.LOANS.STATUS.DELAY, updatedLoan.Status__c);
+      Assert.areEqual(Consts.LOANS.STATUS.DELAY, updatedLoan.Status__c);
     }
   }
 
@@ -110,7 +110,7 @@ private class DelayedItemsTest {
     ];
 
     for (Loan__c updatedLoan : updatedLoans) {
-      System.assertEquals(Consts.LOANS.STATUS.BORROWED, updatedLoan.Status__c);
+      Assert.areEqual(Consts.LOANS.STATUS.BORROWED, updatedLoan.Status__c);
     }
   }
 }
