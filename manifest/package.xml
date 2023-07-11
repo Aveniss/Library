@@ -48,6 +48,11 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>MaxNumberOfBorrowing</members>
+        <members>CurrentlyBorrowedItem</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
         <members>ParseEmail</members>
         <members>EmailToCase</members>
         <name>EmailServicesFunction</name>
