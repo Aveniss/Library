@@ -22,14 +22,11 @@ public with sharing class DelayedItems implements Schedulable {
                         AND End_Of_Rental__c < :currentDate
         ];
 
-        List<Loan__c> updatedItems = new List<Loan__c>();
         for (Loan__c loan : overdueItems) {
             loan.Status__c = Consts.LOANS.STATUS.DELAY;
-            updatedItems.add(loan);
         }
 
-        if (!updatedItems.isEmpty()) {
-            update updatedItems;
-        }
+        update overdueItems;
+
     }
 }
