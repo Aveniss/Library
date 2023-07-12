@@ -27,8 +27,7 @@ private class DelayedItemsTest {
   static void scheduleMeTest(){
 
     Test.startTest();
-    DelayedItems.scheduleMe();
-    Id scheduleID = DelayedItems.getScheduleID();
+    Id scheduleID = DelayedItems.scheduleMe();
     Test.stopTest();
 
     List<CronTrigger> cronTriggers = [SELECT Id FROM CronTrigger WHERE Id=:scheduleID];
