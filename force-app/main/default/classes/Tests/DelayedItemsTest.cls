@@ -1,7 +1,7 @@
 @IsTest
 private class DelayedItemsTest {
 
-  private static final Date CURRENT_DATA = Date.today();
+  private static final Date CURRENT_DATE = Date.today();
   private static final String BOOK_NAME = 'Test Book';
   private static final String BORROWER_NAME = 'Test';
   @TestSetup
@@ -21,8 +21,22 @@ private class DelayedItemsTest {
     );
     insert borrower;
   }
+
+
   @IsTest
-  static void chechDelayedItems() {
+  static void scheduleMeTest(){
+
+    Test.startTest();
+    DelayedItems.scheduleMe();
+    Id scheduleID = DelayedItems.getScheduleID();
+    Test.stopTest();
+
+    List<CronTrigger> cronTriggers = [SELECT Id FROM CronTrigger WHERE Id=:scheduleID];
+
+    Assert.isTrue(cronTriggers.size()==1,'New Schedule Job was not added correctly');
+  }
+  @IsTest
+  static void checkDelayedItems() {
     List<Loan__c> newLoans = new List<Loan__c>();
 
     Item__c book = [
@@ -42,8 +56,8 @@ private class DelayedItemsTest {
         Item__c = book.Id,
         Borrower__c = borrower.Id,
         Status__c = Consts.LOANS.STATUS.BORROWED,
-        Rental_Date__c = CURRENT_DATA.addDays(-(5 + 1)),
-        End_Of_Rental__c = CURRENT_DATA.addDays(-i)
+        Rental_Date__c = CURRENT_DATE.addDays(-(5 + i)),
+        End_Of_Rental__c = CURRENT_DATE.addDays(-i)
       );
 
       newLoans.add(loan);
@@ -68,7 +82,7 @@ private class DelayedItemsTest {
   }
 
   @IsTest
-  static void chechNoDelayedItems() {
+  static void checkNoDelayedItems() {
     List<Loan__c> newLoans = new List<Loan__c>();
 
     Item__c book = [
@@ -89,8 +103,8 @@ private class DelayedItemsTest {
         Item__c = book.Id,
         Borrower__c = borrower.Id,
         Status__c = Consts.LOANS.STATUS.BORROWED,
-        Rental_Date__c = CURRENT_DATA.addDays(-(5 + 1)),
-        End_Of_Rental__c = CURRENT_DATA.addDays(+i)
+        Rental_Date__c = CURRENT_DATE.addDays(-(5 + i)),
+        End_Of_Rental__c = CURRENT_DATE.addDays(+i)
       );
 
       newLoans.add(loan);

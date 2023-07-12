@@ -1,10 +1,14 @@
 public with sharing class DelayedItems implements Schedulable {
-    private static String CRON_EXPRESSION = '0 15 21 * * ?';
+    private static String CRON_EXPRESSION = '0 0 0 * * ?';
+    private static Id scheduleID;
 
 
     public static void scheduleMe() {
         DelayedItems schedule = new DelayedItems();
-        System.schedule('Delayed Items Job', CRON_EXPRESSION, schedule);
+        scheduleID = System.schedule('Delayed Items Job', CRON_EXPRESSION, schedule);
+    }
+    public static Id getScheduleID(){
+        return scheduleID;
     }
 
     public void execute(SchedulableContext sc) {
