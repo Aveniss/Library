@@ -31,7 +31,6 @@ private class LoanTriggerHandlerTest {
     insert borrower;
 
     Loan__c existingLoan = new Loan__c(
-      Name = 'Test Loan',
       Item__c = book.Id,
       Borrower__c = borrower.Id,
       Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -55,7 +54,6 @@ private class LoanTriggerHandlerTest {
     ];
 
     Loan__c newLoan = new Loan__c(
-      Name = 'Second Test Loan',
       Item__c = book.Id,
       Borrower__c = borrower.Id,
       Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -84,7 +82,6 @@ private class LoanTriggerHandlerTest {
     ];
 
     Loan__c newLoan = new Loan__c(
-      Name = 'Second Test Loan',
       Item__c = book.Id,
       Borrower__c = borrower.Id,
       Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -121,7 +118,6 @@ private class LoanTriggerHandlerTest {
     ];
 
     Loan__c newLoan = new Loan__c(
-      Name = 'Second Test Loan',
       Item__c = book.Id,
       Borrower__c = borrower.Id,
       Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -153,7 +149,6 @@ private class LoanTriggerHandlerTest {
     update borrower;
 
     Loan__c newLoan = new Loan__c(
-      Name = 'Second Test Loan',
       Item__c = book.Id,
       Borrower__c = borrower.Id,
       Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -172,4 +167,10 @@ private class LoanTriggerHandlerTest {
       newLoan.getErrors()[0].getMessage()
     );
   }
+
+//  @IsTest
+//  static void testChangeAvailabilityStatusWithReservedLoan(){
+//    Loan__c newLoan = [SELECT Id from Loan__c WHERE ]
+//
+//  }
 }

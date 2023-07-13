@@ -82,4 +82,15 @@ public class LoanTriggerHandler {
       }
     }
   }
+
+  public static void changeAvailabilityStatus(List<Loan__c> loans, Boolean isDeleted){
+    for(Loan__c loan : loans){
+        if(loan.Status__c == Consts.LOANS.STATUS.RETURNED || isDeleted){
+          loan.Item__r.Is_Available__c = true;
+        }
+      else{
+        loan.Item__r.Is_Available__c = false;
+      }
+    }
+  }
 }
