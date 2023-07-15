@@ -51,7 +51,6 @@ private class DelayedItemsTest {
 
     for (Integer i = 1; i <= 5; i++) {
       Loan__c loan = new Loan__c(
-        Name = 'Test Loan',
         Item__c = book.Id,
         Borrower__c = borrower.Id,
         Status__c = Consts.LOANS.STATUS.BORROWED,
@@ -98,7 +97,6 @@ private class DelayedItemsTest {
 
     for (Integer i = 1; i <= 5; i++) {
       Loan__c loan = new Loan__c(
-        Name = 'Test Loan',
         Item__c = book.Id,
         Borrower__c = borrower.Id,
         Status__c = Consts.LOANS.STATUS.BORROWED,
