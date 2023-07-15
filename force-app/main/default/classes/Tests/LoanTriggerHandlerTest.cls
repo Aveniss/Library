@@ -1,178 +1,126 @@
-@isTest
+@IsTest
 private class LoanTriggerHandlerTest {
   private static final Date RENTAL_DATE = Date.newInstance(2023, 7, 15);
   private static final Date END_OF_RENTAL = Date.newInstance(2023, 7, 20);
-  private static final String unavailableBookName = 'Unavailable Book';
-  private static final String availableBookName = 'Available Book';
-  private static final String borrowerName = 'Test';
+  private static final String unavailableBookNamePrefix = 'Unavailable Book';
+  private static final String availableBookNamePrefix = 'Available Book';
+  private static final String borrowerNamePrefix = 'Test';
 
   @TestSetup
   private static void insertBasicData() {
-    Item__c book = new Item__c(
-      Name = unavailableBookName,
-      Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
-      Genre__c = Consts.ITEMS.GENRE.SCIENCE_FICTIN
-    );
-    insert book;
+    List<Item__c> unavailableBooks = DataFactory.createItemsList(1,true,unavailableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.SCIENCE_FICTIN);
 
-    Item__c availableBook = new Item__c(
-      Name = availableBookName,
-      Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
-      Genre__c = Consts.ITEMS.GENRE.NOVEL
-    );
-    insert availableBook;
+    List<Item__c> availableBooks = DataFactory.createItemsList(1,true,availableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.NOVEL);
 
-    Person__c borrower = new Person__c(
-      Name = borrowerName,
-      Last_Name__c = 'Borrower',
-      Email__c = 'testEmail@gmail.com',
-      Maximum_Number_Of_Rentals__c = 2
-    );
-    insert borrower;
-    System.debug('Test: ');
-    Loan__c existingLoan = new Loan__c(
-      Item__c = book.Id,
-      Borrower__c = borrower.Id,
-      Status__c = Consts.LOANS.STATUS.BORROWED,
-      Rental_Date__c = RENTAL_DATE,
-      End_Of_Rental__c = END_OF_RENTAL
-    );
+    List<Person__c> borrowers = DataFactory.createPeopleList(1,true,borrowerNamePrefix,'testEmail',2);
 
-    System.debug('Test: '+existingLoan);
-    insert existingLoan;
+    DataFactory.createLoansList(1,true,unavailableBooks,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
   }
 
-  @isTest
+  @IsTest
   static void testWhenItemIsAvailable() {
-    Item__c book = [
+    List<Item__c> books = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :availableBookName
+      WHERE Name = :availableBookNamePrefix+' 0'
     ];
-    Person__c borrower = [
+    List<Person__c> borrowers = [
       SELECT Id, Maximum_Number_Of_Rentals__c
       FROM Person__c
-      WHERE Name = :borrowerName
+      WHERE Name = :borrowerNamePrefix+' 0'
     ];
 
-    Loan__c newLoan = new Loan__c(
-      Item__c = book.Id,
-      Borrower__c = borrower.Id,
-      Status__c = Consts.LOANS.STATUS.BORROWED,
-      Rental_Date__c = RENTAL_DATE,
-      End_Of_Rental__c = END_OF_RENTAL
-    );
-    List<Loan__c> newLoans = new List<Loan__c>{ newLoan };
+    System.debug(books + '\n'+borrowers);
+    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
     Test.startTest();
     LoanTriggerHandler.checkBookAvailability(newLoans);
     Test.stopTest();
 
-    Assert.isFalse(newLoan.hasErrors(), 'Expected no error to be returned');
+    Assert.isFalse(newLoans.get(0).hasErrors(), 'Expected no error to be returned');
   }
-  @isTest
+  @IsTest
   static void testWhenItemIsNotAvailable() {
-    Item__c book = [
-      SELECT Id, Type__c
-      FROM Item__c
-      WHERE Name = :unavailableBookName
-    ];
-    Person__c borrower = [
-      SELECT Id, Maximum_Number_Of_Rentals__c
-      FROM Person__c
-      WHERE Name = :borrowerName
+    List<Item__c> books = [
+            SELECT Id, Type__c
+            FROM Item__c
+            WHERE Name = :unavailableBookNamePrefix+' 0'
     ];
 
-    Loan__c newLoan = new Loan__c(
-      Item__c = book.Id,
-      Borrower__c = borrower.Id,
-      Status__c = Consts.LOANS.STATUS.BORROWED,
-      Rental_Date__c = RENTAL_DATE,
-      End_Of_Rental__c = END_OF_RENTAL
-    );
-    List<Loan__c> newLoans = new List<Loan__c>{ newLoan };
+    List<Person__c> borrowers = [
+            SELECT Id, Maximum_Number_Of_Rentals__c
+            FROM Person__c
+            WHERE Name = :borrowerNamePrefix+' 0'
+    ];
+
+    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+
 
     Test.startTest();
     LoanTriggerHandler.checkBookAvailability(newLoans);
     Test.stopTest();
 
-    Assert.isTrue(newLoan.hasErrors(), 'Expected error to be returned');
+    Assert.isTrue(newLoans.get(0).hasErrors(), 'Expected error to be returned');
     Assert.areEqual(
       String.format(
         Label.CurrentlyBorrowedItem,
         new List<String>{ Consts.ITEMS.TYPE.PAPER_BOOK }
       ),
-      newLoan.getErrors()[0].getMessage()
+            newLoans.get(0).getErrors()[0].getMessage()
     );
   }
 
-  @isTest
+  @IsTest
   static void testWhenBorrowingLimitIsNotAchieve() {
-    Item__c book = [
-      SELECT Id, Type__c
-      FROM Item__c
-      WHERE Name = :unavailableBookName
-    ];
-    Person__c borrower = [
-      SELECT Id, Maximum_Number_Of_Rentals__c
-      FROM Person__c
-      WHERE Name = :borrowerName
+    List<Item__c> books = [
+            SELECT Id, Type__c
+            FROM Item__c
+            WHERE Name = :unavailableBookNamePrefix+' 0'
     ];
 
-    Loan__c newLoan = new Loan__c(
-      Item__c = book.Id,
-      Borrower__c = borrower.Id,
-      Status__c = Consts.LOANS.STATUS.BORROWED,
-      Rental_Date__c = RENTAL_DATE,
-      End_Of_Rental__c = END_OF_RENTAL
-    );
-    List<Loan__c> newLoans = new List<Loan__c>{ newLoan };
+    List<Person__c> borrowers = [
+            SELECT Id, Maximum_Number_Of_Rentals__c
+            FROM Person__c
+            WHERE Name = :borrowerNamePrefix+' 0'
+    ];
+
+    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
     Test.startTest();
     LoanTriggerHandler.checkBookLimit(newLoans);
     Test.stopTest();
 
-    Assert.isFalse(newLoan.hasErrors(), 'Expected no error to be returned');
+    Assert.isFalse(newLoans.get(0).hasErrors(), 'Expected no error to be returned');
   }
 
-  @isTest
+  @IsTest
   static void testWhenBorrowingLimitIsAchieve() {
-    Item__c book = [
-      SELECT Id, Type__c
-      FROM Item__c
-      WHERE Name = :unavailableBookName
+    List<Item__c> books = [
+            SELECT Id, Type__c
+            FROM Item__c
+            WHERE Name = :unavailableBookNamePrefix+' 0'
     ];
-    Person__c borrower = [
-      SELECT Id, Maximum_Number_Of_Rentals__c
-      FROM Person__c
-      WHERE Name = :borrowerName
-    ];
-    borrower.Maximum_Number_Of_Rentals__c = 1;
-    update borrower;
 
-    Loan__c newLoan = new Loan__c(
-      Item__c = book.Id,
-      Borrower__c = borrower.Id,
-      Status__c = Consts.LOANS.STATUS.BORROWED,
-      Rental_Date__c = RENTAL_DATE,
-      End_Of_Rental__c = END_OF_RENTAL
-    );
-    List<Loan__c> newLoans = new List<Loan__c>{ newLoan };
+    List<Person__c> borrowers = [
+            SELECT Id, Maximum_Number_Of_Rentals__c
+            FROM Person__c
+            WHERE Name = :borrowerNamePrefix+' 0'
+    ];
+    borrowers.get(0).Maximum_Number_Of_Rentals__c = 1;
+    update borrowers;
+
+    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+
 
     Test.startTest();
     LoanTriggerHandler.checkBookLimit(newLoans);
     Test.stopTest();
 
-    Assert.isTrue(newLoan.hasErrors(), 'Expected error to be returned');
+    Assert.isTrue(newLoans.get(0).hasErrors(), 'Expected error to be returned');
     Assert.areEqual(
       System.Label.MaxNumberOfBorrowing,
-      newLoan.getErrors()[0].getMessage()
+      newLoans.get(0).getErrors()[0].getMessage()
     );
   }
 
-//  @IsTest
-//  static void testChangeAvailabilityStatusWithReservedLoan(){
-//    Loan__c newLoan = [SELECT Id from Loan__c WHERE ]
-//
-//  }
 }
