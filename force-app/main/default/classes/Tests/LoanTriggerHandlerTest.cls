@@ -29,7 +29,7 @@ private class LoanTriggerHandlerTest {
       Maximum_Number_Of_Rentals__c = 2
     );
     insert borrower;
-
+    System.debug('Test: ');
     Loan__c existingLoan = new Loan__c(
       Item__c = book.Id,
       Borrower__c = borrower.Id,
@@ -37,6 +37,8 @@ private class LoanTriggerHandlerTest {
       Rental_Date__c = RENTAL_DATE,
       End_Of_Rental__c = END_OF_RENTAL
     );
+
+    System.debug('Test: '+existingLoan);
     insert existingLoan;
   }
 
