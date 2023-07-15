@@ -9,7 +9,6 @@ trigger LoanTrigger on Loan__c(before insert,after insert,after delete, after up
     LoanTriggerHandler.changeAvailabilityStatus(Trigger.new,Trigger.isDelete);
   }
 
-
     if(Trigger.isDelete){
       LoanTriggerHandler.changeAvailabilityStatus(Trigger.old,Trigger.isDelete);
     }

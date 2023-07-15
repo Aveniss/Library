@@ -82,7 +82,6 @@ public class LoanTriggerHandler {
       }
     }
   }
-
   public static void changeAvailabilityStatus(List<Loan__c> loans, Boolean isDeleted){
 
     Set<Id> IDs = new Set<Id>();

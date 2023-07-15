@@ -6,4 +6,5 @@
     <label>Is Available</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
+
 </CustomField>

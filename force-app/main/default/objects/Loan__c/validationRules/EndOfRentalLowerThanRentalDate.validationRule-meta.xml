@@ -5,4 +5,5 @@
     <errorConditionFormula>End_Of_Rental__c  &lt;  Rental_Date__c</errorConditionFormula>
     <errorDisplayField>End_Of_Rental__c</errorDisplayField>
     <errorMessage>End Of Renta cannot be lower than Rental Date</errorMessage>
+
 </ValidationRule>
