@@ -3,10 +3,15 @@
  */
 @IsTest
 public with sharing class ReturnReminderTest {
-    @IsTest
-    static void testEmptyEmailToItemsMap() {
+    @isTest
+    static void testScheduleMe() {
+        Test.startTest();
+        Id jobId = ReturnReminder.scheduleMe();
+        Test.stopTest();
 
-
-        }
+        CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :jobId];
+        Assert.areEqual(ReturnReminder.JOB_NAME, cronTrigger.CronJobDetail.Name,'Invalid job name');
+        Assert.areEqual(ReturnReminder.CRON_EXPRESSION, cronTrigger.CronExpression,'Inavlid cron expression');
+    }
 
 }

@@ -4,12 +4,13 @@
 
 public with sharing class ReturnReminder implements Schedulable {
     private static final Integer daysToReturnTheItem = 3;
-    private static final String CRON_EXPRESSION = '0 0 * * 1-5';
+    public static final String CRON_EXPRESSION = '0 0 * * 1-5';
+    public static final String JOB_NAME = 'Return Reminder Job';
 
 
     public static Id scheduleMe() {
         ReturnReminder schedule = new ReturnReminder();
-        return System.schedule('Return Reminder Job', CRON_EXPRESSION, schedule);
+        return System.schedule(JOB_NAME, CRON_EXPRESSION, schedule);
     }
 
     public void execute(SchedulableContext context) {
@@ -27,24 +28,7 @@ public with sharing class ReturnReminder implements Schedulable {
         }
 
         Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
-        inspectResults(results);
     }
-
-    private static Boolean inspectResults(Messaging.SendEmailResult[] results) {
-        Boolean sendResult = true;
-        for (Messaging.SendEmailResult res : results) {
-            if (res.isSuccess()) {
-                System.debug('Email sent successfully');
-            }
-            else {
-                sendResult = false;
-                System.debug('The following errors occurred: ' + res.getErrors());
-            }
-        }
-        return sendResult;
-    }
-
-
 
     private static String itemsToString(List<String> itemsList){
         String result = '\n';
