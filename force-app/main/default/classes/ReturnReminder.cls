@@ -4,7 +4,7 @@
 
 public with sharing class ReturnReminder implements Schedulable {
     public static final Integer DAYS_TO_RETURN = 3;
-    public static final String CRON_EXPRESSION = '0 0 * * 1-5';
+    public static final String CRON_EXPRESSION = '0 0 0 ? * MON,TUE,WED,THU,FRI *';
     public static final String JOB_NAME = 'Return Reminder Job';
 
 
