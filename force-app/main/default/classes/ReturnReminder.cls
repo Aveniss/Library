@@ -3,7 +3,7 @@
  */
 
 public with sharing class ReturnReminder implements Schedulable {
-    private static final Integer daysToReturnTheItem = 3;
+    public static final Integer DAYS_TO_RETURN = 3;
     public static final String CRON_EXPRESSION = '0 0 * * 1-5';
     public static final String JOB_NAME = 'Return Reminder Job';
 
@@ -14,7 +14,7 @@ public with sharing class ReturnReminder implements Schedulable {
     }
 
     public void execute(SchedulableContext context) {
-        Map<String,Container> emailToItems = generateEmailToItemsMap([SELECT Borrower__r.Email__c,Item__r.Name FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED AND End_Of_Rental__c =: addBusinessDays(Date.today(),daysToReturnTheItem)]);
+        Map<String,Container> emailToItems = generateEmailToItemsMap([SELECT Borrower__r.Email__c,Item__r.Name,End_Of_Rental__c FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED AND End_Of_Rental__c =: addBusinessDays(Date.today(), DAYS_TO_RETURN)]);
 
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
         for (String email : emailToItems.keySet()){
