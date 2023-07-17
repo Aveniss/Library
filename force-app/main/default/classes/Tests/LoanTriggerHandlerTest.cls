@@ -125,11 +125,7 @@ private class LoanTriggerHandlerTest {
 
     @isTest
     static void testChangeAvailabilityStatusAfterBorrowed() {
-        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED];
-
-        Test.startTest();
-        LoanTriggerHandler.changeAvailabilityStatus(loans,false);
-        Test.stopTest();
+        List<Loan__c> loans = [SELECT Status__c,Item__r.Name,Item__r.Is_Available__c FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED];
 
         for (Loan__c loan : loans){
             Assert.isFalse(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should not be available');
@@ -138,12 +134,13 @@ private class LoanTriggerHandlerTest {
 
     @isTest
     static void testChangeAvailabilityStatusAfterDelete() {
-
-        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
+        List<Loan__c> loans = [SELECT Status__c,Item__c,Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
 
         Test.startTest();
         LoanTriggerHandler.changeAvailabilityStatus(loans,true);
         Test.stopTest();
+
+        loans = [SELECT Status__c,Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
 
         for (Loan__c loan : loans){
             Assert.isTrue(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should be available');
@@ -152,17 +149,15 @@ private class LoanTriggerHandlerTest {
     }
     @isTest
     static void testChangeAvailabilityStatusAfterReturned() {
-
-        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
+        List<Id> ids = new List<Id>();
+        List<Loan__c> loans = [SELECT Status__c,Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
 
         for (Loan__c loan : loans){
             loan.Status__c = Consts.LOANS.STATUS.RETURNED;
         }
         update loans;
 
-        Test.startTest();
-        LoanTriggerHandler.changeAvailabilityStatus(loans,false);
-        Test.stopTest();
+        loans = [SELECT Status__c,Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
 
         for (Loan__c loan : loans){
             Assert.isTrue(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should be available');

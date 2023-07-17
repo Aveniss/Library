@@ -95,10 +95,10 @@ public class LoanTriggerHandler {
 
     for(Loan__c loan : loans){
           if(loan.Status__c == Consts.LOANS.STATUS.RETURNED || isDeleted){
-            items.get(loan.Item__c).Is_Available__c = true;
+              items.get(loan.Item__c).Is_Available__c = true;
           }
           else{
-            items.get(loan.Item__c).Is_Available__c = true;
+            items.get(loan.Item__c).Is_Available__c = false;
           }
     }
     update items.values();

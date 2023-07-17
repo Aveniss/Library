@@ -6,7 +6,6 @@ trigger LoanTrigger on Loan__c(before insert,after insert,after delete, after up
   if (Trigger.isBefore && Trigger.isInsert) {
     LoanTriggerHandler.checkBookAvailability(Trigger.new);
     LoanTriggerHandler.checkBookLimit(Trigger.new);
-    LoanTriggerHandler.changeAvailabilityStatus(Trigger.new,Trigger.isDelete);
   }
 
     if(Trigger.isDelete){
