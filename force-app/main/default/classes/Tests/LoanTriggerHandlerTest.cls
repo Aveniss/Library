@@ -8,13 +8,13 @@ private class LoanTriggerHandlerTest {
 
   @TestSetup
   private static void insertBasicData() {
-    List<Item__c> unavailableBooks = DataFactory.createItemsList(1,true,unavailableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.SCIENCE_FICTIN);
+    List<Item__c> unavailableBooks = TestDataFactory.createItemsList(1,true,unavailableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.SCIENCE_FICTIN);
 
-    List<Item__c> availableBooks = DataFactory.createItemsList(1,true,availableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.NOVEL);
+    List<Item__c> availableBooks = TestDataFactory.createItemsList(1,true,availableBookNamePrefix,Consts.ITEMS.TYPE.PAPER_BOOK,Consts.ITEMS.GENRE.NOVEL);
 
-    List<Person__c> borrowers = DataFactory.createPeopleList(1,true,borrowerNamePrefix,'testEmail',2);
+    List<Person__c> borrowers = TestDataFactory.createPeopleList(1,true,borrowerNamePrefix,'testEmail',2);
 
-    DataFactory.createLoansList(1,true,unavailableBooks,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+    TestDataFactory.createLoansList(1,true,unavailableBooks,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
   }
 
   @IsTest
@@ -30,8 +30,8 @@ private class LoanTriggerHandlerTest {
       WHERE Name = :borrowerNamePrefix+' 0'
     ];
 
-    System.debug(books + '\n'+borrowers);
-    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+
+    List<Loan__c> newLoans = TestDataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
     Test.startTest();
     LoanTriggerHandler.checkBookAvailability(newLoans);
@@ -53,7 +53,7 @@ private class LoanTriggerHandlerTest {
             WHERE Name = :borrowerNamePrefix+' 0'
     ];
 
-    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+    List<Loan__c> newLoans = TestDataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
 
     Test.startTest();
@@ -84,7 +84,7 @@ private class LoanTriggerHandlerTest {
             WHERE Name = :borrowerNamePrefix+' 0'
     ];
 
-    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+    List<Loan__c> newLoans = TestDataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
     Test.startTest();
     LoanTriggerHandler.checkBookLimit(newLoans);
@@ -109,7 +109,7 @@ private class LoanTriggerHandlerTest {
     borrowers.get(0).Maximum_Number_Of_Rentals__c = 1;
     update borrowers;
 
-    List<Loan__c> newLoans = DataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
+    List<Loan__c> newLoans = TestDataFactory.createLoansList(1,false,books,borrowers,RENTAL_DATE,END_OF_RENTAL,Consts.LOANS.STATUS.BORROWED);
 
 
     Test.startTest();
@@ -122,5 +122,52 @@ private class LoanTriggerHandlerTest {
       newLoans.get(0).getErrors()[0].getMessage()
     );
   }
+
+    @isTest
+    static void testChangeAvailabilityStatusAfterBorrowed() {
+        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED];
+
+        Test.startTest();
+        LoanTriggerHandler.changeAvailabilityStatus(loans,false);
+        Test.stopTest();
+
+        for (Loan__c loan : loans){
+            Assert.isFalse(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should not be available');
+        }
+    }
+
+    @isTest
+    static void testChangeAvailabilityStatusAfterDelete() {
+
+        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
+
+        Test.startTest();
+        LoanTriggerHandler.changeAvailabilityStatus(loans,true);
+        Test.stopTest();
+
+        for (Loan__c loan : loans){
+            Assert.isTrue(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should be available');
+        }
+
+    }
+    @isTest
+    static void testChangeAvailabilityStatusAfterReturned() {
+
+        List<Loan__c> loans = [SELECT Item__r.Name,Item__r.Is_Available__c FROM Loan__c];
+
+        for (Loan__c loan : loans){
+            loan.Status__c = Consts.LOANS.STATUS.RETURNED;
+        }
+        update loans;
+
+        Test.startTest();
+        LoanTriggerHandler.changeAvailabilityStatus(loans,false);
+        Test.stopTest();
+
+        for (Loan__c loan : loans){
+            Assert.isTrue(loan.Item__r.Is_Available__c,loan.Item__r.Name + ' should be available');
+        }
+    }
+
 
 }

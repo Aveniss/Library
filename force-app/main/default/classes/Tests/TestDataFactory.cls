@@ -2,7 +2,7 @@
  * Created by kamil on 15.07.2023.
  */
 @isTest
-public with sharing class DataFactory {
+public with sharing class TestDataFactory {
     public static List<Item__c> createItemsList(Integer numberOfItems,Boolean insertData,String itemNamePrefix, String itemType,String itemGenre){
         List<Item__c> items = new List<Item__c>();
 
