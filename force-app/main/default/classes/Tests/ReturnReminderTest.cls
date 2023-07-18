@@ -41,9 +41,9 @@ public with sharing class ReturnReminderTest {
         Assert.areEqual(NUMBER_OF_DATA, emails.size(), 'Invalid number of emails sent');
 
         for (Integer i = 0; i < NUMBER_OF_DATA; i++) {
-            Assert.areEqual(emails.get(0).Subject, emailSubject, 'Incorrect email subject');
-            Assert.areEqual(emails.get(i).TextBody, String.format(emails.get(0).TextBody, new List<String>{
-                    '\n' + books.get(i) + '\n', END_OF_RENTAL.format()
+            Assert.areEqual(emails.get(i).Subject, emailSubject, 'Incorrect email subject');
+            Assert.areEqual(emails.get(i).TextBody, String.format(Label.ReturnReminder, new List<String>{
+                    '\n' + books.get(i).Name + '\n', END_OF_RENTAL.format()
             }), 'Incorrect email content');
             Assert.areEqual(emails.get(i).ToAddress, EMAIL_PREFIX + i + TestDataFactory.EMAIL_SUFFIX, 'Incorrect email address for ' + EMAIL_PREFIX + i + TestDataFactory.EMAIL_SUFFIX);
         }
