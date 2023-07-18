@@ -14,15 +14,19 @@ public with sharing class ReturnReminder implements Schedulable {
     }
 
     public void execute(SchedulableContext context) {
-        Map<String,Container> emailToItems = generateEmailToItemsMap([SELECT Borrower__r.Email__c,Item__r.Name,End_Of_Rental__c FROM Loan__c WHERE Status__c =: Consts.LOANS.STATUS.BORROWED AND End_Of_Rental__c =: addBusinessDays(Date.today(), DAYS_TO_RETURN)]);
+        Map<String, Container> emailToItems = generateEmailToItemsMap([SELECT Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c FROM Loan__c WHERE Status__c = :Consts.LOANS.STATUS.BORROWED AND End_Of_Rental__c = :addBusinessDays(Date.today(), DAYS_TO_RETURN)]);
 
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
-        for (String email : emailToItems.keySet()){
+        for (String email : emailToItems.keySet()) {
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            String[] toAddresses = new String[] {email};
+            String[] toAddresses = new String[]{
+                    email
+            };
             mail.setToAddresses(toAddresses);
             mail.setSubject('End of Loan Reminder');
-            mail.setPlainTextBody(String.format(Label.ReturnReminder,new List<String>{itemsToString(emailToItems.get(email).stringsList),emailToItems.get(email).endOfRentalDate.format()}));
+            mail.setPlainTextBody(String.format(Label.ReturnReminder, new List<String>{
+                    itemsToString(emailToItems.get(email).stringsList), emailToItems.get(email).endOfRentalDate.format()
+            }));
             mail.setSenderDisplayName('Library Support');
             mails.add(mail);
         }
@@ -30,21 +34,21 @@ public with sharing class ReturnReminder implements Schedulable {
         Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
     }
 
-    private static String itemsToString(List<String> itemsList){
+    private static String itemsToString(List<String> itemsList) {
         String result = '\n';
-        for (String str : itemsList){
-            result+= (str + '\n');
+        for (String str : itemsList) {
+            result += (str + '\n');
         }
         return result;
     }
 
 
-    private static Map<String,Container> generateEmailToItemsMap(List<Loan__c> loans){
-        Map<String,Container> emailToItems = new Map<String,Container>();
+    private static Map<String, Container> generateEmailToItemsMap(List<Loan__c> loans) {
+        Map<String, Container> emailToItems = new Map<String, Container>();
 
-        for (Loan__c loan : loans){
-            if(!emailToItems.containsKey(loan.Borrower__r.Email__c)){
-                emailToItems.put(loan.Borrower__r.Email__c,new Container(new List<String>(),loan.End_Of_Rental__c));
+        for (Loan__c loan : loans) {
+            if (!emailToItems.containsKey(loan.Borrower__r.Email__c)) {
+                emailToItems.put(loan.Borrower__r.Email__c, new Container(new List<String>(), loan.End_Of_Rental__c));
             }
             emailToItems.get(loan.Borrower__r.Email__c).stringsList.add(loan.Item__r.Name);
         }
@@ -52,16 +56,16 @@ public with sharing class ReturnReminder implements Schedulable {
         return emailToItems;
     }
 
-    private static Date addBusinessDays(Date yourDate,Integer additionalDays){
-        if(additionalDays<=0) {
+    private static Date addBusinessDays(Date yourDate, Integer additionalDays) {
+        if (additionalDays <= 0) {
             return Date.today();
         }
 
         Datetime finalDate = yourDate;
         Integer addedDays = 0;
-        while(addedDays!=additionalDays){
+        while (addedDays != additionalDays) {
             finalDate = finalDate.addDays(1);
-            if(!(finalDate.format('E').equals('Sat') || finalDate.format('E').equals('Sun'))){
+            if (!(finalDate.format('E').equals('Sat') || finalDate.format('E').equals('Sun'))) {
                 addedDays++;
             }
         }
@@ -69,11 +73,11 @@ public with sharing class ReturnReminder implements Schedulable {
         return finalDate.date();
     }
 
-    private class Container{
+    private class Container {
         public List<String> stringsList;
         public Date endOfRentalDate;
 
-        Container(List<String> stringsList,Date endOfRentalDate){
+        Container(List<String> stringsList, Date endOfRentalDate){
             this.stringsList = stringsList;
             this.endOfRentalDate = endOfRentalDate;
         }
