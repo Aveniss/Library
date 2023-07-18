@@ -6,6 +6,7 @@ public with sharing class ReturnReminder implements Schedulable {
     public static final Integer DAYS_TO_RETURN = 3;
     public static final String CRON_EXPRESSION = '0 0 0 ? * MON,TUE,WED,THU,FRI *';
     public static final String JOB_NAME = 'Return Reminder Job';
+    public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
 
 
     public static Id scheduleMe() {
@@ -23,7 +24,7 @@ public with sharing class ReturnReminder implements Schedulable {
                     email
             };
             mail.setToAddresses(toAddresses);
-            mail.setSubject('End of Loan Reminder');
+            mail.setSubject(EMAIL_SUBJECT);
             mail.setPlainTextBody(String.format(Label.ReturnReminder, new List<String>{
                     itemsToString(emailToItems.get(email).stringsList), emailToItems.get(email).endOfRentalDate.format()
             }));
