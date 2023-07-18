@@ -1,11 +1,54 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Genre__c</fullName>
     <externalId>false</externalId>
     <label>Genre</label>
-    <length>50</length>
     <required>true</required>
     <trackTrending>false</trackTrending>
-    <type>Text</type>
-    <unique>false</unique>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>true</sorted>
+            <value>
+                <fullName>Adventure Novel</fullName>
+                <default>false</default>
+                <label>Adventure Novel</label>
+            </value>
+            <value>
+                <fullName>Autobiography</fullName>
+                <default>false</default>
+                <label>Autobiography</label>
+            </value>
+            <value>
+                <fullName>Crime Fiction</fullName>
+                <default>false</default>
+                <label>Crime Fiction</label>
+            </value>
+            <value>
+                <fullName>Novel</fullName>
+                <default>false</default>
+                <label>Novel</label>
+            </value>
+            <value>
+                <fullName>Poetry</fullName>
+                <default>false</default>
+                <label>Poetry</label>
+            </value>
+            <value>
+                <fullName>Science Fiction</fullName>
+                <default>false</default>
+                <label>Science Fiction</label>
+            </value>
+            <value>
+                <fullName>Short Story</fullName>
+                <default>false</default>
+                <label>Short Story</label>
+            </value>
+            <value>
+                <fullName>Tragedy</fullName>
+                <default>false</default>
+                <label>Tragedy</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
 </CustomField>
