@@ -57,9 +57,10 @@ public with sharing class ReturnReminder implements Schedulable {
         return emailToItems;
     }
 
+    @TestVisible
     private static Date addBusinessDays(Date yourDate, Integer additionalDays) {
         if (additionalDays <= 0) {
-            return Date.today();
+            return yourDate;
         }
 
         Datetime finalDate = yourDate;
