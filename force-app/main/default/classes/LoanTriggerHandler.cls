@@ -82,4 +82,25 @@ public class LoanTriggerHandler {
       }
     }
   }
+  public static void changeAvailabilityStatus(List<Loan__c> loans, Boolean isDeleted){
+
+    Set<Id> IDs = new Set<Id>();
+    Map<Id,Item__c> items;
+
+    for(Loan__c loan : loans){
+      IDs.add(loan.Item__c);
+    }
+
+    items = new Map<Id,Item__c>( [SELECT Is_Available__c FROM Item__c WHERE Id IN: IDs]);
+
+    for(Loan__c loan : loans){
+          if(loan.Status__c == Consts.LOANS.STATUS.RETURNED || isDeleted){
+              items.get(loan.Item__c).Is_Available__c = true;
+          }
+          else{
+            items.get(loan.Item__c).Is_Available__c = false;
+          }
+    }
+    update items.values();
+  }
 }
