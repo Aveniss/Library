@@ -4,8 +4,8 @@
 @IsTest
 public with sharing class ReturnReminderTest {
     private static final String EMAIL_PREFIX = 'testemail';
-    private static final Integer NUMBER_OF_DATA = 1;
-    private static final Date END_OF_RENTAL = Date.today().addDays(ReturnReminder.DAYS_TO_RETURN);
+    private static final Integer NUMBER_OF_DATA = 5;
+    private static final Date END_OF_RENTAL = ReturnReminder.addBusinessDays(Date.today(), ReturnReminder.DAYS_TO_RETURN);
 
     @TestSetup
     private static void insertBasicData() {
@@ -36,7 +36,7 @@ public with sharing class ReturnReminderTest {
     @IsTest
     static void testSendedEmails() {
         String emailSubject = ReturnReminder.EMAIL_SUBJECT;
-        Integer daysToAdd = ReturnReminder.DAYS_TO_RETURN;
+        Date expectedDate = ReturnReminder.addBusinessDays(Date.today(), ReturnReminder.DAYS_TO_RETURN);
         List<Item__c> books = [SELECT Name FROM Item__c];
         Map<String, Loan__c> emailToLoan = new Map<String, Loan__c>();
         for (Loan__c loan : [SELECT Status__c, End_Of_Rental__c, Borrower__r.Email__c, Item__r.Name FROM Loan__c]) {
@@ -54,11 +54,11 @@ public with sharing class ReturnReminderTest {
 
         for (Integer i = 0; i < NUMBER_OF_DATA; i++) {
             String toAddress = emails.get(i).ToAddress;
-            Assert.areEqual(Consts.LOANS.STATUS.BORROWED, emailToLoan.get(toAddress).Status__c, 'Incorrect status for address ' + toAddress);
-            Assert.areEqual(Date.today().addDays(daysToAdd), emailToLoan.get(toAddress).End_Of_Rental__c, 'Incorrect email sending date for address ' + toAddress);
+            Assert.areEqual(Consts.LOANS.STATUS.BORROWED, emailToLoan.get(toAddress).Status__c, 'Incorrect loan status for address ' + toAddress);
+            Assert.areEqual(expectedDate, emailToLoan.get(toAddress).End_Of_Rental__c, 'Incorrect email sending date for address ' + toAddress);
             Assert.areEqual(emails.get(i).Subject, emailSubject, 'Incorrect email subject');
             Assert.areEqual(emails.get(i).TextBody, String.format(Label.ReturnReminder, new List<String>{
-                    '\n' + books.get(i).Name + '\n', END_OF_RENTAL.format()
+                    books.get(i).Name, END_OF_RENTAL.format()
             }), 'Incorrect email content');
             Assert.areEqual(toAddress, EMAIL_PREFIX + i + TestDataFactory.EMAIL_SUFFIX, 'Incorrect email address for ' + EMAIL_PREFIX + i + TestDataFactory.EMAIL_SUFFIX);
         }

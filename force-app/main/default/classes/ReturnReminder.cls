@@ -15,7 +15,15 @@ public with sharing class ReturnReminder implements Schedulable {
     }
 
     public void execute(SchedulableContext context) {
-        Map<String, Container> emailToItems = generateEmailToItemsMap([SELECT Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c FROM Loan__c WHERE Status__c = :Consts.LOANS.STATUS.BORROWED AND End_Of_Rental__c = :addBusinessDays(Date.today(), DAYS_TO_RETURN)]);
+
+        Map<String, Container> emailToItems = generateEmailToItemsMap(
+        [
+                SELECT Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c
+                FROM Loan__c
+                WHERE Status__c = :Consts.LOANS.STATUS.BORROWED
+                AND End_Of_Rental__c = :addBusinessDays(Date.today(), DAYS_TO_RETURN)
+        ]
+        );
 
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
         for (String email : emailToItems.keySet()) {
@@ -26,23 +34,14 @@ public with sharing class ReturnReminder implements Schedulable {
             mail.setToAddresses(toAddresses);
             mail.setSubject(EMAIL_SUBJECT);
             mail.setPlainTextBody(String.format(Label.ReturnReminder, new List<String>{
-                    itemsToString(emailToItems.get(email).stringsList), emailToItems.get(email).endOfRentalDate.format()
+                    String.join(emailToItems.get(email).stringsList, '\n'), emailToItems.get(email).endOfRentalDate.format()
             }));
             mail.setSenderDisplayName('Library Support');
             mails.add(mail);
         }
 
-        Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
+        Messaging.sendEmail(mails);
     }
-
-    private static String itemsToString(List<String> itemsList) {
-        String result = '\n';
-        for (String str : itemsList) {
-            result += (str + '\n');
-        }
-        return result;
-    }
-
 
     private static Map<String, Container> generateEmailToItemsMap(List<Loan__c> loans) {
         Map<String, Container> emailToItems = new Map<String, Container>();

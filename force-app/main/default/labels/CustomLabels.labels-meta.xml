@@ -20,6 +20,8 @@
         <protected>true</protected>
         <shortDescription>Return Reminder</shortDescription>
         <value>Good Morning,
-we remind you that these titles:{0}must be returned by {1}</value>
+we remind you that these titles:
+{0}
+must be returned by {1}</value>
     </labels>
 </CustomLabels>
