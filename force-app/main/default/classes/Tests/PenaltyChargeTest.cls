@@ -87,7 +87,11 @@ public with sharing class PenaltyChargeTest {
 
         for (Loan__c loan : loans) {
             if (loan.Status__c == Consts.LOANS.STATUS.DELAY && loan.End_Of_Rental__c < Date.today()) {
-                Assert.areEqual(loan.Penalty__c, PenaltyCharge.chargeFromItemType(loan.Item__r.Type__c)*PenaltyCharge.calculateWorkingDays(END_OF_RENTAL,Date.today()), 'Incorrect penalty for ' + loan.Item__r.Type__c);
+                Assert.areEqual(
+                        loan.Penalty__c,
+                        PenaltyCharge.chargeFromItemType(loan.Item__r.Type__c) * PenaltyCharge.calculateWorkingDays(END_OF_RENTAL, Date.today()),
+                        'Incorrect penalty for ' + loan.Item__r.Type__c
+                );
             } else {
                 Assert.areEqual(loan.Penalty__c, 0, 'Not delayed item should not be penalized');
             }
