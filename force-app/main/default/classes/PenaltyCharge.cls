@@ -10,10 +10,11 @@ public with sharing class PenaltyCharge {
     }
 
     public void execute(SchedulableContext context) {
-        List<Loan__c> delayedLoans = [SELECT Item__r.Type__c, Penalty__c FROM Loan__c WHERE Status__c = :Consts.LOANS.STATUS.DELAY];
+        List<Loan__c> delayedLoans = [SELECT Item__r.Type__c, Penalty__c,End_Of_Rental__c FROM Loan__c WHERE Status__c = :Consts.LOANS.STATUS.DELAY AND End_Of_Rental__c<:Date.today()];
+
 
         for (Loan__c loan : delayedLoans) {
-            loan.Penalty__c += chargeFromItemType(loan.Item__r.Type__c);
+            loan.Penalty__c = chargeFromItemType(loan.Item__r.Type__c)*calculateWorkingDays(loan.End_Of_Rental__c,Date.today());
         }
 
         update delayedLoans;
@@ -30,6 +31,22 @@ public with sharing class PenaltyCharge {
         } else {
             return 0;
         }
+    }
+    @TestVisible
+    private static Integer calculateWorkingDays(Date startDate, Date endDate) {
+        if(startDate>endDate) {
+            return null;
+        }
+
+        Integer workingDays = 0;
+        Datetime currentDate = startDate;
+        while (currentDate<endDate) {
+            currentDate = currentDate.addDays(1);
+            if (!(currentDate.format('E').equals('Sat') || currentDate.format('E').equals('Sun'))) {
+                workingDays++;
+            }
+        }
+        return workingDays;
     }
 
 }
