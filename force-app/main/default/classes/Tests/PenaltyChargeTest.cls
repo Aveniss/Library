@@ -5,22 +5,31 @@
 @IsTest
 public with sharing class PenaltyChargeTest {
     private static final Integer NUMBER_OF_DATA = 5;
+    private static final Integer NUMBER_OF_WORKING_DAYS = 5;
     private static final Date RENTAL_DATE = Date.newInstance(2023, 7, 10);
-    private static final Date END_OF_RENTAL = Date.newInstance(2023, 7, 17);
+    private static final Date END_OF_RENTAL = Date.newInstance(2023, 7, 15);
     private static final String EMAIL_PREFIX = 'testemail';
     @TestSetup
     private static void insertBasicData() {
-        List<Item__c> delayedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA*2, true, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
-        List<Item__c> delayedMagazines = TestDataFactory.createItemsList(NUMBER_OF_DATA, true, 'Test', Consts.ITEMS.TYPE.MAGAZINE, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
-        List<Item__c> returnedBooks = delayedBooks.clone();
-        for(Integer i =0;i<NUMBER_OF_DATA;i++){
-            returnedBooks.remove(0);
-        }
+        List<Item__c> allItems = new List<Item__c>();
+        List<Item__c> delayedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA, false, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
+        List<Item__c> delayedMagazines = TestDataFactory.createItemsList(NUMBER_OF_DATA, false, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
+        List<Item__c> returnedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA, false, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
+
+        allItems.addAll(delayedBooks);
+        allItems.addAll(delayedMagazines);
+        allItems.addAll(returnedBooks);
+
+        insert allItems;
+
         List<Person__c> borrowers = TestDataFactory.createPeopleList(NUMBER_OF_DATA, true, 'Test', EMAIL_PREFIX, 3);
 
-        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedBooks, borrowers, RENTAL_DATE, END_OF_RENTAL, Consts.LOANS.STATUS.DELAY);
-        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedMagazines, borrowers, Date.today(), Date.today().addDays(3), Consts.LOANS.STATUS.BORROWED);
-        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, returnedBooks, borrowers, RENTAL_DATE, END_OF_RENTAL, Consts.LOANS.STATUS.RETURNED);
+        List<Loan__c> allLoans = new List<Loan__c>();
+        allLoans.addAll(TestDataFactory.createLoansList(NUMBER_OF_DATA, false, delayedBooks, borrowers, RENTAL_DATE, END_OF_RENTAL, Consts.LOANS.STATUS.DELAY));
+        allLoans.addAll(TestDataFactory.createLoansList(NUMBER_OF_DATA, false, delayedMagazines, borrowers, Date.today(), Date.today().addDays(3), Consts.LOANS.STATUS.BORROWED));
+        allLoans.addAll(TestDataFactory.createLoansList(NUMBER_OF_DATA, false, returnedBooks, borrowers, RENTAL_DATE, END_OF_RENTAL, Consts.LOANS.STATUS.RETURNED));
+
+        insert allLoans;
     }
 
     @IsTest
@@ -90,12 +99,12 @@ public with sharing class PenaltyChargeTest {
         for (Loan__c loan : loans) {
             if (loan.Status__c == Consts.LOANS.STATUS.DELAY && loan.End_Of_Rental__c < Date.today()) {
                 Assert.areEqual(
+                        Consts.LOANS.CHARGE.BOOK_CHARGE * PenaltyCharge.calculateWorkingDays(END_OF_RENTAL, Date.today()),
                         loan.Penalty__c,
-                        PenaltyCharge.chargeFromItemType(loan.Item__r.Type__c) * PenaltyCharge.calculateWorkingDays(END_OF_RENTAL, Date.today()),
                         'Incorrect penalty for ' + loan.Item__r.Type__c
                 );
             } else {
-                Assert.areEqual(loan.Penalty__c, 0, 'Not delayed item should not be penalized');
+                Assert.areEqual(0,loan.Penalty__c, 'Not delayed item should not be penalized');
             }
         }
 
