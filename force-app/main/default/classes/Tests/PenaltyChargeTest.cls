@@ -10,10 +10,12 @@ public with sharing class PenaltyChargeTest {
     private static final String EMAIL_PREFIX = 'testemail';
     @TestSetup
     private static void insertBasicData() {
-        List<Item__c> delayedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA, true, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
+        List<Item__c> delayedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA*2, true, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
         List<Item__c> delayedMagazines = TestDataFactory.createItemsList(NUMBER_OF_DATA, true, 'Test', Consts.ITEMS.TYPE.MAGAZINE, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
-        List<Item__c> returnedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA, true, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
-
+        List<Item__c> returnedBooks = delayedBooks.clone();
+        for(Integer i =0;i<NUMBER_OF_DATA;i++){
+            returnedBooks.remove(0);
+        }
         List<Person__c> borrowers = TestDataFactory.createPeopleList(NUMBER_OF_DATA, true, 'Test', EMAIL_PREFIX, 3);
 
         TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedBooks, borrowers, RENTAL_DATE, END_OF_RENTAL, Consts.LOANS.STATUS.DELAY);
