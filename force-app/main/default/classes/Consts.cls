@@ -9,9 +9,14 @@ public class Consts {
       return ItemConst.INSTANCE;
     }
   }
-  public static final CaseConst CASE_CONST {
+  public static final CaseConst CASES {
     get {
       return CaseConst.INSTANCE;
+    }
+  }
+  public static final CronConst CRONS {
+    get {
+      return CronConst.INSTANCE;
     }
   }
 }

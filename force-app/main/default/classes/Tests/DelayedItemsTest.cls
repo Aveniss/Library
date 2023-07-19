@@ -30,9 +30,9 @@ private class DelayedItemsTest {
     Id scheduleID = DelayedItems.scheduleMe();
     Test.stopTest();
 
-    List<CronTrigger> cronTriggers = [SELECT Id FROM CronTrigger WHERE Id=:scheduleID];
-
-    Assert.isTrue(cronTriggers.size()==1,'New Schedule Job was not added correctly');
+    CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :scheduleID];
+    Assert.areEqual(DelayedItems.JOB_NAME, cronTrigger.CronJobDetail.Name, 'Invalid job name');
+    Assert.areEqual(Consts.CRONS.CRON.DELAYED_ITEMS, cronTrigger.CronExpression, 'Inavlid cron expression');
   }
   @IsTest
   static void checkDelayedItems() {

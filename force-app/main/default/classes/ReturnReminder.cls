@@ -4,14 +4,13 @@
 
 public with sharing class ReturnReminder implements Schedulable {
     public static final Integer DAYS_TO_RETURN = 3;
-    public static final String CRON_EXPRESSION = '0 0 0 ? * MON,TUE,WED,THU,FRI *';
     public static final String JOB_NAME = 'Return Reminder Job';
     public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
 
 
     public static Id scheduleMe() {
         ReturnReminder schedule = new ReturnReminder();
-        return System.schedule(JOB_NAME, CRON_EXPRESSION, schedule);
+        return System.schedule(JOB_NAME, Consts.CRONS.CRON.RETURN_REMINDER, schedule);
     }
 
     public void execute(SchedulableContext context) {
