@@ -14,12 +14,10 @@ public with sharing class PenaltyChargeTest {
         List<Item__c> returnedBooks = TestDataFactory.createItemsList(NUMBER_OF_DATA, true, 'Test', Consts.ITEMS.TYPE.PAPER_BOOK, Consts.ITEMS.GENRE.SCIENCE_FICTIN);
 
         List<Person__c> borrowers = TestDataFactory.createPeopleList(NUMBER_OF_DATA, true, 'Test', EMAIL_PREFIX, 3);
-        List<Person__c> returnedBorrowers = TestDataFactory.createPeopleList(NUMBER_OF_DATA, true, 'Returned', 'Returned', 3);
-        List<Person__c> notRemindBorrowers = TestDataFactory.createPeopleList(NUMBER_OF_DATA, true, 'NotRemind', 'NotRemind', 3);
 
         TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedBooks, borrowers, Date.today(), END_OF_RENTAL, Consts.LOANS.STATUS.DELAY);
-        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedMagazines, notRemindBorrowers, Date.today(), END_OF_RENTAL.addDays(4), Consts.LOANS.STATUS.DELAY);
-        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, returnedBooks, returnedBorrowers, Date.today(), END_OF_RENTAL, Consts.LOANS.STATUS.RETURNED);
+        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, delayedMagazines, borrowers, Date.today(), END_OF_RENTAL.addDays(4), Consts.LOANS.STATUS.DELAY);
+        TestDataFactory.createLoansList(NUMBER_OF_DATA, true, returnedBooks, borrowers, Date.today(), END_OF_RENTAL, Consts.LOANS.STATUS.RETURNED);
     }
 
     @IsTest
