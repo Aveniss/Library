@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
         <fullName>CurrentlyBorrowedItem</fullName>
@@ -13,5 +13,15 @@
         <protected>true</protected>
         <shortDescription>MaxNumberOfBorrowing</shortDescription>
         <value>You have achieved maximum number of borrowing items</value>
+    </labels>
+    <labels>
+        <fullName>ReturnReminder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Return Reminder</shortDescription>
+        <value>Good Morning,
+we remind you that these titles:
+{0}
+must be returned by {1}</value>
     </labels>
 </CustomLabels>

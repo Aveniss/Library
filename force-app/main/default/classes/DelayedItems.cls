@@ -1,5 +1,5 @@
 public with sharing class DelayedItems implements Schedulable {
-    private static String CRON_EXPRESSION = '0 0 0 * * ?';
+    private static final String CRON_EXPRESSION = '0 0 0 * * ?';
 
 
     public static Id scheduleMe() {
