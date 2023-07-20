@@ -25,16 +25,24 @@ public class ConstsTest {
   }
   @IsTest
   static void caseStatusConsts() {
-    Assert.areNotEqual(null, Consts.CASE_CONST);
-    Assert.areEqual('Escalated', Consts.CASE_CONST.STATUS.ESCALATED);
-    Assert.areEqual('New', Consts.CASE_CONST.STATUS.NEW_CASE);
-    Assert.areEqual('Working', Consts.CASE_CONST.STATUS.WORKING);
+    Assert.areNotEqual(null, Consts.CASES);
+    Assert.areEqual('Escalated', Consts.CASES.STATUS.ESCALATED);
+    Assert.areEqual('New', Consts.CASES.STATUS.NEW_CASE);
+    Assert.areEqual('Working', Consts.CASES.STATUS.WORKING);
   }
   @IsTest
   static void caseOriginConsts() {
-    Assert.areNotEqual(null, Consts.CASE_CONST);
-    Assert.areEqual('Phone', Consts.CASE_CONST.CASE_ORIGIN.PHONE);
-    Assert.areEqual('Email',Consts.CASE_CONST.CASE_ORIGIN.EMAIL);
-    Assert.areEqual('Web', Consts.CASE_CONST.CASE_ORIGIN.WEB);
+    Assert.areNotEqual(null, Consts.CASES);
+    Assert.areEqual('Phone', Consts.CASES.CASE_ORIGIN.PHONE);
+    Assert.areEqual('Email',Consts.CASES.CASE_ORIGIN.EMAIL);
+    Assert.areEqual('Web', Consts.CASES.CASE_ORIGIN.WEB);
+  }
+
+  @IsTest
+  static void loanChargeConsts() {
+    Assert.areNotEqual(null, Consts.LOANS);
+    Assert.areEqual(15, Consts.LOANS.CHARGE.BOOK_CHARGE);
+    Assert.areEqual(10,Consts.LOANS.CHARGE.MAGAZINE_CHARGE);
+    Assert.areEqual(5, Consts.LOANS.CHARGE.AUDIOBOOK_CHARGE);
   }
 }
