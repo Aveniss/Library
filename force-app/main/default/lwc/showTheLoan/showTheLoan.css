@@ -2,6 +2,7 @@
   background-color: #f4f6f9;
   /*width: 200px;*/
   height: 300px;
+  border-radius: 20px;
 }
 
 .parent-div {
@@ -13,6 +14,14 @@
   bottom: 10%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.enlarge-on-hover {
+  transition: transform 0.2s;
+}
+
+.enlarge-on-hover:hover {
+  transform: scale(103%);
 }
 
 .my-modal-footer {

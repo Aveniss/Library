@@ -38,8 +38,8 @@
           <div
             id="{column.key}"
             onclick={selectItem}
-            data-id="{column.key}"
-            class="parent-div custom-box slds-box slds-p-around_small slds-text-align_center"
+            data-id={column.key}
+            class="enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center"
           >
             Title<br />{column.title}<br />
             Type<br />{column.type}<br />
@@ -60,7 +60,7 @@
         class="slds-button footer-button"
         variant="brand"
         label="RETURN"
-        onclick="{footerButton}"
+        onclick={footerButton}
       ></lightning-button>
     </lightning-modal-footer>
   </template>
