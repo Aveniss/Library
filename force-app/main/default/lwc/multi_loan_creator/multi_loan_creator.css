@@ -1,0 +1,41 @@
+.custom-box {
+  background-color: #f4f6f9;
+  /*width: 200px;*/
+  height: 300px;
+  border-radius: 20px;
+}
+
+.parent-div {
+  position: relative;
+}
+
+.myButton {
+  position: absolute;
+  /*bottom: 10%;*/
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.enlarge-on-hover {
+  transition: transform 0.2s;
+}
+
+.enlarge-on-hover:hover {
+  transform: scale(103%);
+}
+
+.my-modal-footer {
+  --slds-c-modal-footer-color-background: #f4f6f9;
+
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
+
+.footer-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
