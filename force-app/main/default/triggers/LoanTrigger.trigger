@@ -13,9 +13,9 @@ trigger LoanTrigger on Loan__c(
     LoanTriggerHandler.checkBookLimit(Trigger.new);
   }
 
-  if (Trigger.isDelete) {
-    LoanTriggerHandler.changeAvailabilityStatus(Trigger.old, Trigger.isDelete);
-  } else {
-    LoanTriggerHandler.changeAvailabilityStatus(Trigger.new, Trigger.isDelete);
+  if (Trigger.isDelete && Trigger.isAfter) {
+    LoanTriggerHandler.changeAvailabilityStatus(Trigger.old);
+  } else if (Trigger.isAfter) {
+    LoanTriggerHandler.changeAvailabilityStatus(Trigger.new);
   }
 }

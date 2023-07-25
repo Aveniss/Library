@@ -2,137 +2,146 @@
  * Created by kamil on 07.07.2023.
  */
 
-import { LightningElement, track } from "lwc";
+import { LightningElement } from "lwc";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+
 import getLoans from "@salesforce/apex/ShowTheLoanController.getLoans";
 import updateLoans from "@salesforce/apex/ShowTheLoanController.updateLoans";
+import EmailLabel from "@salesforce/label/c.EmailLabel";
+import EmailPlaceholder from "@salesforce/label/c.EmailPlaceholder";
+import SelectStatusLabel from "@salesforce/label/c.SelectStatusLabel";
+import SelectStatusPlaceholder from "@salesforce/label/c.SelectStatusPlaceholder";
+import ItemTitle from "@salesforce/label/c.ItemTitle";
+import ItemType from "@salesforce/label/c.ItemType";
+import LoanEnd from "@salesforce/label/c.LoanEnd";
+import LoanPenalty from "@salesforce/label/c.LoanPenalty";
+import LoanStart from "@salesforce/label/c.LoanStart";
+
+const SELECTED_DIV_STYLE =
+  "selectedDiv enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center";
+const UNSELECTED_DIV_STYLE =
+  "unselectedDiv enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center";
+const DELAY = "Delay";
+const BORROWED = "Borrowed";
+const RESERVATION = "Reservation";
+const RETURNED = "Returned";
+const ALL = "All";
 
 export default class ShowTheLoan extends LightningElement {
   // eslint-disable-next-line @lwc/lwc/no-document-query
-  @track columns = [];
-  @track allItems = [];
-  @track selectedDivs = [];
+  _filteredLoans = [];
+  allLoans = [];
 
-  checkedDiv = "rgb(40, 128, 247)";
-  unCheckedDiv = "rgb(244, 246, 249)";
-
-  value = "";
+  loanStatus = ALL;
   email = "";
+  numberOfSelectedLoans = 0;
+
+  label = {
+    EmailLabel,
+    EmailPlaceholder,
+    SelectStatusLabel,
+    SelectStatusPlaceholder,
+    ItemTitle,
+    ItemType,
+    LoanEnd,
+    LoanPenalty,
+    LoanStart
+  };
+
+  get filteredLoans() {
+    return this._filteredLoans;
+  }
+
+  get getNumberOfSelectedLoans() {
+    return this.numberOfSelectedLoans;
+  }
 
   get options() {
     return [
-      { label: "All", value: "All" },
-      { label: "Reservation", value: "Reservation" },
-      { label: "Borrowed", value: "Borrowed" },
-      { label: "Returned", value: "Returned" },
-      { label: "Delay", value: "Delay" }
+      { label: ALL, value: ALL },
+      { label: RESERVATION, value: RESERVATION },
+      { label: BORROWED, value: BORROWED },
+      { label: RETURNED, value: RETURNED },
+      { label: DELAY, value: DELAY }
     ];
   }
 
-  handleChange(event) {
-    this.selectedDivs.forEach((divId) => {
-      const div = this.template.querySelector(`div[data-id="${divId}"]`);
-      div.style.backgroundColor = this.unCheckedDiv;
-    });
-    this.selectedDivs.length = 0;
-    this.value = event.detail.value;
-    if (this.allItems.length === 0) {
+  handleChangeStatus(event) {
+    this.loanStatus = event.detail.value;
+    if (this.allLoans.length === 0) {
       this.loadData();
     }
     this.sortData();
   }
 
   handleChangeEmail(event) {
-    let input = event.detail.value;
-    if (this.isEmailValid(input)) {
-      this.email = input;
-    }
-  }
-
-  isEmailValid(emial) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(emial);
+    this.email = event.detail.value;
   }
 
   sortData() {
-    this.columns.length = 0;
-    this.allItems.forEach((element) => {
-      if (element.Status__c === this.value || this.value === "All") {
-        this.columns.push(element);
-      }
+    this._filteredLoans.length = 0;
+    this._filteredLoans = this.allLoans.filter((element) => {
+      return element.Status__c === this.loanStatus || this.loanStatus === ALL;
     });
   }
 
   loadData() {
-    this.allItems.length = 0;
-    getLoans({ email: this.email, status: "All" })
+    this.allLoans.length = 0;
+    getLoans({ email: this.email, status: ALL })
       .then((result) => {
-        let i = 0;
+        let key = 0;
         result.forEach((element) => {
-          let column = {
-            key: i,
-            itemId: element.Id,
-            Item__c: element.Item__c,
-            Status__c: element.Status__c,
-            Borrower__c: element.Borrower__c,
-            Penalty__c: element.Penalty__c,
-            title: element.Item__r.Name,
-            type: element.Item__r.Type__c,
-            Rental_Date__c: element.Rental_Date__c,
-            End_Of_Rental__c: element.End_Of_Rental__c
-          };
-          this.allItems.push(column);
-          i = i + 1;
+          let newElement = JSON.parse(JSON.stringify(element));
+          newElement.Selected = false;
+          newElement.Key = key;
+          newElement.Style = UNSELECTED_DIV_STYLE;
+          this.allLoans.push(newElement);
+          key += 1;
         });
         this.sortData();
       })
       .catch((error) => {
-        console.error(error);
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Data Download Failed",
+            message: error.message,
+            variant: "error"
+          })
+        );
       });
   }
 
-  footerButton() {
-    let selectedLoans = [];
-
-    this.selectedDivs.forEach((index) => {
-      selectedLoans.push({
-        Id: this.allItems[index].itemId,
-        Item__c: this.allItems[index].Item__c,
-        Borrower__c: this.allItems[index].Borrower__c,
-        Rental_Date__c: this.allItems[index].Rental_Date__c,
-        End_Of_Rental__c: this.allItems[index].End_Of_Rental__c,
-        Status__c: this.allItems[index].Status__c
-      });
+  updateItemsStatus() {
+    let selectedLoans = this.allLoans.filter((element) => {
+      return element.Selected;
     });
 
     updateLoans({ loans: selectedLoans });
 
-    this.selectedDivs.length = 0;
-    this.columns.length = 0;
-    this.allItems.length = 0;
+    this._filteredLoans.length = 0;
+    this.allLoans.length = 0;
 
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   }
 
   selectItem(event) {
-    if (this.value === "Delay" || this.value === "Borrowed") {
-      const przekazanaZmienna = event.target.dataset.id;
-      const div = this.template.querySelector(
-        `div[data-id="${przekazanaZmienna}"]`
-      );
-      const divID = div.id.split("-")[0];
+    if (this.loanStatus === DELAY || this.loanStatus === BORROWED) {
+      const passedData = event.target.dataset.id;
+      const div = this.template.querySelector(`div[data-id="${passedData}"]`);
+      const divID = Number(div.id.split("-")[0]);
+      let loan = this.allLoans.filter((element) => {
+        return element.Key === divID;
+      })[0];
 
-      if (window.getComputedStyle(div).backgroundColor === this.unCheckedDiv) {
-        div.style.backgroundColor = this.checkedDiv;
-        this.selectedDivs.push(divID);
+      if (loan.Selected) {
+        loan.Style = UNSELECTED_DIV_STYLE;
+        this.numberOfSelectedLoans -= 1;
       } else {
-        div.style.backgroundColor = this.unCheckedDiv;
-
-        const indexToRemove = this.selectedDivs.indexOf(divID);
-        if (indexToRemove !== -1) {
-          this.selectedDivs.splice(indexToRemove, 1);
-        }
+        loan.Style = SELECTED_DIV_STYLE;
+        this.numberOfSelectedLoans += 1;
       }
+      loan.Selected = !loan.Selected;
     }
   }
 }

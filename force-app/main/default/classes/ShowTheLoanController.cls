@@ -5,8 +5,8 @@
 public with sharing class ShowTheLoanController {
   @AuraEnabled(Cacheable=true)
   public static List<Loan__c> getLoans(String email, String status) {
-    if (email.equals('')) {
-      return null;
+    if (String.isBlank(email)) {
+      return new List<Loan__c>();
     }
 
     if (status.toLowerCase().equals('all')) {

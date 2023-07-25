@@ -8,6 +8,55 @@
         <value>This {0} is currently borrowed</value>
     </labels>
     <labels>
+        <fullName>EmailLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailLabel</shortDescription>
+        <value>Email address</value>
+    </labels>
+    <labels>
+        <fullName>EmailPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailPlaceholder</shortDescription>
+        <value>Type Here...</value>
+    </labels>
+    <labels>
+        <fullName>ItemTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemTitle</shortDescription>
+        <value>Title:</value>
+    </labels>
+    <labels>
+        <fullName>ItemType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemType</shortDescription>
+        <value>Type:</value>
+    </labels>
+    <labels>
+        <fullName>LoanEnd</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoanEnd</shortDescription>
+        <value>End Of Rental:</value>
+    </labels>
+    <labels>
+        <fullName>LoanPenalty</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoanPenalty</shortDescription>
+        <value>Penalty:</value>
+    </labels>
+    <labels>
+        <fullName>LoanStart</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoanStart</shortDescription>
+        <value>Rental Date:</value>
+    </labels>
+    <labels>
         <fullName>MaxNumberOfBorrowing</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -23,6 +72,20 @@
 we remind you that these titles:
 {0}
 must be returned by {1}</value>
+    </labels>
+    <labels>
+        <fullName>SelectStatusLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SelectStatusLabel</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>SelectStatusPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SelectStatusPlaceholder</shortDescription>
+        <value>Select Status</value>
     </labels>
     <labels>
         <fullName>UnavailableEmail</fullName>

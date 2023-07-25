@@ -16,6 +16,14 @@
   transform: translate(-50%, -50%);
 }
 
+.selectedDiv {
+  background-color: rgb(40, 128, 247);
+}
+
+.unselectedDiv {
+  background-color: rgb(244, 246, 249);
+}
+
 .enlarge-on-hover {
   transition: transform 0.2s;
 }
