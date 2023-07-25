@@ -71,14 +71,14 @@ export default class ShowTheLoan extends LightningElement {
     if (this.allLoans.length === 0) {
       this.loadData();
     }
-    this.sortData();
+    this.filterData();
   }
 
   handleChangeEmail(event) {
     this.email = event.detail.value;
   }
 
-  sortData() {
+  filterData() {
     this._filteredLoans.length = 0;
     this._filteredLoans = this.allLoans.filter((element) => {
       return element.Status__c === this.loanStatus || this.loanStatus === ALL;
@@ -98,7 +98,7 @@ export default class ShowTheLoan extends LightningElement {
           this.allLoans.push(newElement);
           key += 1;
         });
-        this.sortData();
+        this.filterData();
       })
       .catch((error) => {
         this.dispatchEvent(
