@@ -47,14 +47,14 @@ export default class ItemReturnPanel extends LightningElement {
 
   get filteredLoans() {
     return this.allLoans
-      .map((element) => ({
-        ...element,
-        Style: element.Selected ? SELECTED_DIV_STYLE : UNSELECTED_DIV_STYLE
-      }))
       .filter(
         (element) =>
           element.Status__c === this.loanStatus || this.loanStatus === ALL
-      );
+      )
+      .map((element) => ({
+        ...element,
+        Style: element.Selected ? SELECTED_DIV_STYLE : UNSELECTED_DIV_STYLE
+      }));
   }
 
   get getNumberOfSelectedLoans() {

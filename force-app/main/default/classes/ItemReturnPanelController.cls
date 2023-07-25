@@ -49,7 +49,7 @@ public with sharing class ItemReturnPanelController {
     try {
       update loans;
     } catch (DmlException e) {
-      throw new AuraHandledException('Data update failed');
+      throw new DataUpdateException('Data update failed');
     }
   }
 }
