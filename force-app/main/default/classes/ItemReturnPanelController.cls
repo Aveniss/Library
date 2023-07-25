@@ -2,7 +2,7 @@
  * Created by kamil on 20.07.2023.
  */
 
-public with sharing class ShowTheLoanController {
+public with sharing class ItemReturnPanelController {
   @AuraEnabled(Cacheable=true)
   public static List<Loan__c> getLoans(String email, String status) {
     if (String.isBlank(email)) {
@@ -46,6 +46,10 @@ public with sharing class ShowTheLoanController {
       loan.Status__c = Consts.LOANS.STATUS.RETURNED;
     }
 
-    update loans;
+    try {
+      update loans;
+    } catch (DmlException e) {
+      throw new AuraHandledException('Data update failed');
+    }
   }
 }

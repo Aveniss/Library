@@ -16,6 +16,7 @@
     <tabs>Item__c</tabs>
     <tabs>Supplier__c</tabs>
     <tabs>My_Items</tabs>
+    <tabs>Loan_Creator</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Library_UtilityBar</utilityBar>
 </CustomApplication>

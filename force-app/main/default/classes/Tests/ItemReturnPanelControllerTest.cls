@@ -2,7 +2,7 @@
  * Created by kamil on 22.07.2023.
  */
 @IsTest
-public with sharing class ShowTheLoanControllerTest {
+public with sharing class ItemReturnPanelControllerTest {
   private static final Integer NUMBER_OF_DATA = 5;
   private static final Date RENTAL_DATE = Date.newInstance(2023, 7, 10);
   private static final Date END_OF_RENTAL = Date.newInstance(2023, 7, 15);
@@ -91,7 +91,7 @@ public with sharing class ShowTheLoanControllerTest {
 
   @isTest
   static void testGetLoansWithEmailEmpty() {
-    List<Loan__c> loans = ShowTheLoanController.getLoans('', 'All');
+    List<Loan__c> loans = ItemReturnPanelController.getLoans('', 'All');
     System.assertEquals(
       null,
       loans,
@@ -102,7 +102,7 @@ public with sharing class ShowTheLoanControllerTest {
   @isTest
   static void testGetLoansWithAllStatus() {
     Test.startTest();
-    List<Loan__c> loans = ShowTheLoanController.getLoans(TEST_EMAIL, 'All');
+    List<Loan__c> loans = ItemReturnPanelController.getLoans(TEST_EMAIL, 'All');
     Test.stopTest();
 
     System.assertEquals(
@@ -115,7 +115,7 @@ public with sharing class ShowTheLoanControllerTest {
   @isTest
   static void testGetLoansWithSpecificStatus() {
     Test.startTest();
-    List<Loan__c> loans = ShowTheLoanController.getLoans(
+    List<Loan__c> loans = ItemReturnPanelController.getLoans(
       TEST_EMAIL,
       Consts.LOANS.STATUS.RETURNED
     );
@@ -138,7 +138,7 @@ public with sharing class ShowTheLoanControllerTest {
     List<Loan__c> loansToUpdate = [SELECT Status__c FROM Loan__c];
 
     Test.startTest();
-    ShowTheLoanController.updateLoans(loansToUpdate);
+    ItemReturnPanelController.updateLoans(loansToUpdate);
     Test.stopTest();
 
     for (Loan__c loan : loansToUpdate) {
