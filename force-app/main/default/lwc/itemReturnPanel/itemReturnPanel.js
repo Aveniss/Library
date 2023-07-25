@@ -32,7 +32,6 @@ export default class ItemReturnPanel extends LightningElement {
 
   loanStatus = ALL;
   email = "";
-  numberOfSelectedLoans = 0;
 
   label = {
     EmailLabel,
