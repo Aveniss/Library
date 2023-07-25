@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Library</label>
+    <navType>Standard</navType>
+    <tabs>Loan__c</tabs>
+    <tabs>Person__c</tabs>
+    <tabs>Item__c</tabs>
+    <tabs>Supplier__c</tabs>
+    <tabs>My_Items</tabs>
+    <tabs>Loan_Creator</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Library_UtilityBar</utilityBar>
+</CustomApplication>

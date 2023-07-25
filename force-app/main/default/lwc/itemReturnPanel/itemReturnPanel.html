@@ -1,0 +1,71 @@
+<template>
+  <lightning-card>
+    <div class="slds-m-top_medium slds-m-bottom_x-large">
+      <div class="slds-p-around_medium lgc-bg">
+        <lightning-input
+          type="email"
+          label={label.EmailLabel}
+          placeholder={label.EmailPlaceholder}
+          onchange={handleChangeEmail}
+          required
+        ></lightning-input>
+
+        <lightning-combobox
+          name="progress"
+          label={label.SelectStatusLabel}
+          placeholder={label.SelectStatusPlaceholder}
+          options={options}
+          onchange={handleChangeStatus}
+        ></lightning-combobox>
+      </div>
+    </div>
+
+    <div
+      class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_large slds-m-horizontal_none"
+    >
+      <lightning-layout multiple-rows>
+        <template for:each={filteredLoans} for:item="filteredLoan">
+          <lightning-layout-item
+            key={filteredLoan.Id}
+            size="12"
+            small-device-size="6"
+            medium-device-size="4"
+            large-device-size="3"
+            padding="around-small"
+          >
+            <div
+              id={filteredLoan.Id}
+              onclick={selectItem}
+              data-id={filteredLoan.Id}
+              class={filteredLoan.Style}
+            >
+              <p>{label.ItemTitle}</p>
+              <p>{filteredLoan.Item__r.Name}</p>
+              <p>{label.ItemType}</p>
+              <p>{filteredLoan.Item__r.Type__c}</p>
+              <p>{label.LoanStart}</p>
+              <p>{filteredLoan.Rental_Date__c}</p>
+              <p>{label.LoanEnd}</p>
+              <p>{filteredLoan.End_Of_Rental__c}</p>
+              <template lwc:if={filteredLoan.Penalty__c}>
+                <p>{label.LoanPenalty}</p>
+                <p>{filteredLoan.Penalty__c}</p>
+              </template>
+            </div>
+          </lightning-layout-item>
+        </template>
+      </lightning-layout>
+    </div>
+
+    <template lwc:if={getNumberOfSelectedLoans}>
+      <lightning-modal-footer class="my-modal-footer">
+        <lightning-button
+          class="slds-button footer-button"
+          variant="brand"
+          label="RETURN"
+          onclick={updateItemsStatus}
+        ></lightning-button>
+      </lightning-modal-footer>
+    </template>
+  </lightning-card>
+</template>
