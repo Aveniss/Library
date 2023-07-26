@@ -25,14 +25,7 @@
     >
       <lightning-layout multiple-rows>
         <template for:each={filteredLoans} for:item="filteredLoan">
-          <lightning-layout-item
-            key={filteredLoan.Id}
-            size="12"
-            small-device-size="6"
-            medium-device-size="4"
-            large-device-size="3"
-            padding="around-small"
-          >
+          <lightning-layout-item key={filteredLoan.Id} padding="around-small">
             <div
               id={filteredLoan.Id}
               onclick={selectItem}
@@ -57,15 +50,14 @@
       </lightning-layout>
     </div>
 
-    <template lwc:if={getNumberOfSelectedLoans}>
-      <lightning-modal-footer class="my-modal-footer">
-        <lightning-button
-          class="slds-button footer-button"
-          variant="brand"
-          label="RETURN"
-          onclick={updateItemsStatus}
-        ></lightning-button>
-      </lightning-modal-footer>
-    </template>
+    <lightning-modal-footer class="my-modal-footer">
+      <lightning-button
+        class="slds-button footer-button"
+        disabled={checkButtonStatus}
+        variant="brand"
+        label="RETURN"
+        onclick={updateItemsStatus}
+      ></lightning-button>
+    </lightning-modal-footer>
   </lightning-card>
 </template>
