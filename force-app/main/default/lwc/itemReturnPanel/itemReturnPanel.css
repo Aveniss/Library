@@ -18,10 +18,12 @@
 
 .selectedDiv {
   background-color: rgb(40, 128, 247);
+  cursor: pointer;
 }
 
 .unselectedDiv {
   background-color: rgb(244, 246, 249);
+  cursor: pointer;
 }
 
 .enlarge-on-hover {

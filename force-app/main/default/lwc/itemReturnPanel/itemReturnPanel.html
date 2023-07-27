@@ -32,17 +32,17 @@
               data-id={filteredLoan.Id}
               class={filteredLoan.Style}
             >
-              <p>{label.ItemTitle}</p>
-              <p>{filteredLoan.Item__r.Name}</p>
-              <p>{label.ItemType}</p>
-              <p>{filteredLoan.Item__r.Type__c}</p>
-              <p>{label.LoanStart}</p>
-              <p>{filteredLoan.Rental_Date__c}</p>
-              <p>{label.LoanEnd}</p>
-              <p>{filteredLoan.End_Of_Rental__c}</p>
+              {label.ItemTitle}<br />
+              {filteredLoan.Item__r.Name}<br />
+              {label.ItemType}<br />
+              {filteredLoan.Item__r.Type__c}<br />
+              {label.LoanStart}<br />
+              {filteredLoan.Rental_Date__c}<br />
+              {label.LoanEnd}<br />
+              {filteredLoan.End_Of_Rental__c}<br />
               <template lwc:if={filteredLoan.Penalty__c}>
-                <p>{label.LoanPenalty}</p>
-                <p>{filteredLoan.Penalty__c}</p>
+                {label.LoanPenalty}<br />
+                {filteredLoan.Penalty__c}<br />
               </template>
             </div>
           </lightning-layout-item>
