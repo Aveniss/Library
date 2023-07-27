@@ -57,8 +57,8 @@ export default class ItemReturnPanel extends LightningElement {
       }));
   }
 
-  get getNumberOfSelectedLoans() {
-    return this.allLoans.filter((element) => element.Selected).length;
+  get checkButtonStatus() {
+    return !this.allLoans.filter((element) => element.Selected).length > 0;
   }
 
   get options() {

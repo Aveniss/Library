@@ -1,7 +1,7 @@
 .custom-box {
   background-color: #f4f6f9;
-  /*width: 200px;*/
-  height: 300px;
+  width: 180px;
+  height: 230px;
   border-radius: 20px;
 }
 
@@ -18,10 +18,12 @@
 
 .selectedDiv {
   background-color: rgb(40, 128, 247);
+  cursor: pointer;
 }
 
 .unselectedDiv {
   background-color: rgb(244, 246, 249);
+  cursor: pointer;
 }
 
 .enlarge-on-hover {

@@ -25,31 +25,24 @@
     >
       <lightning-layout multiple-rows>
         <template for:each={filteredLoans} for:item="filteredLoan">
-          <lightning-layout-item
-            key={filteredLoan.Id}
-            size="12"
-            small-device-size="6"
-            medium-device-size="4"
-            large-device-size="3"
-            padding="around-small"
-          >
+          <lightning-layout-item key={filteredLoan.Id} padding="around-small">
             <div
               id={filteredLoan.Id}
               onclick={selectItem}
               data-id={filteredLoan.Id}
               class={filteredLoan.Style}
             >
-              <p>{label.ItemTitle}</p>
-              <p>{filteredLoan.Item__r.Name}</p>
-              <p>{label.ItemType}</p>
-              <p>{filteredLoan.Item__r.Type__c}</p>
-              <p>{label.LoanStart}</p>
-              <p>{filteredLoan.Rental_Date__c}</p>
-              <p>{label.LoanEnd}</p>
-              <p>{filteredLoan.End_Of_Rental__c}</p>
+              {label.ItemTitle}<br />
+              {filteredLoan.Item__r.Name}<br />
+              {label.ItemType}<br />
+              {filteredLoan.Item__r.Type__c}<br />
+              {label.LoanStart}<br />
+              {filteredLoan.Rental_Date__c}<br />
+              {label.LoanEnd}<br />
+              {filteredLoan.End_Of_Rental__c}<br />
               <template lwc:if={filteredLoan.Penalty__c}>
-                <p>{label.LoanPenalty}</p>
-                <p>{filteredLoan.Penalty__c}</p>
+                {label.LoanPenalty}<br />
+                {filteredLoan.Penalty__c}<br />
               </template>
             </div>
           </lightning-layout-item>
@@ -57,15 +50,14 @@
       </lightning-layout>
     </div>
 
-    <template lwc:if={getNumberOfSelectedLoans}>
-      <lightning-modal-footer class="my-modal-footer">
-        <lightning-button
-          class="slds-button footer-button"
-          variant="brand"
-          label="RETURN"
-          onclick={updateItemsStatus}
-        ></lightning-button>
-      </lightning-modal-footer>
-    </template>
+    <lightning-modal-footer class="my-modal-footer">
+      <lightning-button
+        class="slds-button footer-button"
+        disabled={checkButtonStatus}
+        variant="brand"
+        label="RETURN"
+        onclick={updateItemsStatus}
+      ></lightning-button>
+    </lightning-modal-footer>
   </lightning-card>
 </template>
