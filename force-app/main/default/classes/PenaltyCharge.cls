@@ -6,7 +6,8 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
   public static final String JOB_NAME = 'Penalty Charge Job';
   private static final Date TODAY = Date.today();
   private static final String CHARGE_STATUS = Consts.LOANS.STATUS.DELAY;
-  private static final String QUERY = 'SELECT Item__r.Type__c, Penalty__c, End_Of_Rental__c FROM Loan__c WHERE Status__c =: CHARGE_STATUS AND End_Of_Rental__c <: TODAY';
+  private static final String QUERY = 'SELECT Id,Item__r.Type__c, Penalty__c, End_Of_Rental__c FROM Loan__c WHERE Status__c =: CHARGE_STATUS AND End_Of_Rental__c <: TODAY';
+  private static final List<Id> failedLoanIDs = new List<Id>();
   public static Id scheduleMe() {
     ReturnReminder schedule = new ReturnReminder();
     return System.schedule(
@@ -32,10 +33,33 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
         calculateWorkingDays(loan.End_Of_Rental__c, Date.today());
     }
 
-    update loans;
+    Database.SaveResult[] srList = Database.update(loans, false);
+    for (Integer i = 0; i < srList.size(); i++) {
+      if (!srList[i].isSuccess()) {
+        failedLoanIDs.add(loans[i].Id);
+      }
+    }
   }
 
   public void finish(Database.BatchableContext bc) {
+    if (failedLoanIDs.size() > 0) {
+      List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+      mails.add(
+        EmailManager.createSingleEmail(
+          Emails__c.getValues('Admin').AdminEmail__c,
+          String.format(
+            Label.DML_Failed,
+            new List<String>{
+              'PenaltyCharge',
+              'Loan__c',
+              String.join(failedLoanIDs, ',')
+            }
+          ),
+          'PenaltyCharge Error'
+        )
+      );
+      Messaging.sendEmail(mails);
+    }
   }
 
   @TestVisible

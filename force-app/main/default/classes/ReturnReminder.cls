@@ -6,8 +6,6 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   public static final Integer DAYS_TO_RETURN = 3;
   public static final String JOB_NAME = 'Return Reminder Job';
   public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
-  private static final String EMAIL_SENDER_NAME = 'Library Support';
-  private static final String ADMIN_EMAIL = 'kamilst934@gmail.com';
   private static final String REMIND_STATUS = Consts.LOANS.STATUS.BORROWED;
   private static final Date RETURN_DATE = addBusinessDays(
     Date.today(),
@@ -16,7 +14,7 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   private static final String QUERY =
     'SELECT Id,Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c FROM Loan__c WHERE ' +
     'Status__c =: REMIND_STATUS AND End_Of_Rental__c =: RETURN_DATE';
-  private static final List<Id> notSentAdresses = new List<Id>();
+  private static final List<String> notSentAdresses = new List<Id>();
 
   public static Id scheduleMe() {
     ReturnReminder schedule = new ReturnReminder();
@@ -40,7 +38,7 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
     List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
     for (String email : emailToItems.keySet()) {
       mails.add(
-        emailCreator(
+        EmailManager.createSingleEmail(
           email,
           String.format(
             Label.ReturnReminder,
@@ -49,8 +47,7 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
               emailToItems.get(email).endOfRentalDate.format()
             }
           ),
-          EMAIL_SUBJECT,
-          EMAIL_SENDER_NAME
+          EMAIL_SUBJECT
         )
       );
     }
@@ -67,8 +64,8 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
     if (notSentAdresses.size() > 0) {
       List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
       mails.add(
-        emailCreator(
-          ADMIN_EMAIL,
+        EmailManager.createSingleEmail(
+          Emails__c.getValues('Admin').AdminEmail__c,
           String.format(
             Label.ReturnReminderSendFaild,
             new List<String>{
@@ -76,27 +73,11 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
               String.join(notSentAdresses, ',')
             }
           ),
-          'ReturnReminder Error',
-          EMAIL_SENDER_NAME
+          'ReturnReminder Error'
         )
       );
       Messaging.sendEmail(mails);
     }
-  }
-
-  private static Messaging.SingleEmailMessage emailCreator(
-    String emailAddress,
-    String emailTextBody,
-    String emailSubject,
-    String emailSenderName
-  ) {
-    Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-    String[] toAddresses = new List<String>{ emailAddress };
-    mail.setToAddresses(toAddresses);
-    mail.setSubject(emailSubject);
-    mail.setPlainTextBody(emailTextBody);
-    mail.setSenderDisplayName(emailSenderName);
-    return mail;
   }
 
   private static Map<String, Container> generateEmailToItemsMap(

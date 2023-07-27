@@ -1,52 +1,61 @@
 @IsTest
 private class DelayedItemsTest {
-
   private static final Date CURRENT_DATE = Date.today();
   private static final String BOOK_NAME = 'Test Book';
   private static final String BORROWER_NAME = 'Test';
   @TestSetup
   private static void insertBasicData() {
     Item__c book = new Item__c(
-            Name = BOOK_NAME,
-            Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
-            Genre__c = Consts.ITEMS.GENRE.NOVEL
+      Name = BOOK_NAME,
+      Type__c = Consts.ITEMS.TYPE.PAPER_BOOK,
+      Genre__c = Consts.ITEMS.GENRE.NOVEL
     );
     insert book;
 
     Person__c borrower = new Person__c(
-            Name = BORROWER_NAME,
-            Last_Name__c = 'Borrower',
-            Email__c = 'testEmail@gmail.com',
-            Maximum_Number_Of_Rentals__c = 2
+      Name = BORROWER_NAME,
+      Last_Name__c = 'Borrower',
+      Email__c = 'testEmail@gmail.com',
+      Maximum_Number_Of_Rentals__c = 2
     );
     insert borrower;
   }
 
-
   @IsTest
-  static void scheduleMeTest(){
-
+  static void scheduleMeTest() {
     Test.startTest();
     Id scheduleID = DelayedItems.scheduleMe();
     Test.stopTest();
 
-    CronTrigger cronTrigger = [SELECT Id, CronExpression, CronJobDetail.Name FROM CronTrigger WHERE Id = :scheduleID];
-    Assert.areEqual(DelayedItems.JOB_NAME, cronTrigger.CronJobDetail.Name, 'Invalid job name');
-    Assert.areEqual(Consts.CRONS.CRON.DELAYED_ITEMS, cronTrigger.CronExpression, 'Inavlid cron expression');
+    CronTrigger cronTrigger = [
+      SELECT Id, CronExpression, CronJobDetail.Name
+      FROM CronTrigger
+      WHERE Id = :scheduleID
+    ];
+    Assert.areEqual(
+      DelayedItems.JOB_NAME,
+      cronTrigger.CronJobDetail.Name,
+      'Invalid job name'
+    );
+    Assert.areEqual(
+      Consts.CRONS.CRON.DELAYED_ITEMS,
+      cronTrigger.CronExpression,
+      'Inavlid cron expression'
+    );
   }
   @IsTest
   static void checkDelayedItems() {
     List<Loan__c> newLoans = new List<Loan__c>();
 
     Item__c book = [
-            SELECT Id, Type__c
-            FROM Item__c
-            WHERE Name = :BOOK_NAME
+      SELECT Id, Type__c
+      FROM Item__c
+      WHERE Name = :BOOK_NAME
     ];
     Person__c borrower = [
-            SELECT Id, Maximum_Number_Of_Rentals__c
-            FROM Person__c
-            WHERE Name = :BORROWER_NAME
+      SELECT Id, Maximum_Number_Of_Rentals__c
+      FROM Person__c
+      WHERE Name = :BORROWER_NAME
     ];
 
     for (Integer i = 1; i <= 5; i++) {
@@ -84,16 +93,15 @@ private class DelayedItemsTest {
     List<Loan__c> newLoans = new List<Loan__c>();
 
     Item__c book = [
-            SELECT Id, Type__c
-            FROM Item__c
-            WHERE Name = :BOOK_NAME
+      SELECT Id, Type__c
+      FROM Item__c
+      WHERE Name = :BOOK_NAME
     ];
     Person__c borrower = [
-            SELECT Id, Maximum_Number_Of_Rentals__c
-            FROM Person__c
-            WHERE Name = :BORROWER_NAME
+      SELECT Id, Maximum_Number_Of_Rentals__c
+      FROM Person__c
+      WHERE Name = :BORROWER_NAME
     ];
-
 
     for (Integer i = 1; i <= 5; i++) {
       Loan__c loan = new Loan__c(
@@ -123,5 +131,42 @@ private class DelayedItemsTest {
     for (Loan__c updatedLoan : updatedLoans) {
       Assert.areEqual(Consts.LOANS.STATUS.BORROWED, updatedLoan.Status__c);
     }
+  }
+
+  @IsTest
+  static void checkUpdateStatusFaildTest() {
+    Item__c book = [
+      SELECT Id, Type__c
+      FROM Item__c
+      WHERE Name = :BOOK_NAME
+    ];
+    Person__c borrower = [
+      SELECT Id, Maximum_Number_Of_Rentals__c
+      FROM Person__c
+      WHERE Name = :BORROWER_NAME
+    ];
+
+    Loan__c loan = new Loan__c(
+      Item__c = book.Id,
+      Borrower__c = borrower.Id,
+      Status__c = Consts.LOANS.STATUS.BORROWED,
+      Rental_Date__c = CURRENT_DATE.addDays(-5),
+      End_Of_Rental__c = CURRENT_DATE.addDays(-2)
+    );
+    insert loan;
+
+    DelayedItems.shouldForceException = true;
+    Test.startTest();
+    DelayedItems delayedItems = new DelayedItems();
+    delayedItems.execute(null);
+    Test.stopTest();
+
+    List<EmailMessage> emails = [
+      SELECT TextBody, Subject, ToAddress, Id
+      FROM EmailMessage
+      WHERE MessageDate > :Datetime.now().addMinutes(-1)
+    ];
+
+    Assert.areEqual(1, emails.size());
   }
 }

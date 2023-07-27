@@ -8,6 +8,14 @@
         <value>This {0} is currently borrowed</value>
     </labels>
     <labels>
+        <fullName>DML_Failed</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DML_Failed</shortDescription>
+        <value>DML operation failed in class {0} for {1} records:
+{3}</value>
+    </labels>
+    <labels>
         <fullName>EmailLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
