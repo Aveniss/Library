@@ -1,8 +1,5 @@
 public without sharing class DelayedItems implements Database.Batchable<SObject>, Schedulable {
   public static final String JOB_NAME = 'Delayed Items Job';
-  private static final Date TODAY = Date.today();
-  private static final String CHARGE_STATUS = Consts.LOANS.STATUS.BORROWED;
-  private static final String QUERY = 'SELECT Id, Status__c FROM Loan__c WHERE Status__c =:CHARGE_STATUS AND End_Of_Rental__c < :TODAY';
   private static final List<Id> failedLoanIDs = new List<Id>();
   @TestVisible
   private static Boolean shouldForceException = false;
@@ -16,7 +13,15 @@ public without sharing class DelayedItems implements Database.Batchable<SObject>
   }
 
   public Database.QueryLocator start(Database.BatchableContext param1) {
-    return Database.getQueryLocator(QUERY);
+    return Database.getQueryLocator(
+      [
+        SELECT Id, Status__c
+        FROM Loan__c
+        WHERE
+          Status__c = :Consts.LOANS.STATUS.BORROWED
+          AND End_Of_Rental__c < :Date.today()
+      ]
+    );
   }
 
   public void execute(Database.BatchableContext param1, List<Loan__c> loans) {

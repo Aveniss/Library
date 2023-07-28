@@ -6,16 +6,8 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   public static final Integer DAYS_TO_RETURN = 3;
   public static final String JOB_NAME = 'Return Reminder Job';
   public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
-  private static final String REMIND_STATUS = Consts.LOANS.STATUS.BORROWED;
   @TestVisible
   private static Boolean shouldForceException = false;
-  private static final Date RETURN_DATE = addBusinessDays(
-    Date.today(),
-    DAYS_TO_RETURN
-  );
-  private static final String QUERY =
-    'SELECT Id,Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c FROM Loan__c WHERE ' +
-    'Status__c =: REMIND_STATUS AND End_Of_Rental__c =: RETURN_DATE';
   private static final List<String> notSentAdresses = new List<String>();
 
   public static Id scheduleMe() {
@@ -32,7 +24,15 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   }
 
   public Database.QueryLocator start(Database.BatchableContext bc) {
-    return Database.getQueryLocator(QUERY);
+    return Database.getQueryLocator(
+      [
+        SELECT Id, Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c
+        FROM Loan__c
+        WHERE
+          Status__c = :Consts.LOANS.STATUS.BORROWED
+          AND End_Of_Rental__c = :addBusinessDays(Date.today(), DAYS_TO_RETURN)
+      ]
+    );
   }
 
   public void execute(Database.BatchableContext bc, List<Loan__c> loans) {
