@@ -8,6 +8,8 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
   private static final String CHARGE_STATUS = Consts.LOANS.STATUS.DELAY;
   private static final String QUERY = 'SELECT Id,Item__r.Type__c, Penalty__c, End_Of_Rental__c FROM Loan__c WHERE Status__c =: CHARGE_STATUS AND End_Of_Rental__c <: TODAY';
   private static final List<Id> failedLoanIDs = new List<Id>();
+  @TestVisible
+  private static Boolean shouldForceException = false;
   public static Id scheduleMe() {
     ReturnReminder schedule = new ReturnReminder();
     return System.schedule(
@@ -32,6 +34,9 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
         chargeFromItemType(loan.Item__r.Type__c) *
         calculateWorkingDays(loan.End_Of_Rental__c, Date.today());
     }
+    if (Test.isRunningTest() && shouldForceException) {
+      loans.get(0).Penalty__c = -100;
+    }
 
     Database.SaveResult[] srList = Database.update(loans, false);
     for (Integer i = 0; i < srList.size(); i++) {
@@ -55,7 +60,7 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
               String.join(failedLoanIDs, ',')
             }
           ),
-          'PenaltyCharge Error'
+          Consts.BATCHES.SUBJECT.PENALTY_CHARGE
         )
       );
       Messaging.sendEmail(mails);

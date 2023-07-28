@@ -280,4 +280,32 @@ public with sharing class ReturnReminderTest {
     );
     Assert.areEqual(expectedDate4, actualDate4, 'Test case 4 failed');
   }
+
+  @IsTest
+  static void sendEmailFaildTest() {
+    Emails__c customSettingRecord = new Emails__c();
+    customSettingRecord.Name = 'Admin';
+    customSettingRecord.AdminEmail__c = 'kamilst934@gmail.com';
+    insert customSettingRecord;
+
+    ReturnReminder.shouldForceException = true;
+    Test.startTest();
+    ReturnReminder returnReminderr = new ReturnReminder();
+    returnReminderr.execute(null);
+    Test.stopTest();
+
+    List<EmailMessage> emails = [
+      SELECT TextBody, Subject, ToAddress, Id
+      FROM EmailMessage
+      WHERE
+        MessageDate > :Datetime.now().addMinutes(-1)
+        AND Subject = :Consts.BATCHES.SUBJECT.RETURN_REMINDER
+    ];
+
+    Assert.areEqual(1, emails.size());
+    Assert.areEqual(
+      Emails__c.getValues('Admin').AdminEmail__c,
+      emails[0].ToAddress
+    );
+  }
 }

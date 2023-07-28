@@ -34,7 +34,7 @@ public class ConstsTest {
   static void caseOriginConsts() {
     Assert.areNotEqual(null, Consts.CASES);
     Assert.areEqual('Phone', Consts.CASES.CASE_ORIGIN.PHONE);
-    Assert.areEqual('Email',Consts.CASES.CASE_ORIGIN.EMAIL);
+    Assert.areEqual('Email', Consts.CASES.CASE_ORIGIN.EMAIL);
     Assert.areEqual('Web', Consts.CASES.CASE_ORIGIN.WEB);
   }
 
@@ -42,7 +42,21 @@ public class ConstsTest {
   static void loanChargeConsts() {
     Assert.areNotEqual(null, Consts.LOANS);
     Assert.areEqual(15, Consts.LOANS.CHARGE.BOOK_CHARGE);
-    Assert.areEqual(10,Consts.LOANS.CHARGE.MAGAZINE_CHARGE);
+    Assert.areEqual(10, Consts.LOANS.CHARGE.MAGAZINE_CHARGE);
     Assert.areEqual(5, Consts.LOANS.CHARGE.AUDIOBOOK_CHARGE);
+  }
+
+  @IsTest
+  static void batchSubjectConsts() {
+    Assert.areNotEqual(null, Consts.BATCHES);
+    Assert.areEqual(
+      Consts.BATCHES.SUBJECT.RETURN_REMINDER,
+      'ReturnReminder Error'
+    );
+    Assert.areEqual(Consts.BATCHES.SUBJECT.DELAYED_ITEMS, 'DelayedItems Error');
+    Assert.areEqual(
+      Consts.BATCHES.SUBJECT.PENALTY_CHARGE,
+      'PenaltyCharge Error'
+    );
   }
 }

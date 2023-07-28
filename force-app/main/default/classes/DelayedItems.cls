@@ -37,8 +37,6 @@ public without sharing class DelayedItems implements Database.Batchable<SObject>
 
   public void finish(Database.BatchableContext param1) {
     if (failedLoanIDs.size() > 0) {
-      Emails__c emails = Emails__c.getinstance('Admin');
-      System.debug('emails : ' + Emails__c.getValues('Admin').AdminEmail__c);
       List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
       mails.add(
         EmailManager.createSingleEmail(
@@ -51,7 +49,7 @@ public without sharing class DelayedItems implements Database.Batchable<SObject>
               String.join(failedLoanIDs, ',')
             }
           ),
-          'PenaltyCharge Error'
+          Consts.BATCHES.SUBJECT.DELAYED_ITEMS
         )
       );
       Messaging.sendEmail(mails);

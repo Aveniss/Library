@@ -19,4 +19,10 @@ public class Consts {
       return CronConst.INSTANCE;
     }
   }
+
+  public static final BatchConst BATCHES {
+    get {
+      return BatchConst.INSTANCE;
+    }
+  }
 }

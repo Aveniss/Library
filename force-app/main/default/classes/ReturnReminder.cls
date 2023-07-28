@@ -7,6 +7,8 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   public static final String JOB_NAME = 'Return Reminder Job';
   public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
   private static final String REMIND_STATUS = Consts.LOANS.STATUS.BORROWED;
+  @TestVisible
+  private static Boolean shouldForceException = false;
   private static final Date RETURN_DATE = addBusinessDays(
     Date.today(),
     DAYS_TO_RETURN
@@ -14,7 +16,7 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
   private static final String QUERY =
     'SELECT Id,Borrower__r.Email__c, Item__r.Name, End_Of_Rental__c FROM Loan__c WHERE ' +
     'Status__c =: REMIND_STATUS AND End_Of_Rental__c =: RETURN_DATE';
-  private static final List<String> notSentAdresses = new List<Id>();
+  private static final List<String> notSentAdresses = new List<String>();
 
   public static Id scheduleMe() {
     ReturnReminder schedule = new ReturnReminder();
@@ -51,10 +53,12 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
         )
       );
     }
-
     List<Messaging.SendEmailResult> emailResults = Messaging.sendEmail(mails);
     for (Integer i = 0; i < emailResults.size(); i++) {
-      if (!emailResults[i].isSuccess()) {
+      if (
+        !emailResults[i].isSuccess() ||
+        (Test.isRunningTest() && shouldForceException)
+      ) {
         notSentAdresses.add(mails[i].toAddresses[0]);
       }
     }
@@ -73,7 +77,7 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
               String.join(notSentAdresses, ',')
             }
           ),
-          'ReturnReminder Error'
+          Consts.BATCHES.SUBJECT.RETURN_REMINDER
         )
       );
       Messaging.sendEmail(mails);
