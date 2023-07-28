@@ -86,8 +86,7 @@ must be returned by {1}</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ReturnReminderSendFailed</shortDescription>
-        <value
-    >On {0} class ReturnReminder failed to send reminders to addresses: 
+        <value>On {0} class ReturnReminder failed to send reminders to addresses: 
 {1}</value>
     </labels>
     <labels>
