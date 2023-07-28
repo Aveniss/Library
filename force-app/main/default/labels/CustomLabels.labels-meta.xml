@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
         <fullName>CurrentlyBorrowedItem</fullName>
@@ -6,6 +6,14 @@
         <protected>true</protected>
         <shortDescription>CurrentlyBorrowedItem</shortDescription>
         <value>This {0} is currently borrowed</value>
+    </labels>
+    <labels>
+        <fullName>DML_Failed</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DML_Failed</shortDescription>
+        <value>DML operation failed in class {0} for {1} records:
+{3}</value>
     </labels>
     <labels>
         <fullName>EmailLabel</fullName>
@@ -72,6 +80,14 @@
 we remind you that these titles:
 {0}
 must be returned by {1}</value>
+    </labels>
+    <labels>
+        <fullName>ReturnReminderSendFaild</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ReturnReminderSendFailed</shortDescription>
+        <value>On {0} class ReturnReminder failed to send reminders to addresses: 
+{1}</value>
     </labels>
     <labels>
         <fullName>SelectStatusLabel</fullName>
