@@ -1,82 +1,47 @@
 <template>
-  <div class="slds-m-top_medium slds-m-bottom_x-large">
-    <div class="slds-p-around_medium lgc-bg">
-      <lightning-input
-        value={itemName}
-        label="Title"
-        placeholder="Type here..."
-        onchange={selectItemName}
-      ></lightning-input>
+  <lightning-card>
+    <div class="slds-m-top_medium slds-m-bottom_x-large">
+      <div class="slds-p-around_medium lgc-bg">
+        <lightning-input
+          label="Item Name"
+          placeholder="Type here"
+          onchange={handleChangeName}
+        ></lightning-input>
 
-      <lightning-combobox
-        aria-placeholder="Select Type"
-        name="progress"
-        label="Type"
-        value={itemType}
-        placeholder="Select Type"
-        options={options}
-        onchange={handleChange}
-      ></lightning-combobox>
-
-      <template lwc:if={isBook}>
         <lightning-combobox
-          aria-placeholder="Select Genre"
           name="progress"
-          label="Genre"
-          value={itemType}
-          placeholder="Select Type"
-          options={getAddtionalOptions}
-          onchange={selectAdditionalFilter}
+          label="Choose Type"
+          placeholder="Select"
+          options={itemTypes}
+          onchange={handleChangeType}
         ></lightning-combobox>
-      </template>
-      <template lwc:if={isAudiobook}>
-        <lightning-input
-          label="Lector"
-          placeholder="Type here..."
-          onchange={selectAdditionalFilter}
-        ></lightning-input>
-      </template>
-      <template lwc:if={isMagazine}>
-        <lightning-input
-          label="Publishing House"
-          placeholder="Type here..."
-          onchange={selectAdditionalFilter}
-        ></lightning-input>
-      </template>
+      </div>
 
       <lightning-button
-        class="slds-button footer-button"
+        class="slds-button slds-align_absolute-center"
         variant="brand"
+        onclick={showQueryItems}
         label="SEARCH"
-        onclick={loadData}
       ></lightning-button>
     </div>
-  </div>
 
-  <div
-    class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_large slds-m-horizontal_none"
-  >
-    <lightning-layout multiple-rows>
-      <template for:each={columns} for:item="column">
-        <lightning-layout-item
-          key={column.key}
-          size="12"
-          small-device-size="6"
-          medium-device-size="4"
-          large-device-size="3"
-          padding="around-small"
-        >
-          <div
-            id={column.key}
-            onclick={selectItem}
-            data-id={column.key}
-            class="enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center"
-          >
-            Title<br />{column.Name}<br />
-            Type<br />{column.Type__c}<br />
-          </div>
-        </lightning-layout-item>
-      </template>
-    </lightning-layout>
-  </div>
+    <div>
+      <lightning-dual-listbox
+        name="items"
+        source-label="Available"
+        selected-label="Selected"
+        options={options}
+        value={selectedItems}
+        onchange={handleChange}
+      ></lightning-dual-listbox>
+    </div>
+    <div class="slds-box">
+      <p>Selected values are: {selected}</p>
+      <lightning-button
+        class="slds-button slds-align_absolute-center"
+        variant="brand"
+        label="CREATE"
+      ></lightning-button>
+    </div>
+  </lightning-card>
 </template>

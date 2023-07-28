@@ -2,7 +2,7 @@
  * Created by kamil on 23.07.2023.
  */
 
-public with sharing class MultiLoanCreator {
+public with sharing class MultiLoanCreatorController {
   @AuraEnabled(Cacheable=true)
   public static List<Item__c> getItems(
     String name,

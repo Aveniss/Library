@@ -3,132 +3,69 @@
  */
 
 import { LightningElement, track } from "lwc";
-import getItems from "@salesforce/apex/MultiLoanCreator.getItems";
+import getItems from "@salesforce/apex/MultiLoanCreatorController.getItems";
 
 export default class ShowTheLoan extends LightningElement {
-  // eslint-disable-next-line @lwc/lwc/no-document-query
-  @track columns = [];
-  @track selectedItems = [];
-
-  checkedDiv = "rgb(40, 128, 247)";
-  unCheckedDiv = "rgb(244, 246, 249)";
-
   itemType = "";
   itemName = "";
-  additionalFilter = "";
 
-  isBook = false;
-  isAudiobook = false;
-  isMagazine = false;
+  _selected = [];
+
+  @track rightItems = [
+    { label: "Option 1", value: "option1" },
+    { label: "Option 2", value: "option2" },
+    { label: "Option 3", value: "option3" }
+    // Dodaj inne elementy jako potrzebne
+  ];
+
+  @track selectedItems = ["option2"];
+
+  random = [];
+
+  get itemTypes() {
+    return [
+      { label: "PAPER BOOK", value: "Paper Book" },
+      { label: "MAGAZINE", value: "Magazine" },
+      { label: "AUDIOBOOK", value: "Audiobook" }
+    ];
+  }
+
+  // do zamiany z datatable
 
   get options() {
-    return [
-      { label: "Book", value: "Paper Book" },
-      { label: "Audiobook", value: "Audiobook" },
-      { label: "Magazine", value: "Magazine" }
-    ];
+    // return getItems({name: this.itemName,type:this.itemType,genre:'',additionalFiler:''});
+    return this.random;
   }
 
-  get getAddtionalOptions() {
-    return [
-      { label: "Adventure Novel", value: "Adventure Novel" },
-      { label: "Adventure Novel", value: "Adventure Novel" },
-      { label: "Crime Fiction", value: "Crime Fiction" },
-      { label: "Novel", value: "Novel" },
-      { label: "Poetry", value: "Poetry" },
-      { label: "Science Fiction", value: "Science Fiction" },
-      { label: "Short Story", value: "Short Story" },
-      { label: "Tragedy", value: "Tragedy" }
-    ];
+  get selected() {
+    return this._selected.length ? this._selected : "none";
   }
 
-  selectAdditionalFilter(event) {
-    this.additionalFilter = event.detail.value;
-  }
-  selectItemName(event) {
-    this.itemName = event.detail.value;
+  handleChange(e) {
+    this._selected.push(...e.detail.value);
   }
 
-  handleChange(event) {
-    this.isBook = false;
-    this.isAudiobook = false;
-    this.isMagazine = false;
-
-    this.itemType = event.detail.value;
-
-    if (this.itemType === "Paper Book") {
-      this.isBook = true;
-    } else if (this.itemType === "Audiobook") {
-      this.isAudiobook = true;
-    } else {
-      this.isMagazine = true;
-    }
+  handleChangeName(e) {
+    this.itemName = e.detail.value;
   }
 
-  loadData() {
-    this.columns.length = 0;
-    let filters = {};
-    if (this.isBook) {
-      filters = {
-        name: this.itemName,
-        type: this.itemType,
-        genre: this.additionalFilter,
-        additionalFiler: ""
-      };
-    } else if (this.isMagazine || this.isAudiobook) {
-      filters = {
-        name: this.itemName,
-        type: this.itemType,
-        genre: "",
-        additionalFiler: this.additionalFilter
-      };
-    } else {
-      filters = {
-        name: this.itemName,
-        type: "",
-        genre: "",
-        additionalFiler: ""
-      };
-    }
-    getItems(filters)
-      .then((result) => {
-        let i = 0;
-        result.forEach((element) => {
-          let column = {
-            key: i,
-            itemId: element.Id,
-            Name: element.Name,
-            Type__c: element.Type__c
-          };
-          this.columns.push(column);
-          i = i + 1;
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  showQueryItems() {
+    console.log("Poszlo");
+    getItems({
+      name: this.itemName,
+      type: this.itemType,
+      genre: "",
+      additionalFiler: ""
+    }).then((result) => {
+      this.random = result.map((item) => ({
+        label: item.Name,
+        value: item.Id
+      }));
+    });
+    console.log(this.random);
   }
 
-  selectItem(event) {
-    const przekazanaZmienna = event.target.dataset.id;
-    const div = this.template.querySelector(
-      `div[data-id="${przekazanaZmienna}"]`
-    );
-    const divID = div.id.split("-")[0];
-
-    if (window.getComputedStyle(div).backgroundColor === this.unCheckedDiv) {
-      div.style.backgroundColor = this.checkedDiv;
-      this.selectedItems.push(this.columns[divID].itemId);
-    } else {
-      div.style.backgroundColor = this.unCheckedDiv;
-
-      const indexToRemove = this.selectedItems.indexOf(
-        this.columns[divID].itemId
-      );
-      if (indexToRemove !== -1) {
-        this.selectedItems.splice(indexToRemove, 1);
-      }
-    }
-    console.log(this.selectedItems[0]);
+  handleChangeType(e) {
+    this.itemType = e.detail.value;
   }
 }
