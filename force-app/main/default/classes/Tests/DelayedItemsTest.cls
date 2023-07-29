@@ -3,11 +3,11 @@ private class DelayedItemsTest {
   private static final Date CURRENT_DATE = Date.today();
   private static final Date DELAYED_DATE = CURRENT_DATE.addDays(-1);
   private static final Date NOT_DELAYED_DATE = CURRENT_DATE.addDays(3);
-  private static final String BOOK_NAME = 'Test Book';
-  private static final String BORROWER_NAME = 'Test';
-  private static final Integer NUMBER_OF_DATA = 5;
+  private static final Integer NUMBER_OF_DATA = 2;
   @TestSetup
   private static void insertBasicData() {
+    TestDataFactory.createEmailCustomSetting(true,Consts.BATCHES.EMAILS.ADMIN,'kamilst934@gmail.com');
+
     List<Item__c> allItems = new List<Item__c>();
     List<Item__c> delayedBooks = TestDataFactory.createItemsList(
       NUMBER_OF_DATA,
@@ -121,11 +121,6 @@ private class DelayedItemsTest {
 
   @IsTest
   static void checkUpdateStatusFaildTest() {
-    Emails__c customSettingRecord = new Emails__c();
-    customSettingRecord.Name = 'Admin'; // To jest nazwa custom setting (unikalny identyfikator)
-    customSettingRecord.AdminEmail__c = 'kamilst934@gmail.com';
-    insert customSettingRecord;
-
     DelayedItems.shouldForceException = true;
     Test.startTest();
     DelayedItems delayedItems = new DelayedItems();
@@ -135,13 +130,12 @@ private class DelayedItemsTest {
     List<EmailMessage> emails = [
       SELECT TextBody, Subject, ToAddress, Id
       FROM EmailMessage
-      WHERE MessageDate > :Datetime.now().addMinutes(-1)
+      WHERE Subject =: Consts.BATCHES.SUBJECT.DELAYED_ITEMS
     ];
 
     Assert.areEqual(1, emails.size());
-    Assert.areEqual(Consts.BATCHES.SUBJECT.DELAYED_ITEMS, emails[0].Subject);
     Assert.areEqual(
-      Emails__c.getValues('Admin').AdminEmail__c,
+      Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
       emails[0].ToAddress
     );
   }

@@ -2,9 +2,9 @@
  * Created by kamil on 19.07.2023.
  */
 
-public with sharing class PenaltyCharge implements Database.Batchable<SObject>, Schedulable {
+public with sharing class PenaltyCharge implements Database.Batchable<SObject>, Schedulable,Database.Stateful {
   public static final String JOB_NAME = 'Penalty Charge Job';
-  private static final List<Id> failedLoanIDs = new List<Id>();
+  private final Map<String,List<String>> errorToIDs = new Map<String, List<String>>();
   @TestVisible
   private static Boolean shouldForceException = false;
   public static Id scheduleMe() {
@@ -17,7 +17,7 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
   }
 
   public void execute(SchedulableContext context) {
-    Database.executeBatch(new PenaltyCharge(), 10000);
+    Database.executeBatch(new PenaltyCharge(), 150);
   }
 
   public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -45,23 +45,26 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
     Database.SaveResult[] srList = Database.update(loans, false);
     for (Integer i = 0; i < srList.size(); i++) {
       if (!srList[i].isSuccess()) {
-        failedLoanIDs.add(loans[i].Id);
+        String statusCode = srList[i].getErrors().get(0).getStatusCode().name();
+        if(!errorToIDs.containsKey(statusCode)) {
+          errorToIDs.put(statusCode,new List<String>());
+        }
+        errorToIDs.get(statusCode).add(loans[i].Id);
       }
     }
   }
 
   public void finish(Database.BatchableContext bc) {
-    if (failedLoanIDs.size() > 0) {
+    if (errorToIDs.size() > 0) {
       List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
       mails.add(
         EmailManager.createSingleEmail(
-          Emails__c.getValues('Admin').AdminEmail__c,
+          Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
           String.format(
             Label.DML_Failed,
             new List<String>{
               'PenaltyCharge',
-              'Loan__c',
-              String.join(failedLoanIDs, ',')
+              'Loan__c', EmailManager.createEmailContent(errorToIDs)
             }
           ),
           Consts.BATCHES.SUBJECT.PENALTY_CHARGE

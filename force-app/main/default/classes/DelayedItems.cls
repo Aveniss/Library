@@ -1,6 +1,6 @@
-public without sharing class DelayedItems implements Database.Batchable<SObject>, Schedulable {
+public without sharing class DelayedItems implements Database.Batchable<SObject>, Schedulable,Database.Stateful {
   public static final String JOB_NAME = 'Delayed Items Job';
-  private static final List<Id> failedLoanIDs = new List<Id>();
+  private final Map<String,List<String>> errorToIDs = new Map<String, List<String>>();
   @TestVisible
   private static Boolean shouldForceException = false;
   public static Id scheduleMe() {
@@ -9,7 +9,7 @@ public without sharing class DelayedItems implements Database.Batchable<SObject>
   }
 
   public void execute(SchedulableContext sc) {
-    Database.executeBatch(new DelayedItems(), 10000);
+    Database.executeBatch(new DelayedItems(), 150);
   }
 
   public Database.QueryLocator start(Database.BatchableContext param1) {
@@ -25,34 +25,37 @@ public without sharing class DelayedItems implements Database.Batchable<SObject>
   }
 
   public void execute(Database.BatchableContext param1, List<Loan__c> loans) {
+
     for (Loan__c loan : loans) {
       loan.Status__c = Consts.LOANS.STATUS.DELAY;
     }
 
+
     if (Test.isRunningTest() && shouldForceException) {
       loans.get(0).Status__c = 'SomeFakeStatusToForceException';
     }
+
     Database.SaveResult[] srList = Database.update(loans, false);
     for (Integer i = 0; i < srList.size(); i++) {
       if (!srList[i].isSuccess()) {
-        failedLoanIDs.add(loans[i].Id);
+        String statusCode = srList[i].getErrors().get(0).getStatusCode().name();
+        if(!errorToIDs.containsKey(statusCode)) {
+          errorToIDs.put(statusCode,new List<String>());
+        }
+        errorToIDs.get(statusCode).add(loans[i].Id);
       }
     }
   }
 
   public void finish(Database.BatchableContext param1) {
-    if (failedLoanIDs.size() > 0) {
+    if (errorToIDs.size() > 0) {
       List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
       mails.add(
         EmailManager.createSingleEmail(
-          Emails__c.getValues('Admin').AdminEmail__c,
+          Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
           String.format(
             Label.DML_Failed,
-            new List<String>{
-              'PenaltyCharge',
-              'Loan__c',
-              String.join(failedLoanIDs, ',')
-            }
+            new List<String>{'PenaltyCharge','Loan__c',EmailManager.createEmailContent(errorToIDs)}
           ),
           Consts.BATCHES.SUBJECT.DELAYED_ITEMS
         )

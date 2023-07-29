@@ -10,6 +10,8 @@ public with sharing class PenaltyChargeTest {
   private static final String EMAIL_PREFIX = 'testemail';
   @TestSetup
   private static void insertBasicData() {
+    TestDataFactory.createEmailCustomSetting(true,Consts.BATCHES.EMAILS.ADMIN,'kamilst934@gmail.com');
+
     List<Item__c> allItems = new List<Item__c>();
     List<Item__c> delayedBooks = TestDataFactory.createItemsList(
       NUMBER_OF_DATA,
@@ -181,7 +183,7 @@ public with sharing class PenaltyChargeTest {
   }
 
   @IsTest
-  static void testExecute() {
+  static void shouldFillPenaltyField() {
     List<Loan__c> loans;
 
     Test.startTest();
@@ -217,11 +219,6 @@ public with sharing class PenaltyChargeTest {
 
   @IsTest
   static void checkUpdatePenaltyFaildTest() {
-    Emails__c customSettingRecord = new Emails__c();
-    customSettingRecord.Name = 'Admin'; // To jest nazwa custom setting (unikalny identyfikator)
-    customSettingRecord.AdminEmail__c = 'kamilst934@gmail.com';
-    insert customSettingRecord;
-
     PenaltyCharge.shouldForceException = true;
     Test.startTest();
     PenaltyCharge penaltyCharge = new PenaltyCharge();
@@ -231,13 +228,12 @@ public with sharing class PenaltyChargeTest {
     List<EmailMessage> emails = [
       SELECT TextBody, Subject, ToAddress, Id
       FROM EmailMessage
-      WHERE MessageDate > :Datetime.now().addMinutes(-1)
+      WHERE Subject =: Consts.BATCHES.SUBJECT.PENALTY_CHARGE
     ];
 
     Assert.areEqual(1, emails.size());
-    Assert.areEqual(Consts.BATCHES.SUBJECT.PENALTY_CHARGE, emails[0].Subject);
     Assert.areEqual(
-      Emails__c.getValues('Admin').AdminEmail__c,
+      Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
       emails[0].ToAddress
     );
   }

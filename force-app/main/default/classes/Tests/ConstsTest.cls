@@ -59,4 +59,10 @@ public class ConstsTest {
       'PenaltyCharge Error'
     );
   }
+
+  @IsTest
+  static void batchEmailsConsts() {
+    Assert.areNotEqual(null, Consts.BATCHES);
+    Assert.areEqual(Consts.BATCHES.EMAILS.ADMIN,'Admin');
+  }
 }
