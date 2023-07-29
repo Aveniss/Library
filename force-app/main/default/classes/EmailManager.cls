@@ -18,4 +18,14 @@ public with sharing class EmailManager {
     mail.setSenderDisplayName(EMAIL_SENDER_NAME);
     return mail;
   }
+
+
+  public static String createEmailContent(Map<String,List<String>> errorsMap){
+    List<String> records = new List<String>();
+
+    for(String error : errorsMap.keySet()){
+      records.add(error+' : '+String.join(errorsMap.get(error),','));
+    }
+    return String.join(records,'\n');
+  }
 }
