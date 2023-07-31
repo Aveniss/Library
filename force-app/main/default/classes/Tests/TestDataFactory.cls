@@ -5,6 +5,17 @@
 public with sharing class TestDataFactory {
     public static final String EMAIL_SUFFIX = '@gmail.com';
 
+
+    public static Emails__c createEmailCustomSetting(Boolean insertData, String name, String email){
+        Emails__c customSettingRecord = new Emails__c();
+        customSettingRecord.Name = name;
+        customSettingRecord.AdminEmail__c = email;
+        if(insertData) {
+            insert customSettingRecord;
+        }
+        return customSettingRecord;
+    }
+
     public static List<Item__c> createItemsList(Integer numberOfItems, Boolean insertData, String itemNamePrefix, String itemType, String itemGenre) {
         List<Item__c> items = new List<Item__c>();
 
