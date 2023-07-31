@@ -2,13 +2,13 @@
  * Created by kamil on 15.07.2023.
  */
 
-public with sharing class ReturnReminder implements Database.Batchable<SObject>, Schedulable,Database.Stateful {
+public with sharing class ReturnReminder implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
   public static final Integer DAYS_TO_RETURN = 3;
   public static final String JOB_NAME = 'Return Reminder Job';
   public static final String EMAIL_SUBJECT = 'End of Loan Reminder';
   @TestVisible
   private static Boolean shouldForceException = false;
-  private final Map<String,List<String>> errorToAddress = new Map<String, List<String>>();
+  private final Map<String, List<String>> errorToAddress = new Map<String, List<String>>();
 
   public static Id scheduleMe() {
     ReturnReminder schedule = new ReturnReminder();
@@ -39,33 +39,38 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
     Map<String, Container> emailToItems = generateEmailToItemsMap(loans);
     List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
     for (String email : emailToItems.keySet()) {
-
       Messaging.SingleEmailMessage newEmail = EmailManager.createSingleEmail(
-              email,
-              String.format(
-                      Label.ReturnReminder,
-                      new List<String>{
-                              String.join(emailToItems.get(email).stringsList, '\n'),
-                              emailToItems.get(email).endOfRentalDate.format()
-                      }
-              ),
-              EMAIL_SUBJECT
+        email,
+        String.format(
+          Label.ReturnReminder,
+          new List<String>{
+            String.join(emailToItems.get(email).stringsList, '\n'),
+            emailToItems.get(email).endOfRentalDate.format()
+          }
+        ),
+        EMAIL_SUBJECT
       );
 
-      if((Test.isRunningTest() && shouldForceException)){
-        newEmail.toAddresses = new List<String>{'exampleEmail'};
+      if ((Test.isRunningTest() && shouldForceException)) {
+        newEmail.toAddresses = new List<String>{ 'exampleEmail' };
       }
-
 
       mails.add(newEmail);
     }
-    List<Messaging.SendEmailResult> emailResults = Messaging.sendEmail(mails,false);
+    List<Messaging.SendEmailResult> emailResults = Messaging.sendEmail(
+      mails,
+      false
+    );
 
     for (Integer i = 0; i < emailResults.size(); i++) {
       if (!emailResults[i].isSuccess()) {
-        String statusCode = emailResults[i].getErrors().get(0).getStatusCode().name();
-        if(!errorToAddress.containsKey(statusCode)) {
-          errorToAddress.put(statusCode,new List<String>());
+        String statusCode = emailResults[i]
+          .getErrors()
+          .get(0)
+          .getStatusCode()
+          .name();
+        if (!errorToAddress.containsKey(statusCode)) {
+          errorToAddress.put(statusCode, new List<String>());
         }
         errorToAddress.get(statusCode).add(mails[i].toAddresses[0]);
       }
@@ -74,21 +79,18 @@ public with sharing class ReturnReminder implements Database.Batchable<SObject>,
 
   public void finish(Database.BatchableContext bc) {
     if (errorToAddress.size() > 0) {
-      List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
-      mails.add(
-        EmailManager.createSingleEmail(
-          Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
-          String.format(
-            Label.ReturnReminderSendFaild,
-            new List<String>{
-              Date.today().format(),
-              EmailManager.createEmailContent(errorToAddress)
-            }
-          ),
-          Consts.BATCHES.SUBJECT.RETURN_REMINDER
-        )
+      String body = String.format(
+        Label.ReturnReminderSendFaild,
+        new List<String>{
+          Date.today().format(),
+          EmailManager.createEmailContent(errorToAddress)
+        }
       );
-      Messaging.sendEmail(mails);
+
+      EmailManager.sendErrorMessage(
+        Consts.BATCHES.SUBJECT.RETURN_REMINDER,
+        body
+      );
     }
   }
 

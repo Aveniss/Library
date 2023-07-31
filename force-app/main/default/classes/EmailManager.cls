@@ -19,13 +19,24 @@ public with sharing class EmailManager {
     return mail;
   }
 
-
-  public static String createEmailContent(Map<String,List<String>> errorsMap){
+  public static String createEmailContent(Map<String, List<String>> errorsMap) {
     List<String> records = new List<String>();
 
-    for(String error : errorsMap.keySet()){
-      records.add(error+' : '+String.join(errorsMap.get(error),','));
+    for (String error : errorsMap.keySet()) {
+      records.add(error + ' : ' + String.join(errorsMap.get(error), ','));
     }
-    return String.join(records,'\n');
+    return String.join(records, '\n');
+  }
+
+  public static void sendErrorMessage(String subject, String body) {
+    List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+    mails.add(
+      createSingleEmail(
+        Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
+        body,
+        subject
+      )
+    );
+    Messaging.sendEmail(mails);
   }
 }

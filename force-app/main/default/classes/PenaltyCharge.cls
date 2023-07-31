@@ -2,9 +2,9 @@
  * Created by kamil on 19.07.2023.
  */
 
-public with sharing class PenaltyCharge implements Database.Batchable<SObject>, Schedulable,Database.Stateful {
+public with sharing class PenaltyCharge implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
   public static final String JOB_NAME = 'Penalty Charge Job';
-  private final Map<String,List<String>> errorToIDs = new Map<String, List<String>>();
+  private final Map<String, List<String>> errorToIDs = new Map<String, List<String>>();
   @TestVisible
   private static Boolean shouldForceException = false;
   public static Id scheduleMe() {
@@ -17,7 +17,7 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
   }
 
   public void execute(SchedulableContext context) {
-    Database.executeBatch(new PenaltyCharge(), 150);
+    Database.executeBatch(new PenaltyCharge());
   }
 
   public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -46,8 +46,8 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
     for (Integer i = 0; i < srList.size(); i++) {
       if (!srList[i].isSuccess()) {
         String statusCode = srList[i].getErrors().get(0).getStatusCode().name();
-        if(!errorToIDs.containsKey(statusCode)) {
-          errorToIDs.put(statusCode,new List<String>());
+        if (!errorToIDs.containsKey(statusCode)) {
+          errorToIDs.put(statusCode, new List<String>());
         }
         errorToIDs.get(statusCode).add(loans[i].Id);
       }
@@ -56,21 +56,19 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
 
   public void finish(Database.BatchableContext bc) {
     if (errorToIDs.size() > 0) {
-      List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
-      mails.add(
-        EmailManager.createSingleEmail(
-          Emails__c.getValues(Consts.BATCHES.EMAILS.ADMIN).AdminEmail__c,
-          String.format(
-            Label.DML_Failed,
-            new List<String>{
-              'PenaltyCharge',
-              'Loan__c', EmailManager.createEmailContent(errorToIDs)
-            }
-          ),
-          Consts.BATCHES.SUBJECT.PENALTY_CHARGE
-        )
+      String body = String.format(
+        Label.DML_Failed,
+        new List<String>{
+          'PenaltyCharge',
+          'Loan__c',
+          EmailManager.createEmailContent(errorToIDs)
+        }
       );
-      Messaging.sendEmail(mails);
+
+      EmailManager.sendErrorMessage(
+        Consts.BATCHES.SUBJECT.PENALTY_CHARGE,
+        body
+      );
     }
   }
 
@@ -98,10 +96,7 @@ public with sharing class PenaltyCharge implements Database.Batchable<SObject>, 
     Datetime currentDate = startDate;
     while (currentDate < endDate) {
       currentDate = currentDate.addDays(1);
-      if (
-        !(currentDate.format('E').equals('Sat') ||
-        currentDate.format('E').equals('Sun'))
-      ) {
+      if (!(DateTimeUtils.isWeekend(currentDate))) {
         workingDays++;
       }
     }
