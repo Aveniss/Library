@@ -12,7 +12,7 @@ public with sharing class MultiLoanCreatorController {
   ) {
     if (type.equals(Consts.ITEMS.TYPE.PAPER_BOOK)) {
       return [
-        SELECT Id, Name, Type__c
+        SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
         WHERE
           Name LIKE :'%' + name + '%'
@@ -21,7 +21,7 @@ public with sharing class MultiLoanCreatorController {
       ];
     } else if (type.equals(Consts.ITEMS.TYPE.MAGAZINE)) {
       return [
-        SELECT Id, Name, Type__c
+        SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
         WHERE
           Name LIKE :'%' + name + '%'
@@ -30,7 +30,7 @@ public with sharing class MultiLoanCreatorController {
       ];
     } else if (type.equals(Consts.ITEMS.TYPE.AUDIOBOOK)) {
       return [
-        SELECT Id, Name, Type__c
+        SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
         WHERE
           Name LIKE :'%' + name + '%'
@@ -39,7 +39,7 @@ public with sharing class MultiLoanCreatorController {
       ];
     } else {
       return [
-        SELECT Id, Name, Type__c
+        SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
         WHERE Name LIKE :'%' + name + '%'
       ];

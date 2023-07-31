@@ -1,46 +1,67 @@
 <template>
   <lightning-card>
-    <div class="slds-m-top_medium slds-m-bottom_x-large">
+    <div>
       <div class="slds-p-around_medium lgc-bg">
         <lightning-input
-          label="Item Name"
-          placeholder="Type here"
+          type="text"
           onchange={handleChangeName}
+          label="Enter some text"
         ></lightning-input>
-
-        <lightning-combobox
-          name="progress"
-          label="Choose Type"
-          placeholder="Select"
-          options={itemTypes}
-          onchange={handleChangeType}
-        ></lightning-combobox>
       </div>
-
+      <lightning-combobox
+        name="progress"
+        label="Enter Type"
+        placeholder="Enter type"
+        options={options}
+        onchange={handleChangeType}
+      ></lightning-combobox>
       <lightning-button
-        class="slds-button slds-align_absolute-center"
         variant="brand"
-        onclick={showQueryItems}
         label="SEARCH"
+        onclick={searchNewItems}
+        title="Primary action"
+        class="slds-m-left_x-small"
       ></lightning-button>
     </div>
-
-    <div>
-      <lightning-dual-listbox
-        name="items"
-        source-label="Available"
-        selected-label="Selected"
-        options={options}
-        value={selectedItems}
-        onchange={handleChange}
-      ></lightning-dual-listbox>
+    <div class="columnsDiv">
+      <lightning-datatable
+        class="datatable"
+        key-field="Id"
+        columns={columns}
+        data={getSearchedItems}
+        onrowselection={changeOnSelect}
+        resize-column-disabled
+      ></lightning-datatable>
+      <div class="buttonsDiv slds-p-around_medium lgc-bg">
+        <lightning-button-icon
+          class="button"
+          onclick={moveSelectedItems}
+          icon-name="utility:arrow_right"
+          alternative-text="Settings"
+          title="Settings"
+        ></lightning-button-icon>
+        <lightning-button-icon
+          class="button"
+          icon-name="utility:arrow_left"
+          alternative-text="Settings"
+          title="Settings"
+        ></lightning-button-icon>
+      </div>
+      <lightning-datatable
+        class="datatable"
+        key-field="Id"
+        columns={columns}
+        data={getSelectedItems}
+        resize-column-disabled
+      ></lightning-datatable>
     </div>
-    <div class="slds-box">
-      <p>Selected values are: {selected}</p>
+    <div>
       <lightning-button
-        class="slds-button slds-align_absolute-center"
         variant="brand"
         label="CREATE"
+        title="Primary action"
+        onclick={createNewLoans}
+        class="slds-m-left_x-small"
       ></lightning-button>
     </div>
   </lightning-card>

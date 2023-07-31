@@ -2,70 +2,106 @@
  * Created by kamil on 07.07.2023.
  */
 
-import { LightningElement, track } from "lwc";
+import { LightningElement } from "lwc";
 import getItems from "@salesforce/apex/MultiLoanCreatorController.getItems";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
 
 export default class ShowTheLoan extends LightningElement {
-  itemType = "";
-  itemName = "";
-
-  _selected = [];
-
-  @track rightItems = [
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" }
-    // Dodaj inne elementy jako potrzebne
+  searchedItems = [];
+  selectedItems = [];
+  columns = [
+    { label: "Name", fieldName: "Name", type: "text" },
+    { label: "Type", fieldName: "Type__c", type: "text" },
+    { label: "Genre", fieldName: "Genre__c", type: "text" }
   ];
-
-  @track selectedItems = ["option2"];
-
-  random = [];
-
-  get itemTypes() {
+  get options() {
     return [
-      { label: "PAPER BOOK", value: "Paper Book" },
-      { label: "MAGAZINE", value: "Magazine" },
-      { label: "AUDIOBOOK", value: "Audiobook" }
+      { label: "Paper Book", value: "Paper Book" },
+      { label: "Magazine", value: "Magazine" },
+      {
+        label: "Audiobook",
+        value: "Audiobook"
+      }
     ];
   }
 
-  // do zamiany z datatable
+  itemName = "";
+  itemType = "";
 
-  get options() {
-    // return getItems({name: this.itemName,type:this.itemType,genre:'',additionalFiler:''});
-    return this.random;
+  handleChangeType(event) {
+    this.itemType = event.detail.value;
+  }
+  handleChangeName(event) {
+    this.itemName = event.detail.value;
   }
 
-  get selected() {
-    return this._selected.length ? this._selected : "none";
+  get getSearchedItems() {
+    return this.searchedItems;
+  }
+  get getSelectedItems() {
+    return this.selectedItems;
+  }
+  changeOnSelect(event) {
+    const selectedRows = event.detail.selectedRows;
+    if (selectedRows.length) {
+      this.searchedItems = this.searchedItems.map((element) => {
+        console.log(element.Id + " " + selectedRows[0].Id);
+
+        let found = selectedRows.some((item) => item.Id === element.Id);
+        console.log("wynik metody: " + found);
+        return found ? { ...element, selected: true } : element;
+      });
+
+      console.log("cos poszlo " + selectedRows[0].selected);
+    }
   }
 
-  handleChange(e) {
-    this._selected.push(...e.detail.value);
+  moveSelectedItems() {
+    this.selectedItems = [
+      ...this.selectedItems,
+      ...this.searchedItems.filter((element) => element.selected)
+    ];
+    this.searchedItems = this.searchedItems.filter(
+      (element) => !element.selected
+    );
   }
 
-  handleChangeName(e) {
-    this.itemName = e.detail.value;
-  }
-
-  showQueryItems() {
-    console.log("Poszlo");
+  searchNewItems() {
     getItems({
       name: this.itemName,
       type: this.itemType,
       genre: "",
       additionalFiler: ""
-    }).then((result) => {
-      this.random = result.map((item) => ({
-        label: item.Name,
-        value: item.Id
-      }));
-    });
-    console.log(this.random);
+    })
+      .then((result) => {
+        this.searchedItems = result.map((element) => ({
+          ...element,
+          selected: false
+        }));
+        console.log("result: " + this.searchedItems);
+      })
+      .catch((downloadError) => {
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Data Download Failed",
+            message: downloadError.message,
+            variant: "error"
+          })
+        );
+      });
   }
 
-  handleChangeType(e) {
-    this.itemType = e.detail.value;
+  createNewLoans() {
+    console.log(
+      "Itemy: " +
+        this.searchedItems[0].selected +
+        " " +
+        this.searchedItems[0].Name +
+        " " +
+        this.searchedItems[0].Type__c +
+        " " +
+        this.searchedItems[0].Genre__c +
+        " "
+    );
   }
 }
