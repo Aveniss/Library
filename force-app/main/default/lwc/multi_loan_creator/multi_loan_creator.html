@@ -1,89 +1,89 @@
 <template>
-  <lightning-card>
-    <div>
-      <div class="slds-p-around_medium lgc-bg">
-        <lightning-input
-          class="bigInputWidth"
-          type="text"
-          onchange={handleChangeName}
-          label={label.ItemNameLabel}
-        ></lightning-input>
-      </div>
-      <lightning-combobox
-        class="bigInputWidth"
-        name="progress"
-        label={label.SelectTypeLabel}
-        options={itemTypes}
-        onchange={handleChangeType}
-      ></lightning-combobox>
-      <lightning-button
-        variant="brand"
-        label="SEARCH"
-        onclick={searchNewItems}
-        title="Primary action"
-        class="button buttonDiv"
-      ></lightning-button>
-    </div>
-    <div class="columnsDiv">
-      <div class="divSize">
-        <h2>{label.SearchedDatatableLabel}</h2>
-        <lightning-datatable
-          class="datatable"
-          key-field="Id"
-          columns={columns}
-          data={getSearchedItems}
-          onrowselection={changeOnSelect}
-          resize-column-disabled
-        ></lightning-datatable>
-      </div>
-      <div class="buttonsDiv slds-p-around_medium lgc-bg">
-        <lightning-button-icon
-          class="iconButton"
-          onclick={moveSelectedItems}
-          icon-name="utility:arrow_right"
-        ></lightning-button-icon>
-        <lightning-button-icon
-          class="iconButton"
-          icon-name="utility:arrow_left"
-          onclick={moveUnselectedItems}
-        ></lightning-button-icon>
-        <lightning-combobox
-          class="smallInputWidth"
-          label={label.SelectStatusLabel}
-          value=""
-          onchange={handleLoanStatusChange}
-          options={newStatusOptions}
-          required
-        ></lightning-combobox>
-        <lightning-input
-          type="date"
-          class="smallInputWidth"
-          onchange={handleDateChange}
-          label={label.DateFieldLabel}
-          required
-        ></lightning-input>
-      </div>
-      <div class="divSize">
-        <h2>Selected Items</h2>
-        <lightning-datatable
-          key-field="Id"
-          class="datatable"
-          columns={columns}
-          data={getSelectedItems}
-          onrowselection={changeOnUnselect}
-          resize-column-disabled
-        ></lightning-datatable>
-      </div>
-    </div>
-    <div>
-      <lightning-button
-        variant="brand"
-        disabled={checkButtonStatus}
-        label="CREATE"
-        title="Primary action"
-        onclick={createNewLoans}
-        class="slds-m-left_x-small buttonDiv"
-      ></lightning-button>
-    </div>
-  </lightning-card>
+    <lightning-card>
+        <div>
+            <div class="slds-p-around_medium lgc-bg">
+                <lightning-input
+                        class="bigInputWidth"
+                        type="text"
+                        onchange={handleChangeName}
+                        label={label.ItemNameLabel}
+                ></lightning-input>
+            </div>
+            <lightning-combobox
+                    class="bigInputWidth"
+                    name="progress"
+                    label={label.SelectTypeLabel}
+                    options={itemTypes}
+                    onchange={handleChangeType}
+            ></lightning-combobox>
+            <lightning-button
+                    variant="brand"
+                    label="SEARCH"
+                    onclick={searchNewItems}
+                    title="Primary action"
+                    class="button buttonDiv"
+            ></lightning-button>
+        </div>
+        <div class="columnsDiv">
+            <div class="divSize">
+                <h2>{label.SearchedDatatableLabel}</h2>
+                <lightning-datatable
+                        class="datatable"
+                        key-field="Id"
+                        columns={columns}
+                        data={getSearchedItems}
+                        onrowselection={changeOnSelect}
+                        resize-column-disabled
+                ></lightning-datatable>
+            </div>
+            <div class="buttonsDiv slds-p-around_medium lgc-bg">
+                <lightning-button-icon
+                        class="iconButton"
+                        onclick={moveSelectedItems}
+                        icon-name="utility:arrow_right"
+                ></lightning-button-icon>
+                <lightning-button-icon
+                        class="iconButton"
+                        icon-name="utility:arrow_left"
+                        onclick={moveUnselectedItems}
+                ></lightning-button-icon>
+                <lightning-combobox
+                        class="smallInputWidth"
+                        label={label.SelectStatusLabel}
+                        value=""
+                        onchange={handleLoanStatusChange}
+                        options={newStatusOptions}
+                        required
+                ></lightning-combobox>
+                <lightning-input
+                        type="date"
+                        class="smallInputWidth"
+                        onchange={handleDateChange}
+                        label={label.DateFieldLabel}
+                        required
+                ></lightning-input>
+            </div>
+            <div class="divSize">
+                <h2>Selected Items</h2>
+                <lightning-datatable
+                        key-field="Id"
+                        class="datatable"
+                        columns={columns}
+                        data={getSelectedItems}
+                        onrowselection={changeOnUnselect}
+                        resize-column-disabled
+                ></lightning-datatable>
+            </div>
+        </div>
+        <div>
+            <lightning-button
+                    variant="brand"
+                    disabled={checkButtonStatus}
+                    label="CREATE"
+                    title="Primary action"
+                    onclick={createNewLoans}
+                    class="slds-m-left_x-small buttonDiv"
+            ></lightning-button>
+        </div>
+    </lightning-card>
 </template>

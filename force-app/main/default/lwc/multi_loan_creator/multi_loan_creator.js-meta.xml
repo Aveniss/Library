@@ -5,6 +5,7 @@
     <isExposed>true</isExposed>
     <targets>
         <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
     </targets>
     <masterLabel>Multi Loan Creator</masterLabel>
 </LightningComponentBundle>
