@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   margin: 10px;
+  height: 300px;
 }
 
 .buttonsDiv {
@@ -9,10 +10,32 @@
   flex-direction: column;
   align-items: center;
 }
-.button {
+
+.iconButton {
   margin: 10px;
 }
 
+.buttonDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px;
+}
+
 .datatable {
+  overflow-y: auto;
   width: 400px;
+}
+
+.divSize {
+  width: 400px;
+}
+
+.bigInputWidth {
+  width: 100%;
+  /*margin-left: 0;*/
+}
+
+.smallInputWidth {
+  width: 100px;
 }

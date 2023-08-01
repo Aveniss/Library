@@ -7,51 +7,55 @@ public with sharing class MultiLoanCreatorController {
   public static List<Item__c> getItems(
     String name,
     String type,
-    String genre,
-    String additionalFiler
+    List<String> existingIDs
   ) {
-    if (type.equals(Consts.ITEMS.TYPE.PAPER_BOOK)) {
+    if (!String.isBlank(type)) {
       return [
         SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
         WHERE
-          Name LIKE :'%' + name + '%'
+          Is_Available__c = TRUE
+          AND Name LIKE :'%' + name + '%'
           AND Type__c = :type
-          AND Genre__c LIKE :'%' + genre + '%'
-      ];
-    } else if (type.equals(Consts.ITEMS.TYPE.MAGAZINE)) {
-      return [
-        SELECT Id, Name, Type__c, Genre__c
-        FROM Item__c
-        WHERE
-          Name LIKE :'%' + name + '%'
-          AND Type__c = :type
-          AND Publishing_House__c LIKE :'%' + additionalFiler + '%'
-      ];
-    } else if (type.equals(Consts.ITEMS.TYPE.AUDIOBOOK)) {
-      return [
-        SELECT Id, Name, Type__c, Genre__c
-        FROM Item__c
-        WHERE
-          Name LIKE :'%' + name + '%'
-          AND Type__c = :type
-          AND Lector__c LIKE :'%' + additionalFiler + '%'
+          AND Id NOT IN :existingIDs
       ];
     } else {
       return [
         SELECT Id, Name, Type__c, Genre__c
         FROM Item__c
-        WHERE Name LIKE :'%' + name + '%'
+        WHERE
+          Is_Available__c = TRUE
+          AND Name LIKE :'%' + name + '%'
+          AND Id NOT IN :existingIDs
       ];
     }
   }
 
   @AuraEnabled
-  public static void updateLoans(List<Loan__c> loans) {
-    for (Loan__c loan : loans) {
-      loan.Status__c = Consts.LOANS.STATUS.RETURNED;
+  public static void createLoans(
+    String borrowerId,
+    List<Item__c> items,
+    Date endOfRental,
+    String status
+  ) {
+    List<Loan__c> newLoans = new List<Loan__c>();
+
+    for (Item__c item : items) {
+      newLoans.add(
+        new Loan__c(
+          Borrower__c = borrowerId,
+          Item__c = item.Id,
+          Rental_Date__c = Date.today(),
+          End_Of_Rental__c = endOfRental,
+          Status__c = status
+        )
+      );
     }
 
-    update loans;
+    try {
+      insert newLoans;
+    } catch (Exception e) {
+      throw new DataInserException('Data insert failed');
+    }
   }
 }
