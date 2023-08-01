@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
         <fullName>CurrentlyBorrowedItem</fullName>
@@ -13,7 +13,14 @@
         <protected>true</protected>
         <shortDescription>DML_Failed</shortDescription>
         <value>DML operation failed in class {0} for {1} records:
-{3}</value>
+{2}</value>
+    </labels>
+    <labels>
+        <fullName>DateFieldLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DateFieldLabel</shortDescription>
+        <value>Date</value>
     </labels>
     <labels>
         <fullName>EmailLabel</fullName>
@@ -28,6 +35,13 @@
         <protected>true</protected>
         <shortDescription>EmailPlaceholder</shortDescription>
         <value>Type Here...</value>
+    </labels>
+    <labels>
+        <fullName>ItemNameLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemNameLabel</shortDescription>
+        <value>Item Name</value>
     </labels>
     <labels>
         <fullName>ItemTitle</fullName>
@@ -86,8 +100,16 @@ must be returned by {1}</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ReturnReminderSendFailed</shortDescription>
-        <value>On {0} class ReturnReminder failed to send reminders to addresses: 
+        <value
+    >On {0} class ReturnReminder failed to send reminders to addresses: 
 {1}</value>
+    </labels>
+    <labels>
+        <fullName>SearchedDatatableLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SearchedDatatableLabel</shortDescription>
+        <value>Searched Items</value>
     </labels>
     <labels>
         <fullName>SelectStatusLabel</fullName>
@@ -102,6 +124,27 @@ must be returned by {1}</value>
         <protected>true</protected>
         <shortDescription>SelectStatusPlaceholder</shortDescription>
         <value>Select Status</value>
+    </labels>
+    <labels>
+        <fullName>SelectTypeLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SelectTypeLabel</shortDescription>
+        <value>Item Type</value>
+    </labels>
+    <labels>
+        <fullName>SelectTypePlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SelectTypePlaceholder</shortDescription>
+        <value>Enter type</value>
+    </labels>
+    <labels>
+        <fullName>SelectedDatatable</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SelectedDatatable</shortDescription>
+        <value>Selected Items</value>
     </labels>
     <labels>
         <fullName>UnavailableEmail</fullName>
