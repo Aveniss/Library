@@ -2,10 +2,13 @@
  * Created by kamil on 07.07.2023.
  */
 
-import {api, LightningElement} from "lwc";
+import {api, LightningElement, track, wire} from "lwc";
 import getItems from "@salesforce/apex/MultiLoanCreatorController.getItems";
 import createLoans from "@salesforce/apex/MultiLoanCreatorController.createLoans";
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
+import { RefreshEvent } from "lightning/refresh";
+import {getPicklistValues} from 'lightning/uiObjectInfoApi';
+
 
 import SearchedDatatableLabel from "@salesforce/label/c.SearchedDatatableLabel";
 import SelectedDatatable from "@salesforce/label/c.SelectedDatatable";
@@ -13,6 +16,25 @@ import SelectStatusLabel from "@salesforce/label/c.SelectStatusLabel";
 import DateFieldLabel from "@salesforce/label/c.DateFieldLabel";
 import ItemNameLabel from "@salesforce/label/c.ItemNameLabel";
 import SelectTypeLabel from "@salesforce/label/c.SelectTypeLabel";
+import DefaultRecordTypeId from "@salesforce/label/c.DefaultRecordTypeId";
+
+import ITEM_FIELD_NAME from "@salesforce/schema/Item__c.Name";
+import ITEM_FIELD_GENRE from "@salesforce/schema/Item__c.Genre__c";
+import ITEM_FIELD_TYPE from "@salesforce/schema/Item__c.Type__c";
+
+import TYPE_FIELD from '@salesforce/schema/Item__c.Type__c';
+import STATUS_FIELD from '@salesforce/schema/Loan__c.Status__c';
+
+import ItemLabelName from "@salesforce/label/c.ItemLabelName";
+import ItemLabelType from "@salesforce/label/c.ItemLabelType";
+import ItemLabelGenre from "@salesforce/label/c.ItemLabelGenre";
+
+import DataInsertFailedTitle from "@salesforce/label/c.DataInsertFailedTitle";
+import DataDownloadFailedTitle from "@salesforce/label/c.DataDownloadFailedTitle";
+import DataProcessingSucceeded from "@salesforce/label/c.DataProcessingSucceeded";
+import DataProcessingSucceededMessage from "@salesforce/label/c.DataProcessingSucceededMessage";
+import ItemTypeErrorTitle from "@salesforce/label/c.ItemTypeErrorTitle";
+import LoanStatusErrorTitle from "@salesforce/label/c.LoanStatusErrorTitle";
 
 export default class ShowTheLoan extends LightningElement {
     label = {
@@ -25,57 +47,73 @@ export default class ShowTheLoan extends LightningElement {
     };
 
     @api recordId;
-    itemName = "";
-    itemType = "";
-    loanStatus = "";
-    endOfLoan = "";
+    itemName = '';
+    itemType = '';
+    loanStatus = '';
+    endOfLoan = '';
 
-    searchedItems = [];
-    selectedItems = [];
+    @track searchedItems = [];
+    @track selectedItems = [];
+    @track itemTypes = [];
+    @track newStatusOptions = [];
+
     columns = [
-        {label: "Name", fieldName: "Name", type: "text"},
+        {label: ItemLabelName, fieldName: ITEM_FIELD_NAME.fieldApiName},
         {
-            label: "Type",
-            fieldName: "Type__c",
-            type: "text"
+            label: ItemLabelType, fieldName: ITEM_FIELD_TYPE.fieldApiName
         },
-        {label: "Genre", fieldName: "Genre__c", type: "text"}
+        {label: ItemLabelGenre, fieldName: ITEM_FIELD_GENRE.fieldApiName}
     ];
 
-    get itemTypes() {
-        return [
-            {label: "Paper Book", value: "Paper Book"},
-            {label: "Magazine", value: "Magazine"},
-            {
-                label: "Audiobook",
-                value: "Audiobook"
-            }
-        ];
-    }
-
-    handleDateChange(event) {
-        const selectedDate = new Date(event.target.value);
-        const today = new Date();
-
-        if (selectedDate <= today) {
+    @wire(getPicklistValues, {
+        recordTypeId: DefaultRecordTypeId,
+        fieldApiName: TYPE_FIELD
+    })
+    getTypePicklistValues({error, data}) {
+        if (data) {
+            this.itemTypes = data.values;
+        } else if (error) {
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: "Invalid Date",
-                    message: "The date cannot be earlier than tomorrow",
+                    title: ItemTypeErrorTitle,
+                    message: error.message,
                     variant: "error"
                 })
             );
-            event.target.value = "";
-        } else {
-            this.endOfLoan = selectedDate;
         }
+    }
+
+    @wire(getPicklistValues, {
+        recordTypeId: DefaultRecordTypeId,
+        fieldApiName: STATUS_FIELD
+    })
+    getStatusPicklistValues({error, data}) {
+        if (data) {
+            this.newStatusOptions = data.values;
+        } else if (error) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: LoanStatusErrorTitle,
+                    message: error.message,
+                    variant: "error"
+                })
+            );
+        }
+    }
+
+    handleDateChange(event) {
+        this.endOfLoan = event.target.value;
+    }
+
+    get getMinimumDate() {
+        let currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        return currentDate.toISOString().slice(0, 10);
     }
 
     get checkButtonStatus() {
         return !(
-            this.selectedItems.length !== 0 &&
-            this.endOfLoan !== "" &&
-            this.loanStatus !== ""
+            this.selectedItems.length && this.endOfLoan && this.loanStatus
         );
     }
 
@@ -83,12 +121,6 @@ export default class ShowTheLoan extends LightningElement {
         this.loanStatus = event.target.value;
     }
 
-    get newStatusOptions() {
-        return [
-            {label: "Reservation", value: "Reservation"},
-            {label: "Borrowed", value: "Borrowed"}
-        ];
-    }
 
     handleChangeType(event) {
         this.itemType = event.detail.value;
@@ -164,7 +196,7 @@ export default class ShowTheLoan extends LightningElement {
             .catch((downloadError) => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: "Data Download Failed",
+                        title: DataDownloadFailedTitle,
                         message: downloadError.message,
                         variant: "error"
                     })
@@ -178,19 +210,24 @@ export default class ShowTheLoan extends LightningElement {
             items: this.selectedItems,
             endOfRental: this.endOfLoan,
             status: this.loanStatus
-        })
-            .catch((insertError) => {
+        }).then(() => {
+            this.selectedItems.length = 0;
+            this.dispatchEvent(new RefreshEvent());
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: DataProcessingSucceeded,
+                    message: DataProcessingSucceededMessage,
+                    variant: "success"
+                })
+            );
+        }).catch((insertError) => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: "Data Insert Failed",
+                        title: DataInsertFailedTitle,
                         message: insertError.message,
                         variant: "error"
                     })
                 );
             })
-            .then(() => {
-                // eslint-disable-next-line no-restricted-globals
-                location.reload();
-            });
     }
 }

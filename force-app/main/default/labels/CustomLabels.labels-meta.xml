@@ -51,6 +51,13 @@
         <value>Date</value>
     </labels>
     <labels>
+        <fullName>DefaultRecordTypeId</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultRecordTypeId</shortDescription>
+        <value>012000000000000AAA</value>
+    </labels>
+    <labels>
         <fullName>EmailLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>

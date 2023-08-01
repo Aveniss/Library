@@ -50,7 +50,6 @@
                 <lightning-combobox
                         class="smallInputWidth"
                         label={label.SelectStatusLabel}
-                        value=""
                         onchange={handleLoanStatusChange}
                         options={newStatusOptions}
                         required
@@ -60,6 +59,7 @@
                         class="smallInputWidth"
                         onchange={handleDateChange}
                         label={label.DateFieldLabel}
+                        min={getMinimumDate}
                         required
                 ></lightning-input>
             </div>
