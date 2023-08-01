@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
         <fullName>CurrentlyBorrowedItem</fullName>
@@ -16,11 +16,46 @@
 {2}</value>
     </labels>
     <labels>
+        <fullName>DataDownloadFailedTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DataDownloadFailedTitle</shortDescription>
+        <value>Data Download Failed</value>
+    </labels>
+    <labels>
+        <fullName>DataInsertFailedTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DataInsertFailedTitle</shortDescription>
+        <value>Data Insert Failed</value>
+    </labels>
+    <labels>
+        <fullName>DataProcessingSucceeded</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DataProcessingSucceeded</shortDescription>
+        <value>Data Processing Succeeded</value>
+    </labels>
+    <labels>
+        <fullName>DataProcessingSucceededMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DataProcessingSucceededMessage</shortDescription>
+        <value>New Loans have been created</value>
+    </labels>
+    <labels>
         <fullName>DateFieldLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>DateFieldLabel</shortDescription>
         <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>DefaultRecordTypeId</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DefaultRecordTypeId</shortDescription>
+        <value>012000000000000AAA</value>
     </labels>
     <labels>
         <fullName>EmailLabel</fullName>
@@ -35,6 +70,27 @@
         <protected>true</protected>
         <shortDescription>EmailPlaceholder</shortDescription>
         <value>Type Here...</value>
+    </labels>
+    <labels>
+        <fullName>ItemLabelGenre</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelGenre</shortDescription>
+        <value>Genre</value>
+    </labels>
+    <labels>
+        <fullName>ItemLabelName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelName</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>ItemLabelType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelType</shortDescription>
+        <value>Type</value>
     </labels>
     <labels>
         <fullName>ItemNameLabel</fullName>
@@ -58,6 +114,13 @@
         <value>Type:</value>
     </labels>
     <labels>
+        <fullName>ItemTypeErrorTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemTypeErrorTitle</shortDescription>
+        <value>Item Types Download Failed</value>
+    </labels>
+    <labels>
         <fullName>LoanEnd</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -77,6 +140,13 @@
         <protected>true</protected>
         <shortDescription>LoanStart</shortDescription>
         <value>Rental Date:</value>
+    </labels>
+    <labels>
+        <fullName>LoanStatusErrorTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoanStatusErrorTitle</shortDescription>
+        <value>Loan Status Download Failed</value>
     </labels>
     <labels>
         <fullName>MaxNumberOfBorrowing</fullName>
@@ -100,8 +170,7 @@ must be returned by {1}</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ReturnReminderSendFailed</shortDescription>
-        <value
-    >On {0} class ReturnReminder failed to send reminders to addresses: 
+        <value>On {0} class ReturnReminder failed to send reminders to addresses: 
 {1}</value>
     </labels>
     <labels>
