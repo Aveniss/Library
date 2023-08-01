@@ -46,10 +46,10 @@ export default class ShowTheLoan extends LightningElement {
   };
 
   @api recordId;
-  itemName = "";
-  itemType = "";
-  loanStatus = "";
-  endOfLoan = "";
+  itemName = '';
+  itemType = '';
+  loanStatus = '';
+  endOfLoan = '';
 
   @track searchedItems = [];
   @track selectedItems = [];
