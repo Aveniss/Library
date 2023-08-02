@@ -1,0 +1,89 @@
+<template>
+  <lightning-card>
+    <div>
+      <div class="slds-p-around_medium lgc-bg">
+        <lightning-input
+          class="bigInputWidth"
+          type="text"
+          onchange={handleChangeName}
+          label={myLabel.ItemNameLabel}
+        ></lightning-input>
+      </div>
+      <lightning-combobox
+        class="bigInputWidth"
+        name="progress"
+        label={myLabel.SelectTypeLabel}
+        options={itemTypes}
+        onchange={handleChangeType}
+      ></lightning-combobox>
+      <lightning-button
+        variant="brand"
+        label={myLabel.SearchButtonLabel}
+        onclick={searchNewItems}
+        title="Primary action"
+        class="buttonDiv slds-m-around_medium"
+      ></lightning-button>
+    </div>
+    <div class="columnDiv">
+      <div class="divSize">
+        <h2>{myLabel.SearchedDatatableLabel}</h2>
+        <lightning-datatable
+          class="datatable"
+          key-field="Id"
+          columns={columns}
+          data={searchedItems}
+          onrowselection={changeOnSelect}
+          resize-column-disabled
+        ></lightning-datatable>
+      </div>
+      <div class="buttonDiv slds-p-around_medium lgc-bg">
+        <lightning-button-icon
+          class="slds-m-around_medium"
+          onclick={moveSelectedItems}
+          icon-name="utility:arrow_right"
+        ></lightning-button-icon>
+        <lightning-button-icon
+          class="slds-m-around_medium"
+          icon-name="utility:arrow_left"
+          onclick={moveUnselectedItems}
+        ></lightning-button-icon>
+        <lightning-combobox
+          class="smallInputWidth"
+          label={myLabel.SelectStatusLabel}
+          onchange={handleLoanStatusChange}
+          options={newStatusOptions}
+          required
+        ></lightning-combobox>
+        <lightning-input
+          type="date"
+          class="smallInputWidth"
+          onchange={handleDateChange}
+          label={myLabel.DateFieldLabel}
+          min={minimumDate}
+          required
+        ></lightning-input>
+      </div>
+      <div class="divSize">
+        <h2>{myLabel.SelectedDatatable}</h2>
+        <lightning-datatable
+          key-field="Id"
+          class="datatable"
+          columns={columns}
+          data={selectedItems}
+          onrowselection={changeOnUnselect}
+          resize-column-disabled
+        ></lightning-datatable>
+      </div>
+    </div>
+    <div>
+      <lightning-button
+        variant="brand"
+        disabled={checkRequiredFields}
+        label={myLabel.CreateButtonLabel}
+        title="Primary action"
+        onclick={createNewLoans}
+        class="slds-m-around_large buttonDiv"
+      ></lightning-button>
+    </div>
+  </lightning-card>
+</template>
