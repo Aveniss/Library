@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>CreateButtonLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CreateButtonLabel</shortDescription>
+        <value>CREATE</value>
+    </labels>
     <labels>
         <fullName>CurrentlyBorrowedItem</fullName>
         <language>en_US</language>
@@ -170,8 +177,16 @@ must be returned by {1}</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ReturnReminderSendFailed</shortDescription>
-        <value>On {0} class ReturnReminder failed to send reminders to addresses: 
+        <value
+    >On {0} class ReturnReminder failed to send reminders to addresses: 
 {1}</value>
+    </labels>
+    <labels>
+        <fullName>SearchButtonLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SearchButtonLabel</shortDescription>
+        <value>SEARCH</value>
     </labels>
     <labels>
         <fullName>SearchedDatatableLabel</fullName>
