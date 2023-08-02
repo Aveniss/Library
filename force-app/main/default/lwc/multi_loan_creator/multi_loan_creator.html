@@ -6,27 +6,27 @@
           class="bigInputWidth"
           type="text"
           onchange={handleChangeName}
-          label={label.ItemNameLabel}
+          label={myLabel.ItemNameLabel}
         ></lightning-input>
       </div>
       <lightning-combobox
         class="bigInputWidth"
         name="progress"
-        label={label.SelectTypeLabel}
+        label={myLabel.SelectTypeLabel}
         options={itemTypes}
         onchange={handleChangeType}
       ></lightning-combobox>
       <lightning-button
         variant="brand"
-        label="SEARCH"
+        label={myLabel.SearchButtonLabel}
         onclick={searchNewItems}
         title="Primary action"
-        class="button buttonDiv"
+        class="buttonDiv slds-m-around_medium"
       ></lightning-button>
     </div>
-    <div class="columnsDiv">
+    <div class="columnDiv">
       <div class="divSize">
-        <h2>{label.SearchedDatatableLabel}</h2>
+        <h2>{myLabel.SearchedDatatableLabel}</h2>
         <lightning-datatable
           class="datatable"
           key-field="Id"
@@ -36,20 +36,20 @@
           resize-column-disabled
         ></lightning-datatable>
       </div>
-      <div class="buttonsDiv slds-p-around_medium lgc-bg">
+      <div class="buttonDiv slds-p-around_medium lgc-bg">
         <lightning-button-icon
-          class="iconButton"
+          class="slds-m-around_medium"
           onclick={moveSelectedItems}
           icon-name="utility:arrow_right"
         ></lightning-button-icon>
         <lightning-button-icon
-          class="iconButton"
+          class="slds-m-around_medium"
           icon-name="utility:arrow_left"
           onclick={moveUnselectedItems}
         ></lightning-button-icon>
         <lightning-combobox
           class="smallInputWidth"
-          label={label.SelectStatusLabel}
+          label={myLabel.SelectStatusLabel}
           onchange={handleLoanStatusChange}
           options={newStatusOptions}
           required
@@ -58,13 +58,13 @@
           type="date"
           class="smallInputWidth"
           onchange={handleDateChange}
-          label={label.DateFieldLabel}
-          min={getMinimumDate}
+          label={myLabel.DateFieldLabel}
+          min={minimumDate}
           required
         ></lightning-input>
       </div>
       <div class="divSize">
-        <h2>Selected Items</h2>
+        <h2>{myLabel.SelectedDatatable}</h2>
         <lightning-datatable
           key-field="Id"
           class="datatable"
@@ -78,11 +78,11 @@
     <div>
       <lightning-button
         variant="brand"
-        disabled={checkButtonStatus}
-        label="CREATE"
+        disabled={checkRequiredFields}
+        label={myLabel.CreateButtonLabel}
         title="Primary action"
         onclick={createNewLoans}
-        class="slds-m-left_x-small buttonDiv"
+        class="slds-m-around_large buttonDiv"
       ></lightning-button>
     </div>
   </lightning-card>

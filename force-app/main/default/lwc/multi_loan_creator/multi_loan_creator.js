@@ -6,50 +6,17 @@ import { api, LightningElement, track, wire } from "lwc";
 import getItems from "@salesforce/apex/MultiLoanCreatorController.getItems";
 import createLoans from "@salesforce/apex/MultiLoanCreatorController.createLoans";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import { RefreshEvent } from "lightning/refresh";
 import { getPicklistValues } from "lightning/uiObjectInfoApi";
-
-import SearchedDatatableLabel from "@salesforce/label/c.SearchedDatatableLabel";
-import SelectedDatatable from "@salesforce/label/c.SelectedDatatable";
-import SelectStatusLabel from "@salesforce/label/c.SelectStatusLabel";
-import DateFieldLabel from "@salesforce/label/c.DateFieldLabel";
-import ItemNameLabel from "@salesforce/label/c.ItemNameLabel";
-import SelectTypeLabel from "@salesforce/label/c.SelectTypeLabel";
-import DefaultRecordTypeId from "@salesforce/label/c.DefaultRecordTypeId";
-
-import ITEM_FIELD_NAME from "@salesforce/schema/Item__c.Name";
-import ITEM_FIELD_GENRE from "@salesforce/schema/Item__c.Genre__c";
-import ITEM_FIELD_TYPE from "@salesforce/schema/Item__c.Type__c";
-
-import TYPE_FIELD from "@salesforce/schema/Item__c.Type__c";
-import STATUS_FIELD from "@salesforce/schema/Loan__c.Status__c";
-
-import ItemLabelName from "@salesforce/label/c.ItemLabelName";
-import ItemLabelType from "@salesforce/label/c.ItemLabelType";
-import ItemLabelGenre from "@salesforce/label/c.ItemLabelGenre";
-
-import DataInsertFailedTitle from "@salesforce/label/c.DataInsertFailedTitle";
-import DataDownloadFailedTitle from "@salesforce/label/c.DataDownloadFailedTitle";
-import DataProcessingSucceeded from "@salesforce/label/c.DataProcessingSucceeded";
-import DataProcessingSucceededMessage from "@salesforce/label/c.DataProcessingSucceededMessage";
-import ItemTypeErrorTitle from "@salesforce/label/c.ItemTypeErrorTitle";
-import LoanStatusErrorTitle from "@salesforce/label/c.LoanStatusErrorTitle";
+import { labels } from "./labels.js";
 
 export default class ShowTheLoan extends LightningElement {
-  label = {
-    SelectTypeLabel,
-    SearchedDatatableLabel,
-    SelectedDatatable,
-    SelectStatusLabel,
-    DateFieldLabel,
-    ItemNameLabel
-  };
-
   @api recordId;
   itemName = "";
   itemType = "";
   loanStatus = "";
   endOfLoan = "";
+  myLabel = labels;
+  minimumDate = "";
 
   @track searchedItems = [];
   @track selectedItems = [];
@@ -57,17 +24,29 @@ export default class ShowTheLoan extends LightningElement {
   @track newStatusOptions = [];
 
   columns = [
-    { label: ItemLabelName, fieldName: ITEM_FIELD_NAME.fieldApiName },
     {
-      label: ItemLabelType,
-      fieldName: ITEM_FIELD_TYPE.fieldApiName
+      label: labels.ItemNameLabel,
+      fieldName: labels.ITEM_FIELD_NAME.fieldApiName
     },
-    { label: ItemLabelGenre, fieldName: ITEM_FIELD_GENRE.fieldApiName }
+    {
+      label: labels.ItemLabelType,
+      fieldName: labels.ITEM_FIELD_TYPE.fieldApiName
+    },
+    {
+      label: labels.ItemLabelGenre,
+      fieldName: labels.ITEM_FIELD_GENRE.fieldApiName
+    }
   ];
 
+  connectedCallback() {
+    let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    this.minimumDate = currentDate.toISOString().slice(0, 10);
+  }
+
   @wire(getPicklistValues, {
-    recordTypeId: DefaultRecordTypeId,
-    fieldApiName: TYPE_FIELD
+    recordTypeId: labels.DefaultRecordTypeId,
+    fieldApiName: labels.TYPE_FIELD
   })
   getTypePicklistValues({ error, data }) {
     if (data) {
@@ -75,7 +54,7 @@ export default class ShowTheLoan extends LightningElement {
     } else if (error) {
       this.dispatchEvent(
         new ShowToastEvent({
-          title: ItemTypeErrorTitle,
+          title: labels.ItemTypeErrorTitle,
           message: error.message,
           variant: "error"
         })
@@ -84,8 +63,8 @@ export default class ShowTheLoan extends LightningElement {
   }
 
   @wire(getPicklistValues, {
-    recordTypeId: DefaultRecordTypeId,
-    fieldApiName: STATUS_FIELD
+    recordTypeId: labels.DefaultRecordTypeId,
+    fieldApiName: labels.STATUS_FIELD
   })
   getStatusPicklistValues({ error, data }) {
     if (data) {
@@ -93,7 +72,7 @@ export default class ShowTheLoan extends LightningElement {
     } else if (error) {
       this.dispatchEvent(
         new ShowToastEvent({
-          title: LoanStatusErrorTitle,
+          title: labels.LoanStatusErrorTitle,
           message: error.message,
           variant: "error"
         })
@@ -104,14 +83,7 @@ export default class ShowTheLoan extends LightningElement {
   handleDateChange(event) {
     this.endOfLoan = event.target.value;
   }
-
-  get getMinimumDate() {
-    let currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 1);
-    return currentDate.toISOString().slice(0, 10);
-  }
-
-  get checkButtonStatus() {
+  get checkRequiredFields() {
     return !(this.selectedItems.length && this.endOfLoan && this.loanStatus);
   }
 
@@ -185,14 +157,13 @@ export default class ShowTheLoan extends LightningElement {
       .catch((downloadError) => {
         this.dispatchEvent(
           new ShowToastEvent({
-            title: DataDownloadFailedTitle,
+            title: labels.DataDownloadFailedTitle,
             message: downloadError.message,
             variant: "error"
           })
         );
       });
   }
-
   createNewLoans() {
     createLoans({
       borrowerId: this.recordId,
@@ -201,20 +172,19 @@ export default class ShowTheLoan extends LightningElement {
       status: this.loanStatus
     })
       .then(() => {
-        this.selectedItems.length = 0;
-        this.dispatchEvent(new RefreshEvent());
         this.dispatchEvent(
           new ShowToastEvent({
-            title: DataProcessingSucceeded,
-            message: DataProcessingSucceededMessage,
+            title: labels.DataProcessingSucceeded,
+            message: labels.DataProcessingSucceededMessage,
             variant: "success"
           })
         );
+        this.selectedItems = [];
       })
       .catch((insertError) => {
         this.dispatchEvent(
           new ShowToastEvent({
-            title: DataInsertFailedTitle,
+            title: labels.DataInsertFailedTitle,
             message: insertError.message,
             variant: "error"
           })

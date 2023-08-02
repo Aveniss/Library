@@ -1,41 +1,40 @@
-.columnsDiv {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-    height: 300px;
+html,
+body {
+  font-size: 16px;
 }
 
-.buttonsDiv {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.iconButton {
-    margin: 10px;
+.columnDiv {
+  display: flex;
+  justify-content: space-between;
+  height: 18.75rem;
 }
 
 .buttonDiv {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+}
+
+.buttonDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .datatable {
-    overflow-y: auto;
-    width: 400px;
+  overflow-y: auto;
+  width: 25rem;
 }
 
 .divSize {
-    width: 400px;
+  width: 25rem;
 }
 
 .bigInputWidth {
-    width: 100%;
-    /*margin-left: 0;*/
+  width: 100%;
 }
 
 .smallInputWidth {
-    width: 100px;
+  width: 6.25rem;
 }
