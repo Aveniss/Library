@@ -79,6 +79,20 @@
         <value>Type Here...</value>
     </labels>
     <labels>
+        <fullName>GenerateNewPinError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NewPINGeneratonFailed</shortDescription>
+        <value>New PIN Generaton Failed</value>
+    </labels>
+    <labels>
+        <fullName>GenerateNewPinLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>GenerateNewPinLabel</shortDescription>
+        <value>Generate New PIN</value>
+    </labels>
+    <labels>
         <fullName>ItemLabelGenre</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -163,6 +177,24 @@
         <value>You have achieved maximum number of borrowing items</value>
     </labels>
     <labels>
+        <fullName>NewPersonMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NewPersonMessage</shortDescription>
+        <value>Good morning
+Your account has been successfully created. Your login details:
+Client ID: {0}
+PIN: {1}</value>
+    </labels>
+    <labels>
+        <fullName>NewPinMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NewPinMessage</shortDescription>
+        <value>Good morning
+this is your new PIN: {0}</value>
+    </labels>
+    <labels>
         <fullName>ReturnReminder</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -229,6 +261,13 @@ must be returned by {1}</value>
         <protected>true</protected>
         <shortDescription>SelectedDatatable</shortDescription>
         <value>Selected Items</value>
+    </labels>
+    <labels>
+        <fullName>SuccessfulyGeneratePinLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SuccessfulyGeneratePinTitle</shortDescription>
+        <value>New Pin Successfully Generated</value>
     </labels>
     <labels>
         <fullName>UnavailableEmail</fullName>
