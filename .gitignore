@@ -8,6 +8,8 @@
 .localdevserver/
 deploy-options.json
 
+OfflineSymbolTable.zip
+
 # LWC VSCode autocomplete
 **/lwc/jsconfig.json
 
