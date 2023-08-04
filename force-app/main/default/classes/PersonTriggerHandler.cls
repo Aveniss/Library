@@ -6,6 +6,10 @@ public with sharing class PersonTriggerHandler {
   @TestVisible
   private static final String NEW_USER_SUBJECT = 'Login Data';
 
+  public static void generatePIN(List<Person__c> newPeople) {
+    UserUtils.generatePIN(newPeople);
+  }
+
   public static void sendLoginData(List<Person__c> newPeople) {
     List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
 

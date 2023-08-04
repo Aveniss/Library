@@ -3,7 +3,7 @@
  */
 
 import { api, LightningElement } from "lwc";
-import generateNewPIN from "@salesforce/apex/UserUtils.generateNewPin";
+import generateNewPIN from "@salesforce/apex/GenerateNewPinController.generateNewPin";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { label } from "./labels.js";
 

@@ -29,20 +29,6 @@ public with sharing class UserUtilsTest {
   }
 
   @IsTest
-  public static void generateNewPinTest() {
-    Person__c person = [SELECT Id, Encrypted_PIN__c FROM Person__c LIMIT 1];
-    String oldPin = person.Encrypted_PIN__c;
-
-    Test.startTest();
-    UserUtils.generateNewPin(person.Id);
-    Test.stopTest();
-
-    person = [SELECT Id, Encrypted_PIN__c FROM Person__c WHERE Id = :person.Id];
-
-    Assert.areNotEqual(oldPin, person.Encrypted_PIN__c);
-  }
-
-  @IsTest
   public static void sendLoginDataForChangePINTest() {
     List<Person__c> people = [
       SELECT Person_ID__c, Email__c, Encrypted_PIN__c

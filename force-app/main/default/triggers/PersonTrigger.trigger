@@ -4,7 +4,7 @@
 
 trigger PersonTrigger on Person__c(before insert, after insert) {
   if (Trigger.isInsert && Trigger.isBefore) {
-    UserUtils.generatePIN(Trigger.new);
+    PersonTriggerHandler.generatePIN(Trigger.new);
   }
 
   if (Trigger.isInsert && Trigger.isAfter) {

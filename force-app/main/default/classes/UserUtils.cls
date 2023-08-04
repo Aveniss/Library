@@ -6,18 +6,6 @@ public with sharing class UserUtils {
   @TestVisible
   private static final String NEW_PIN_SUBJECT = 'New PIN';
 
-  @AuraEnabled
-  public static void generateNewPin(String personId) {
-    List<Person__c> person = [
-      SELECT Email__c, Person_ID__c, Encrypted_PIN__c
-      FROM Person__c
-      WHERE Id = :personId
-    ];
-    generatePIN(person);
-    update person;
-    sendNewPinData(person);
-  }
-
   public static void generatePIN(List<Person__c> newPeople) {
     for (Person__c person : newPeople) {
       person.Encrypted_PIN__c = String.valueOf(generateRandomLong());
