@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project version="4">
-  <component name="IlluminatedCloudSettings">
-    <option name="connections">
-      <list>
-        <IlluminatedCloudConnection>
-          <option name="connectionName" value="trialhead-resilient-impala" />
-          <option name="connectionType" value="OAUTH" />
-          <option name="defaultModuleName" value="biblioteka" />
-          <option
+    <component name="IlluminatedCloudSettings">
+        <option name="connections">
+            <list>
+                <IlluminatedCloudConnection>
+                    <option
+            name="connectionName"
+            value="trialhead-resilient-impala"
+          />
+                    <option name="connectionType" value="OAUTH" />
+                    <option name="defaultModuleName" value="biblioteka" />
+                    <option
             name="offlineSymbolTablePath"
             value="$PROJECT_DIR$/IlluminatedCloud/trialhead_resilient_impala/OfflineSymbolTable.zip"
           />
-        </IlluminatedCloudConnection>
-      </list>
-    </option>
-  </component>
+                </IlluminatedCloudConnection>
+            </list>
+        </option>
+    </component>
 </project>
