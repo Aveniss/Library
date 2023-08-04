@@ -9,6 +9,12 @@
 deploy-options.json
 
 OfflineSymbolTable.zip
+.project
+.settings/
+salesforce.schema
+*.properties
+illuminatedCloud.xml
+biblioteka.iml
 
 # LWC VSCode autocomplete
 **/lwc/jsconfig.json
