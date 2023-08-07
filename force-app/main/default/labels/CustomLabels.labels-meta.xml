@@ -100,6 +100,13 @@
         <value>Genre</value>
     </labels>
     <labels>
+        <fullName>ItemLabelLector</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelLector</shortDescription>
+        <value>Lector</value>
+    </labels>
+    <labels>
         <fullName>ItemLabelName</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -107,11 +114,25 @@
         <value>Name</value>
     </labels>
     <labels>
+        <fullName>ItemLabelPublishingHouse</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelPublishingHouse</shortDescription>
+        <value>Publishing House</value>
+    </labels>
+    <labels>
         <fullName>ItemLabelType</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ItemLabelType</shortDescription>
         <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>ItemLabelVersion</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelVersion</shortDescription>
+        <value>Version</value>
     </labels>
     <labels>
         <fullName>ItemNameLabel</fullName>
@@ -266,7 +287,7 @@ must be returned by {1}</value>
         <fullName>SuccessfulyGeneratePinLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>SuccessfulyGeneratePinTitle</shortDescription>
+        <shortDescription>SuccessfullyGeneratePinTitle</shortDescription>
         <value>New Pin Successfully Generated</value>
     </labels>
     <labels>
