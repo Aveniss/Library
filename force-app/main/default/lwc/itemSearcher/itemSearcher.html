@@ -1,0 +1,85 @@
+<template>
+  <lightning-card>
+    <div class="slds-p-around_medium lgc-bg">
+      <lightning-input
+        class="bigInputWidth"
+        type="text"
+        label={myLabel.ItemNameLabel}
+        onchange={handleChangeName}
+      ></lightning-input>
+    </div>
+    <lightning-combobox
+      class="bigInputWidth"
+      name="progress"
+      label={myLabel.SelectTypeLabel}
+      options={itemTypes}
+      onchange={handleChangeType}
+    ></lightning-combobox>
+    <template lwc:if={isBook}>
+      <lightning-combobox
+        class="bigInputWidth"
+        name="progress"
+        label={myLabel.ItemLabelGenre}
+        options={itemGenres}
+        onchange={handleChangeGenre}
+      ></lightning-combobox>
+    </template>
+    <template lwc:if={isAudiobook}>
+      <div class="slds-p-around_medium lgc-bg">
+        <lightning-input
+          class="bigInputWidth"
+          type="text"
+          label={myLabel.ItemLabelLector}
+          onchange={handleChangeLector}
+        ></lightning-input>
+        <lightning-input
+          class="bigInputWidth"
+          type="number"
+          label={myLabel.ItemLabelVersion}
+          min="0"
+          onchange={handleChangeVersion}
+        ></lightning-input>
+      </div>
+    </template>
+    <template lwc:if={isMagazine}>
+      <div class="slds-p-around_medium lgc-bg">
+        <lightning-input
+          class="bigInputWidth"
+          type="text"
+          label={myLabel.ItemLabelPublishingHouse}
+          onchange={handleChangePublishingHouse}
+        ></lightning-input>
+      </div>
+    </template>
+    <lightning-button
+      variant="brand"
+      label={myLabel.SearchButtonLabel}
+      onclick={loadData}
+      title="Primary action"
+      class="buttonDiv slds-m-around_medium"
+    ></lightning-button>
+
+    <div
+      class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_large slds-m-horizontal_none"
+    >
+      <lightning-layout multiple-rows>
+        <template for:each={items} for:item="item">
+          <lightning-layout-item key={item.Id} padding="around-small">
+            <div
+              id={item.Id}
+              data-id={item.Id}
+              class="unselectedDiv enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center"
+            >
+              {myLabel.ItemLabelName}:<br />
+              {item.Name}<br />
+              {myLabel.ItemLabelType}:<br />
+              {item.Type__c}<br />
+              {myLabel.ItemLabelGenre}:<br />
+              {item.Genre__c}
+            </div>
+          </lightning-layout-item>
+        </template>
+      </lightning-layout>
+    </div>
+  </lightning-card>
+</template>
