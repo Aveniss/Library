@@ -15,6 +15,10 @@ import ItemLabelName from "@salesforce/label/c.ItemLabelName";
 import ItemLabelType from "@salesforce/label/c.ItemLabelType";
 import ItemLabelGenre from "@salesforce/label/c.ItemLabelGenre";
 
+import PaperBookItemType from "@salesforce/label/c.PaperBookItemType";
+import MagazineItemType from "@salesforce/label/c.MagazineItemType";
+import AudiobookItemType from "@salesforce/label/c.AudiobookItemType";
+
 import ItemTypeErrorTitle from "@salesforce/label/c.ItemTypeErrorTitle";
 
 import ItemLabelVersion from "@salesforce/label/c.ItemLabelVersion";
@@ -22,6 +26,9 @@ import ItemLabelLector from "@salesforce/label/c.ItemLabelLector";
 import ItemLabelPublishingHouse from "@salesforce/label/c.ItemLabelPublishingHouse";
 
 const labels = {
+  PaperBookItemType: PaperBookItemType,
+  MagazineItemType: MagazineItemType,
+  AudiobookItemType: AudiobookItemType,
   ItemLabelVersion: ItemLabelVersion,
   ItemLabelPublishingHouse: ItemLabelPublishingHouse,
   ItemLabelLector: ItemLabelLector,

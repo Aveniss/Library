@@ -18,19 +18,21 @@ export default class itemSearcher extends LightningElement {
   get getBookStatus() {
     return (
       this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
-      "Paper Book"
+      labels.PaperBookItemType
     );
   }
 
   get getMagazineStatus() {
     return (
-      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] === "Magazine"
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
+      labels.MagazineItemType
     );
   }
 
   get getAudiobookStatus() {
     return (
-      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] === "Audiobook"
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
+      labels.AudiobookItemType
     );
   }
 
