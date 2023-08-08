@@ -7,6 +7,9 @@ import SearchButtonLabel from "@salesforce/label/c.SearchButtonLabel";
 import ITEM_FIELD_NAME from "@salesforce/schema/Item__c.Name";
 import ITEM_FIELD_GENRE from "@salesforce/schema/Item__c.Genre__c";
 import ITEM_FIELD_TYPE from "@salesforce/schema/Item__c.Type__c";
+import ITEM_FIELD_PUBLISHING_HOUSE from "@salesforce/schema/Item__c.Publishing_House__c";
+import ITEM_FIELD_LECTOR from "@salesforce/schema/Item__c.Lector__c";
+import ITEM_FIELD_VERSION from "@salesforce/schema/Item__c.Version__c";
 
 import ItemLabelName from "@salesforce/label/c.ItemLabelName";
 import ItemLabelType from "@salesforce/label/c.ItemLabelType";
@@ -22,6 +25,9 @@ const labels = {
   ItemLabelVersion: ItemLabelVersion,
   ItemLabelPublishingHouse: ItemLabelPublishingHouse,
   ItemLabelLector: ItemLabelLector,
+  ITEM_FIELD_PUBLISHING_HOUSE: ITEM_FIELD_PUBLISHING_HOUSE,
+  ITEM_FIELD_LECTOR: ITEM_FIELD_LECTOR,
+  ITEM_FIELD_VERSION: ITEM_FIELD_VERSION,
   SelectTypeLabel: SelectTypeLabel,
   ItemNameLabel: ItemNameLabel,
   DefaultRecordTypeId: DefaultRecordTypeId,

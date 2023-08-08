@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Lector__c</fullName>
-    <defaultValue>&quot;unknown&quot;</defaultValue>
     <externalId>false</externalId>
     <label>Lector</label>
     <length>50</length>

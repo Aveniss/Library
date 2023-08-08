@@ -1,3 +1,10 @@
+.custom-box {
+  background-color: #f4f6f9;
+  width: 180px;
+  height: 230px;
+  border-radius: 20px;
+}
+
 .buttonDiv {
   display: flex;
   flex-direction: column;
@@ -5,25 +12,11 @@
   margin: 1rem;
 }
 
-.buttonDiv {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.datatable {
-  overflow-y: auto;
-  width: 25rem;
-}
-
-.divSize {
-  width: 25rem;
-}
-
 .bigInputWidth {
   width: 100%;
 }
 
-.smallInputWidth {
-  width: 6.25rem;
+.combobox {
+  margin-left: 1rem;
+  width: 98%;
 }

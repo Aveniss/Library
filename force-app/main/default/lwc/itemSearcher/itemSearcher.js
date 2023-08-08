@@ -8,22 +8,31 @@ import { getPicklistValues } from "lightning/uiObjectInfoApi";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import searchItems from "@salesforce/apex/ItemSearcherController.searchItems";
 
-export default class HelloComponentForVFLWC extends LightningElement {
+export default class itemSearcher extends LightningElement {
   myLabel = labels;
   @track items = [];
   @track itemTypes = [];
   @track itemGenres = [];
+  searchProperties = {};
 
-  @track isBook = false;
-  @track isMagazine = false;
-  @track isAudiobook = false;
+  get getBookStatus() {
+    return (
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
+      "Paper Book"
+    );
+  }
 
-  itemName = "";
-  selectedType = "";
-  selectedGenre = "";
-  selectedVersion = 0;
-  selectedLector = "";
-  selectedPublishingHouse = "";
+  get getMagazineStatus() {
+    return (
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] === "Magazine"
+    );
+  }
+
+  get getAudiobookStatus() {
+    return (
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] === "Audiobook"
+    );
+  }
 
   @wire(getPicklistValues, {
     recordTypeId: labels.DefaultRecordTypeId,
@@ -61,56 +70,26 @@ export default class HelloComponentForVFLWC extends LightningElement {
     }
   }
 
-  handleChangeType(event) {
-    this.isBook = false;
-    this.isMagazine = false;
-    this.isAudiobook = false;
-    this.selectedType = "";
-    this.selectedGenre = "";
-    this.selectedVersion = 0;
-    this.selectedLector = "";
-    this.selectedPublishingHouse = "";
+  handleFieldChange(event) {
+    if (event.target.name === labels.ITEM_FIELD_TYPE.fieldApiName) {
+      let itemName = this.searchProperties[labels.ITEM_FIELD_NAME.fieldApiName];
 
-    this.selectedType = event.target.value;
-
-    if (this.selectedType === "Paper Book") {
-      this.isBook = true;
-    } else if (this.selectedType === "Magazine") {
-      this.isMagazine = true;
-    } else {
-      this.isAudiobook = true;
+      if (itemName) {
+        this.searchProperties = {
+          [labels.ITEM_FIELD_NAME.fieldApiName]: itemName
+        };
+      } else {
+        this.searchProperties = {};
+      }
     }
-  }
-
-  handleChangeName(event) {
-    this.itemName = event.target.value;
-  }
-
-  handleChangeGenre(event) {
-    this.selectedGenre = event.target.value;
-  }
-
-  handleChangeLector(event) {
-    this.selectedLector = event.target.value;
-  }
-
-  handleChangeVersion(event) {
-    this.selectedVersion = event.target.value;
-  }
-
-  handleChangePublishingHouse(event) {
-    this.selectedPublishingHouse = event.target.value;
+    this.searchProperties = {
+      ...this.searchProperties,
+      [event.target.name]: event.target.value
+    };
   }
 
   loadData() {
-    searchItems({
-      name: this.itemName,
-      type: this.selectedType,
-      genre: this.selectedGenre,
-      version: this.selectedVersion,
-      publishingHouse: this.selectedPublishingHouse,
-      lector: this.selectedLector
-    })
+    searchItems({ searchProperties: this.searchProperties })
       .then((result) => {
         this.items = result;
       })

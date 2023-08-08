@@ -1,53 +1,58 @@
 <template>
   <lightning-card>
-    <div class="slds-p-around_medium lgc-bg">
+    <div class="slds-p-around_medium">
       <lightning-input
         class="bigInputWidth"
+        name={myLabel.ITEM_FIELD_NAME.fieldApiName}
         type="text"
         label={myLabel.ItemNameLabel}
-        onchange={handleChangeName}
+        onchange={handleFieldChange}
       ></lightning-input>
     </div>
     <lightning-combobox
-      class="bigInputWidth"
-      name="progress"
+      class="combobox"
+      name={myLabel.ITEM_FIELD_TYPE.fieldApiName}
       label={myLabel.SelectTypeLabel}
       options={itemTypes}
-      onchange={handleChangeType}
+      onchange={handleFieldChange}
     ></lightning-combobox>
-    <template lwc:if={isBook}>
+    <template lwc:if={getBookStatus}>
       <lightning-combobox
-        class="bigInputWidth"
-        name="progress"
+        class="combobox"
         label={myLabel.ItemLabelGenre}
+        name={myLabel.ITEM_FIELD_GENRE.fieldApiName}
         options={itemGenres}
-        onchange={handleChangeGenre}
+        onchange={handleFieldChange}
       ></lightning-combobox>
     </template>
-    <template lwc:if={isAudiobook}>
-      <div class="slds-p-around_medium lgc-bg">
+    <template lwc:if={getAudiobookStatus}>
+      <div class="slds-p-around_medium">
         <lightning-input
           class="bigInputWidth"
           type="text"
+          name={myLabel.ITEM_FIELD_LECTOR.fieldApiName}
           label={myLabel.ItemLabelLector}
-          onchange={handleChangeLector}
+          onchange={handleFieldChange}
         ></lightning-input>
         <lightning-input
           class="bigInputWidth"
           type="number"
+          name={myLabel.ITEM_FIELD_VERSION.fieldApiName}
           label={myLabel.ItemLabelVersion}
+          step="0.1"
           min="0"
-          onchange={handleChangeVersion}
+          onchange={handleFieldChange}
         ></lightning-input>
       </div>
     </template>
-    <template lwc:if={isMagazine}>
-      <div class="slds-p-around_medium lgc-bg">
+    <template lwc:if={getMagazineStatus}>
+      <div class="slds-p-around_medium">
         <lightning-input
           class="bigInputWidth"
           type="text"
           label={myLabel.ItemLabelPublishingHouse}
-          onchange={handleChangePublishingHouse}
+          name={myLabel.ITEM_FIELD_PUBLISHING_HOUSE.fieldApiName}
+          onchange={handleFieldChange}
         ></lightning-input>
       </div>
     </template>
@@ -68,7 +73,7 @@
             <div
               id={item.Id}
               data-id={item.Id}
-              class="unselectedDiv enlarge-on-hover parent-div custom-box slds-box slds-p-around_small slds-text-align_center"
+              class="custom-box slds-box slds-p-around_small slds-text-align_center"
             >
               {myLabel.ItemLabelName}:<br />
               {item.Name}<br />

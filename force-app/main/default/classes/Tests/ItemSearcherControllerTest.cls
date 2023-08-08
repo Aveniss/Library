@@ -22,7 +22,15 @@ public with sharing class ItemSearcherControllerTest {
       Consts.ITEMS.TYPE.AUDIOBOOK,
       Consts.ITEMS.GENRE.SCIENCE_FICTIN
     );
+    List<Item__c> magazines = TestDataFactory.createItemsList(
+      NUMBER_OF_DATA,
+      false,
+      'Test',
+      Consts.ITEMS.TYPE.MAGAZINE,
+      Consts.ITEMS.GENRE.CRIME_FICTION
+    );
     allItemList.addAll(books);
+    allItemList.addAll(magazines);
     allItemList.addAll(audiobooks);
     insert allItemList;
   }
@@ -31,75 +39,53 @@ public with sharing class ItemSearcherControllerTest {
   public static void searchAllItemsTest() {
     Test.startTest();
     List<Item__c> items = ItemSearcherController.searchItems(
-      '',
-      '',
-      '',
-      0,
-      '',
-      ''
+      new Map<String, String>()
     );
     Test.stopTest();
 
-    Assert.areEqual(10, items.size(), 'Incorrect number of returned items');
+    Assert.areEqual(15, items.size(), 'Incorrect number of returned items');
   }
 
   @IsTest
-  public static void searchItemsWithSpecificNameTest() {
+  public static void searchSpecificTypeTest() {
+    Map<String, String> arguments = new Map<String, String>();
+    arguments.put('Type__c', Consts.ITEMS.TYPE.AUDIOBOOK);
     Test.startTest();
-    List<Item__c> items = ItemSearcherController.searchItems(
-      'ample',
-      '',
-      '',
-      0,
-      '',
-      ''
-    );
+    List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
 
-    Assert.areEqual(
-      NUMBER_OF_DATA,
-      items.size(),
-      'Incorrect number of returned items'
-    );
+    Assert.areEqual(5, items.size(), 'Incorrect number of returned items');
+    for (Item__c item : items) {
+      Assert.areEqual(Consts.ITEMS.TYPE.AUDIOBOOK, item.Type__c);
+    }
   }
 
   @IsTest
-  public static void searchItemsWithSpecificTypeTest() {
+  public static void searchSpecificGenreTest() {
+    Map<String, String> arguments = new Map<String, String>();
+    arguments.put('Genre__c', Consts.ITEMS.GENRE.NOVEL);
     Test.startTest();
-    List<Item__c> items = ItemSearcherController.searchItems(
-      '',
-      Consts.ITEMS.TYPE.AUDIOBOOK,
-      '',
-      0,
-      '',
-      ''
-    );
+    List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
 
-    Assert.areEqual(
-      NUMBER_OF_DATA,
-      items.size(),
-      'Incorrect number of returned items'
-    );
+    Assert.areEqual(5, items.size(), 'Incorrect number of returned items');
+    for (Item__c item : items) {
+      Assert.areEqual(Consts.ITEMS.GENRE.NOVEL, item.Genre__c);
+    }
   }
 
   @IsTest
-  public static void searchItemsWithSpecificGenreTest() {
+  public static void searchSpecificNameTest() {
+    String namePart = 'Exa';
+    Map<String, String> arguments = new Map<String, String>();
+    arguments.put('Name', namePart);
     Test.startTest();
-    List<Item__c> items = ItemSearcherController.searchItems(
-      '',
-      Consts.ITEMS.TYPE.PAPER_BOOK,
-      Consts.ITEMS.GENRE.NOVEL,
-      0,
-      '',
-      ''
-    );
+    List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
 
-    Assert.areEqual(
-      NUMBER_OF_DATA,
-      items.size(),
-      'Incorrect number of returned items'
-    );
+    Assert.areEqual(5, items.size(), 'Incorrect number of returned items');
+    for (Item__c item : items) {
+      Assert.isTrue(item.Name.contains(namePart));
+    }
   }
 }
