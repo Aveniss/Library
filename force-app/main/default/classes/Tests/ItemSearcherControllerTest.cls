@@ -88,4 +88,20 @@ public with sharing class ItemSearcherControllerTest {
       Assert.isTrue(item.Name.contains(namePart));
     }
   }
+
+  @IsTest
+  public static void searchSpecificTypeAndGenreTest() {
+    Map<String, String> arguments = new Map<String, String>();
+    arguments.put('Type__c', Consts.ITEMS.TYPE.PAPER_BOOK);
+    arguments.put('Genre__c', Consts.ITEMS.GENRE.NOVEL);
+    Test.startTest();
+    List<Item__c> items = ItemSearcherController.searchItems(arguments);
+    Test.stopTest();
+
+    Assert.areEqual(5, items.size(), 'Incorrect number of returned items');
+    for (Item__c item : items) {
+      Assert.areEqual(Consts.ITEMS.GENRE.NOVEL, item.Genre__c);
+      Assert.areEqual(Consts.ITEMS.TYPE.PAPER_BOOK, item.Type__c);
+    }
+  }
 }

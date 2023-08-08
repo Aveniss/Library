@@ -1,66 +1,54 @@
 <template>
   <lightning-card>
-    <div class="slds-p-around_medium">
-      <lightning-input
-        class="bigInputWidth"
-        name={myLabel.ITEM_FIELD_NAME.fieldApiName}
-        type="text"
-        label={myLabel.ItemNameLabel}
-        onchange={handleFieldChange}
-      ></lightning-input>
-    </div>
+    <lightning-input
+      name={myLabel.ITEM_FIELD_NAME.fieldApiName}
+      type="text"
+      label={myLabel.ItemNameLabel}
+      onchange={handleFieldChange}
+    ></lightning-input>
     <lightning-combobox
-      class="combobox"
       name={myLabel.ITEM_FIELD_TYPE.fieldApiName}
       label={myLabel.SelectTypeLabel}
       options={itemTypes}
       onchange={handleFieldChange}
     ></lightning-combobox>
-    <template lwc:if={getBookStatus}>
+    <template lwc:if={isBook}>
       <lightning-combobox
-        class="combobox"
         label={myLabel.ItemLabelGenre}
         name={myLabel.ITEM_FIELD_GENRE.fieldApiName}
         options={itemGenres}
         onchange={handleFieldChange}
       ></lightning-combobox>
     </template>
-    <template lwc:if={getAudiobookStatus}>
-      <div class="slds-p-around_medium">
-        <lightning-input
-          class="bigInputWidth"
-          type="text"
-          name={myLabel.ITEM_FIELD_LECTOR.fieldApiName}
-          label={myLabel.ItemLabelLector}
-          onchange={handleFieldChange}
-        ></lightning-input>
-        <lightning-input
-          class="bigInputWidth"
-          type="number"
-          name={myLabel.ITEM_FIELD_VERSION.fieldApiName}
-          label={myLabel.ItemLabelVersion}
-          step="0.1"
-          min="0"
-          onchange={handleFieldChange}
-        ></lightning-input>
-      </div>
+    <template lwc:if={isAudiobook}>
+      <lightning-input
+        type="text"
+        name={myLabel.ITEM_FIELD_LECTOR.fieldApiName}
+        label={myLabel.ItemLabelLector}
+        onchange={handleFieldChange}
+      ></lightning-input>
+      <lightning-input
+        type="number"
+        name={myLabel.ITEM_FIELD_VERSION.fieldApiName}
+        label={myLabel.ItemLabelVersion}
+        step="0.1"
+        min="0"
+        onchange={handleFieldChange}
+      ></lightning-input>
     </template>
-    <template lwc:if={getMagazineStatus}>
-      <div class="slds-p-around_medium">
-        <lightning-input
-          class="bigInputWidth"
-          type="text"
-          label={myLabel.ItemLabelPublishingHouse}
-          name={myLabel.ITEM_FIELD_PUBLISHING_HOUSE.fieldApiName}
-          onchange={handleFieldChange}
-        ></lightning-input>
-      </div>
+    <template lwc:if={isMagazine}>
+      <lightning-input
+        class="bigInputWidth"
+        type="text"
+        label={myLabel.ItemLabelPublishingHouse}
+        name={myLabel.ITEM_FIELD_PUBLISHING_HOUSE.fieldApiName}
+        onchange={handleFieldChange}
+      ></lightning-input>
     </template>
     <lightning-button
       variant="brand"
       label={myLabel.SearchButtonLabel}
       onclick={loadData}
-      title="Primary action"
       class="buttonDiv slds-m-around_medium"
     ></lightning-button>
 
@@ -69,10 +57,8 @@
     >
       <lightning-layout multiple-rows>
         <template for:each={items} for:item="item">
-          <lightning-layout-item key={item.Id} padding="around-small">
+          <lightning-layout-item key={item.Id} class="slds-p-around_small">
             <div
-              id={item.Id}
-              data-id={item.Id}
               class="custom-box slds-box slds-p-around_small slds-text-align_center"
             >
               {myLabel.ItemLabelName}:<br />

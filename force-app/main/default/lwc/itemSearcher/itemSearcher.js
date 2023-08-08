@@ -15,21 +15,21 @@ export default class itemSearcher extends LightningElement {
   @track itemGenres = [];
   searchProperties = {};
 
-  get getBookStatus() {
+  get isBook() {
     return (
       this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
       labels.PaperBookItemType
     );
   }
 
-  get getMagazineStatus() {
+  get isMagazine() {
     return (
       this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
       labels.MagazineItemType
     );
   }
 
-  get getAudiobookStatus() {
+  get isAudiobook() {
     return (
       this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
       labels.AudiobookItemType
@@ -76,13 +76,9 @@ export default class itemSearcher extends LightningElement {
     if (event.target.name === labels.ITEM_FIELD_TYPE.fieldApiName) {
       let itemName = this.searchProperties[labels.ITEM_FIELD_NAME.fieldApiName];
 
-      if (itemName) {
-        this.searchProperties = {
-          [labels.ITEM_FIELD_NAME.fieldApiName]: itemName
-        };
-      } else {
-        this.searchProperties = {};
-      }
+      this.searchProperties = itemName
+        ? { [labels.ITEM_FIELD_NAME.fieldApiName]: itemName }
+        : {};
     }
     this.searchProperties = {
       ...this.searchProperties,
