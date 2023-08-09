@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>AudiobookItemType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AudiobookItemType</shortDescription>
+        <value>Audiobook</value>
+    </labels>
+    <labels>
         <fullName>CreateButtonLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -100,6 +107,13 @@
         <value>Genre</value>
     </labels>
     <labels>
+        <fullName>ItemLabelLector</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelLector</shortDescription>
+        <value>Lector</value>
+    </labels>
+    <labels>
         <fullName>ItemLabelName</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -107,11 +121,25 @@
         <value>Name</value>
     </labels>
     <labels>
+        <fullName>ItemLabelPublishingHouse</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelPublishingHouse</shortDescription>
+        <value>Publishing House</value>
+    </labels>
+    <labels>
         <fullName>ItemLabelType</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ItemLabelType</shortDescription>
         <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>ItemLabelVersion</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ItemLabelVersion</shortDescription>
+        <value>Version</value>
     </labels>
     <labels>
         <fullName>ItemNameLabel</fullName>
@@ -170,6 +198,13 @@
         <value>Loan Status Download Failed</value>
     </labels>
     <labels>
+        <fullName>MagazineItemType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MagazineItemType</shortDescription>
+        <value>Magazine</value>
+    </labels>
+    <labels>
         <fullName>MaxNumberOfBorrowing</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -193,6 +228,13 @@ PIN: {1}</value>
         <shortDescription>NewPinMessage</shortDescription>
         <value>Good morning
 this is your new PIN: {0}</value>
+    </labels>
+    <labels>
+        <fullName>PaperBookItemType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PaperBookItemType</shortDescription>
+        <value>Paper Book</value>
     </labels>
     <labels>
         <fullName>ReturnReminder</fullName>
@@ -266,7 +308,7 @@ must be returned by {1}</value>
         <fullName>SuccessfulyGeneratePinLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>SuccessfulyGeneratePinTitle</shortDescription>
+        <shortDescription>SuccessfullyGeneratePinTitle</shortDescription>
         <value>New Pin Successfully Generated</value>
     </labels>
     <labels>

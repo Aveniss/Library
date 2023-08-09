@@ -1,0 +1,14 @@
+<apex:page showHeader="false" sidebar="false">
+  <apex:includeLightning />
+  <div id="LightningComponentid" />
+  <script>
+    $Lightning.use("c:LWCtoVFP", function () {
+      $Lightning.createComponent(
+        "c:itemSearcher",
+        {},
+        "LightningComponentid",
+        function (cmp) {}
+      );
+    });
+  </script>
+</apex:page>

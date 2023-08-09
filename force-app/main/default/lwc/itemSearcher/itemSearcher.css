@@ -1,0 +1,13 @@
+.custom-box {
+  background-color: #f4f6f9;
+  width: 8rem;
+  height: 12rem;
+  border-radius: 1rem;
+  overflow-y: auto;
+}
+
+.buttonDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
