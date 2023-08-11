@@ -1,4 +1,5 @@
 public with sharing class ItemSearcherController {
+  public static final String ERROR_MESSAGE = 'Incorrect PIN or user ID';
   private static final Map<String, String> templates = new Map<String, String>{
     Item__c.Type__c.getDescribe().name => '{0} AND {1} = \'\'{2}\'\'',
     Item__c.Genre__c.getDescribe().name => '{0} AND {1} = \'\'{2}\'\'',
@@ -28,5 +29,41 @@ public with sharing class ItemSearcherController {
       }
     }
     return Database.query(baseQuery);
+  }
+
+  @AuraEnabled
+  public static void createNewLoans(
+    List<Item__c> items,
+    String userPIN,
+    String userID
+  ) {
+    ItemSearcherControllerWithoutSharing withoutSharingController = new ItemSearcherControllerWithoutSharing();
+    List<Person__c> borrowers = [
+      SELECT Id, Encrypted_PIN__c
+      FROM Person__c
+      WHERE Person_ID__c = :userID
+    ];
+
+    if (
+      borrowers.size() == 0 ||
+      !userPIN.equals(UserUtils.decryptUserPin(borrowers.get(0)))
+    ) {
+      throw new IncorrectLoginDataException(ERROR_MESSAGE);
+    }
+
+    List<Loan__c> newLoans = UserUtils.createLoans(
+      borrowers.get(0).Id,
+      items,
+      Date.today().addDays(30),
+      Consts.LOANS.STATUS.BORROWED
+    );
+
+    withoutSharingController.insertLoans(newLoans);
+  }
+
+  private without sharing class ItemSearcherControllerWithoutSharing {
+    public void insertLoans(List<Loan__c> loans) {
+      insert loans;
+    }
   }
 }

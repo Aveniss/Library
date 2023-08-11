@@ -1,6 +1,6 @@
-import ItemNameLabel from "@salesforce/label/c.ItemNameLabel";
 import SelectTypeLabel from "@salesforce/label/c.SelectTypeLabel";
 import DefaultRecordTypeId from "@salesforce/label/c.DefaultRecordTypeId";
+import DataProcessingSucceededMessage from "@salesforce/label/c.DataProcessingSucceededMessage";
 
 import SearchButtonLabel from "@salesforce/label/c.SearchButtonLabel";
 
@@ -26,6 +26,7 @@ import ItemLabelLector from "@salesforce/label/c.ItemLabelLector";
 import ItemLabelPublishingHouse from "@salesforce/label/c.ItemLabelPublishingHouse";
 
 const labels = {
+  DataProcessingSucceededMessage: DataProcessingSucceededMessage,
   PaperBookItemType: PaperBookItemType,
   MagazineItemType: MagazineItemType,
   AudiobookItemType: AudiobookItemType,
@@ -36,13 +37,12 @@ const labels = {
   ITEM_FIELD_LECTOR: ITEM_FIELD_LECTOR,
   ITEM_FIELD_VERSION: ITEM_FIELD_VERSION,
   SelectTypeLabel: SelectTypeLabel,
-  ItemNameLabel: ItemNameLabel,
+  ItemLabelName: ItemLabelName,
   DefaultRecordTypeId: DefaultRecordTypeId,
   SearchButtonLabel: SearchButtonLabel,
   ITEM_FIELD_NAME: ITEM_FIELD_NAME,
   ITEM_FIELD_GENRE: ITEM_FIELD_GENRE,
   ITEM_FIELD_TYPE: ITEM_FIELD_TYPE,
-  ItemLabelName: ItemLabelName,
   ItemLabelType: ItemLabelType,
   ItemLabelGenre: ItemLabelGenre,
   ItemTypeErrorTitle: ItemTypeErrorTitle

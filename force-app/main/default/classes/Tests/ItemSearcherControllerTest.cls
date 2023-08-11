@@ -33,6 +33,15 @@ public with sharing class ItemSearcherControllerTest {
     allItemList.addAll(magazines);
     allItemList.addAll(audiobooks);
     insert allItemList;
+
+    List<Person__c> people = new List<Person__c>();
+    people.addAll(
+      TestDataFactory.createPeopleList(1, false, 'Name', 'email', 5)
+    );
+    people.addAll(
+      TestDataFactory.createPeopleList(1, false, 'Name', 'email', 1)
+    );
+    insert people;
   }
 
   @IsTest
@@ -102,6 +111,120 @@ public with sharing class ItemSearcherControllerTest {
     for (Item__c item : items) {
       Assert.areEqual(Consts.ITEMS.GENRE.NOVEL, item.Genre__c);
       Assert.areEqual(Consts.ITEMS.TYPE.PAPER_BOOK, item.Type__c);
+    }
+  }
+
+  @IsTest
+  public static void createNewLoansTest() {
+    Person__c borrower = [
+      SELECT Id, Person_ID__c, Encrypted_PIN__c
+      FROM Person__c
+      LIMIT 1
+    ];
+    Map<Id, Item__c> items = new Map<Id, Item__c>(
+      [SELECT Id FROM Item__c WHERE Type__c = :Consts.ITEMS.TYPE.PAPER_BOOK]
+    );
+
+    Test.startTest();
+    ItemSearcherController.createNewLoans(
+      items.values(),
+      UserUtils.decryptUserPin(borrower),
+      borrower.Person_ID__c
+    );
+    Test.stopTest();
+
+    List<Loan__c> loans = [
+      SELECT Status__c, End_Of_Rental__c, Borrower__c, Item__c
+      FROM Loan__c
+    ];
+
+    Assert.areEqual(
+      items.size(),
+      loans.size(),
+      'Incorrect number of created loans'
+    );
+
+    for (Loan__c loan : loans) {
+      Assert.areEqual(borrower.Id, loan.Borrower__c, 'Incorrect borrower');
+      Assert.isTrue(items.containsKey(loan.Item__c), 'Incorrect item');
+      Assert.areEqual(
+        Date.today().addDays(30),
+        loan.End_Of_Rental__c,
+        'Incorrect end of loan date'
+      );
+      Assert.areEqual(
+        Consts.LOANS.STATUS.BORROWED,
+        loan.Status__c,
+        'Incorrect loan status'
+      );
+    }
+  }
+
+  @IsTest
+  public static void createNewLoansWithIncorrectID() {
+    Map<Id, Item__c> items = new Map<Id, Item__c>(
+      [SELECT Id FROM Item__c WHERE Type__c = :Consts.ITEMS.TYPE.PAPER_BOOK]
+    );
+    Person__c borrower = [SELECT Encrypted_PIN__c FROM Person__c LIMIT 1];
+
+    try {
+      ItemSearcherController.createNewLoans(
+        items.values(),
+        UserUtils.decryptUserPin(borrower),
+        'xxxxxxxxxx'
+      );
+      Assert.isTrue(false, 'The method should throw an error');
+    } catch (IncorrectLoginDataException e) {
+      Assert.areEqual(ItemSearcherController.ERROR_MESSAGE, e.getMessage());
+    }
+  }
+
+  @IsTest
+  public static void createNewLoansWithIncorrectPIN() {
+    List<Item__c> items = [
+      SELECT Id
+      FROM Item__c
+      WHERE Type__c = :Consts.ITEMS.TYPE.PAPER_BOOK
+    ];
+    Person__c borrower = [
+      SELECT Id, Person_ID__c, Encrypted_PIN__c
+      FROM Person__c
+      LIMIT 1
+    ];
+
+    try {
+      ItemSearcherController.createNewLoans(
+        items,
+        'xxxxxxxxxx',
+        borrower.Person_ID__c
+      );
+      Assert.isTrue(false, 'The method should throw an error');
+    } catch (IncorrectLoginDataException e) {
+      Assert.areEqual(ItemSearcherController.ERROR_MESSAGE, e.getMessage());
+    }
+  }
+
+  @IsTest
+  public static void createNewLoansWithMaxNumberOfBorrowedItems() {
+    Person__c borrower = [
+      SELECT Id, Maximum_Number_Of_Rentals__c, Encrypted_PIN__c, Person_ID__c
+      FROM Person__c
+      WHERE Maximum_Number_Of_Rentals__c = 1
+      LIMIT 1
+    ];
+    Map<Id, Item__c> items = new Map<Id, Item__c>(
+      [SELECT Id FROM Item__c WHERE Type__c = :Consts.ITEMS.TYPE.PAPER_BOOK]
+    );
+
+    try {
+      ItemSearcherController.createNewLoans(
+        items.values(),
+        UserUtils.decryptUserPin(borrower),
+        borrower.Person_ID__c
+      );
+      Assert.isTrue(false, 'An error should be return');
+    } catch (DmlException e) {
+      Assert.areEqual(System.Label.MaxNumberOfBorrowing, e.getDmlMessage(0));
     }
   }
 }

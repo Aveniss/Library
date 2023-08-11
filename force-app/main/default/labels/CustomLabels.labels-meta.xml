@@ -55,7 +55,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>DataProcessingSucceededMessage</shortDescription>
-        <value>New Loans have been created</value>
+        <value>New Loan(s) have been created</value>
     </labels>
     <labels>
         <fullName>DateFieldLabel</fullName>

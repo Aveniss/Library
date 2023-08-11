@@ -1,13 +1,19 @@
-<apex:page showHeader="false" sidebar="false">
+<apex:page lightningStylesheets="true" showHeader="false" sidebar="false">
   <apex:includeLightning />
-  <div id="LightningComponentid" />
+  <div id="LightningComponentId" />
   <script>
     $Lightning.use("c:LWCtoVFP", function () {
       $Lightning.createComponent(
         "c:itemSearcher",
         {},
-        "LightningComponentid",
-        function (cmp) {}
+        "LightningComponentId",
+        function (cmp) {
+          document
+            .querySelector("c-item-searcher")
+            .addEventListener("myEvent", function (event) {
+              window.alert(event.detail);
+            });
+        }
       );
     });
   </script>

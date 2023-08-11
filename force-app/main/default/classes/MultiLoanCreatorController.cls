@@ -38,20 +38,6 @@ public with sharing class MultiLoanCreatorController {
     Date endOfRental,
     String status
   ) {
-    List<Loan__c> newLoans = new List<Loan__c>();
-
-    for (Item__c item : items) {
-      newLoans.add(
-        new Loan__c(
-          Borrower__c = borrowerId,
-          Item__c = item.Id,
-          Rental_Date__c = Date.today(),
-          End_Of_Rental__c = endOfRental,
-          Status__c = status
-        )
-      );
-    }
-
-    insert newLoans;
+    insert UserUtils.createLoans(borrowerId, items, endOfRental, status);
   }
 }

@@ -40,4 +40,35 @@ public with sharing class UserUtils {
 
     return Long.valueOf(timestampString);
   }
+
+  public static List<Loan__c> createLoans(
+    String borrowerId,
+    List<Item__c> items,
+    Date endOfRental,
+    String status
+  ) {
+    List<Loan__c> newLoans = new List<Loan__c>();
+
+    for (Item__c item : items) {
+      newLoans.add(
+        new Loan__c(
+          Borrower__c = borrowerId,
+          Item__c = item.Id,
+          Rental_Date__c = Date.today(),
+          End_Of_Rental__c = endOfRental,
+          Status__c = status
+        )
+      );
+    }
+
+    return newLoans;
+  }
+
+  public static String decryptUserPin(Person__c person) {
+    Person__c deserializedBorrower = (Person__c) JSON.deserialize(
+      JSON.serialize(person),
+      Person__c.class
+    );
+    return deserializedBorrower.Encrypted_PIN__c;
+  }
 }
