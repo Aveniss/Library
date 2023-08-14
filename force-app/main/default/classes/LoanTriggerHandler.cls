@@ -45,6 +45,15 @@ public class LoanTriggerHandler {
 
     for (Loan__c loan : newLoans) {
       requiredIDs.add(loan.Borrower__c);
+      incrementBorrowerCounter(borrowers, loan.Borrower__c);
+    }
+
+    for (Person__c person : [
+      SELECT Id, Maximum_Number_Of_Rentals__c
+      FROM Person__c
+      WHERE Id IN :requiredIDs
+    ]) {
+      maxLimitOfBooks.put(person.Id, person.Maximum_Number_Of_Rentals__c);
     }
 
     for (Loan__c existingLoan : [
@@ -58,25 +67,13 @@ public class LoanTriggerHandler {
         Borrower__c IN :requiredIDs
         AND Status__c != :Consts.LOANS.STATUS.RETURNED
     ]) {
-      if (borrowers.containsKey(existingLoan.Borrower__c)) {
-        borrowers.put(
-          existingLoan.Borrower__c,
-          borrowers.get(existingLoan.Borrower__c) + 1
-        );
-      } else {
-        borrowers.put(existingLoan.Borrower__c, 1);
-        maxLimitOfBooks.put(
-          existingLoan.Borrower__c,
-          existingLoan.Borrower__r.Maximum_Number_Of_Rentals__c
-        );
-      }
+      incrementBorrowerCounter(borrowers, existingLoan.Borrower__c);
     }
 
     for (Loan__c loan : newLoans) {
-      System.debug('Max wyporzyczen: ' + maxLimitOfBooks.get(loan.Borrower__c));
       if (
         borrowers.containsKey(loan.Borrower__c) &&
-        borrowers.get(loan.Borrower__c) >= maxLimitOfBooks.get(loan.Borrower__c)
+        borrowers.get(loan.Borrower__c) > maxLimitOfBooks.get(loan.Borrower__c)
       ) {
         loan.addError(System.Label.MaxNumberOfBorrowing);
       }
@@ -102,5 +99,16 @@ public class LoanTriggerHandler {
       }
     }
     update items.values();
+  }
+
+  private static void incrementBorrowerCounter(
+    Map<Id, Decimal> borrowers,
+    Id personId
+  ) {
+    if (borrowers.containsKey(personId)) {
+      borrowers.put(personId, borrowers.get(personId) + 1);
+    } else {
+      borrowers.put(personId, 1);
+    }
   }
 }

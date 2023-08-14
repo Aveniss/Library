@@ -8,9 +8,10 @@ private class LoanTriggerHandlerTest {
 
   @TestSetup
   private static void insertBasicData() {
+    List<Item__c> allItems = new List<Item__c>();
     List<Item__c> unavailableBooks = TestDataFactory.createItemsList(
       1,
-      true,
+      false,
       unavailableBookNamePrefix,
       Consts.ITEMS.TYPE.PAPER_BOOK,
       Consts.ITEMS.GENRE.SCIENCE_FICTIN
@@ -18,19 +19,38 @@ private class LoanTriggerHandlerTest {
 
     List<Item__c> availableBooks = TestDataFactory.createItemsList(
       1,
-      true,
+      false,
       availableBookNamePrefix,
       Consts.ITEMS.TYPE.PAPER_BOOK,
       Consts.ITEMS.GENRE.NOVEL
     );
 
+    List<Item__c> magazines = TestDataFactory.createItemsList(
+      3,
+      false,
+      'test',
+      Consts.ITEMS.TYPE.MAGAZINE,
+      Consts.ITEMS.GENRE.NOVEL
+    );
+
+    allItems.addAll(magazines);
+    allItems.addAll(unavailableBooks);
+    allItems.addAll(availableBooks);
+    insert allItems;
+
+    List<Person__c> people = new List<Person__c>();
     List<Person__c> borrowers = TestDataFactory.createPeopleList(
       1,
-      true,
+      false,
       borrowerNamePrefix,
       'testEmail',
       2
     );
+    people.addAll(
+      TestDataFactory.createPeopleList(1, false, 'example', 'testEmail', 1)
+    );
+    people.addAll(borrowers);
+    insert people;
 
     TestDataFactory.createLoansList(
       1,
@@ -118,7 +138,7 @@ private class LoanTriggerHandlerTest {
     List<Item__c> books = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :unavailableBookNamePrefix + ' 0'
+      WHERE Name = :availableBookNamePrefix + ' 0'
     ];
 
     List<Person__c> borrowers = [
@@ -127,24 +147,19 @@ private class LoanTriggerHandlerTest {
       WHERE Name = :borrowerNamePrefix + ' 0'
     ];
 
-    List<Loan__c> newLoans = TestDataFactory.createLoansList(
-      1,
-      false,
-      books,
-      borrowers,
-      RENTAL_DATE,
-      END_OF_RENTAL,
-      Consts.LOANS.STATUS.BORROWED
-    );
-
-    Test.startTest();
-    LoanTriggerHandler.checkBookLimit(newLoans);
-    Test.stopTest();
-
-    Assert.isFalse(
-      newLoans.get(0).hasErrors(),
-      'Expected no error to be returned'
-    );
+    try {
+      TestDataFactory.createLoansList(
+        1,
+        true,
+        books,
+        borrowers,
+        RENTAL_DATE,
+        END_OF_RENTAL,
+        Consts.LOANS.STATUS.BORROWED
+      );
+    } catch (DmlException e) {
+      Assert.isTrue(false, 'Expected no error to be returned');
+    }
   }
 
   @IsTest
@@ -152,7 +167,7 @@ private class LoanTriggerHandlerTest {
     List<Item__c> books = [
       SELECT Id, Type__c
       FROM Item__c
-      WHERE Name = :unavailableBookNamePrefix + ' 0'
+      WHERE Name = :availableBookNamePrefix + ' 0'
     ];
 
     List<Person__c> borrowers = [
@@ -160,28 +175,24 @@ private class LoanTriggerHandlerTest {
       FROM Person__c
       WHERE Name = :borrowerNamePrefix + ' 0'
     ];
-    borrowers.get(0).Maximum_Number_Of_Rentals__c = 1;
+
+    borrowers.get(0).Maximum_Number_Of_Rentals__c = 0;
     update borrowers;
 
-    List<Loan__c> newLoans = TestDataFactory.createLoansList(
-      1,
-      false,
-      books,
-      borrowers,
-      RENTAL_DATE,
-      END_OF_RENTAL,
-      Consts.LOANS.STATUS.BORROWED
-    );
-
-    Test.startTest();
-    LoanTriggerHandler.checkBookLimit(newLoans);
-    Test.stopTest();
-
-    Assert.isTrue(newLoans.get(0).hasErrors(), 'Expected error to be returned');
-    Assert.areEqual(
-      System.Label.MaxNumberOfBorrowing,
-      newLoans.get(0).getErrors()[0].getMessage()
-    );
+    try {
+      TestDataFactory.createLoansList(
+        1,
+        true,
+        books,
+        borrowers,
+        RENTAL_DATE,
+        END_OF_RENTAL,
+        Consts.LOANS.STATUS.BORROWED
+      );
+      Assert.isTrue(false, 'An error should be thrown');
+    } catch (DmlException e) {
+      Assert.areEqual(System.Label.MaxNumberOfBorrowing, e.getDmlMessage(0));
+    }
   }
 
   @isTest
@@ -227,7 +238,6 @@ private class LoanTriggerHandlerTest {
   }
   @isTest
   static void testChangeAvailabilityStatusAfterReturned() {
-    List<Id> ids = new List<Id>();
     List<Loan__c> loans = [
       SELECT Status__c, Item__r.Name, Item__r.Is_Available__c
       FROM Loan__c
@@ -248,6 +258,40 @@ private class LoanTriggerHandlerTest {
         loan.Item__r.Is_Available__c,
         loan.Item__r.Name + ' should be available'
       );
+    }
+  }
+
+  @IsTest
+  public static void testAchieveMaxLoansNumberWithNewPerson() {
+    Person__c borrower = [
+      SELECT Maximum_Number_Of_Rentals__c
+      FROM Person__c
+      WHERE Maximum_Number_Of_Rentals__c = 1
+    ];
+    List<Item__c> items = [
+      SELECT Id, Is_Available__c
+      FROM Item__c
+      WHERE Type__c = :Consts.ITEMS.TYPE.MAGAZINE
+    ];
+    List<Loan__c> loans = new List<Loan__c>();
+
+    for (Item__c item : items) {
+      loans.add(
+        new Loan__c(
+          Borrower__c = borrower.Id,
+          Item__c = item.Id,
+          Status__c = Consts.LOANS.STATUS.BORROWED,
+          Rental_Date__c = Date.today(),
+          End_Of_Rental__c = Date.today().addDays(7)
+        )
+      );
+    }
+
+    try {
+      insert loans;
+      Assert.isTrue(false, 'An error should be thrown');
+    } catch (DmlException e) {
+      Assert.areEqual(System.Label.MaxNumberOfBorrowing, e.getDmlMessage(0));
     }
   }
 }
