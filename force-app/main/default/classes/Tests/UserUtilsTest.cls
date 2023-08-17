@@ -1,7 +1,3 @@
-/**
- * Created by kamil on 04.08.2023.
- */
-
 @IsTest
 public with sharing class UserUtilsTest {
   private static final Integer NUMBER_OF_DATA = 5;

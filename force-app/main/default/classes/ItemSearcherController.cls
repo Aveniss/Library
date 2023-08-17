@@ -1,5 +1,4 @@
 public with sharing class ItemSearcherController {
-  public static final String ERROR_MESSAGE = 'Incorrect PIN or user ID';
   private static final Map<String, String> templates = new Map<String, String>{
     Item__c.Type__c.getDescribe().name => '{0} AND {1} = \'\'{2}\'\'',
     Item__c.Genre__c.getDescribe().name => '{0} AND {1} = \'\'{2}\'\'',
@@ -48,7 +47,7 @@ public with sharing class ItemSearcherController {
       borrowers.size() == 0 ||
       !userPIN.equals(UserUtils.decryptUserPin(borrowers.get(0)))
     ) {
-      throw new IncorrectLoginDataException(ERROR_MESSAGE);
+      throw new IncorrectLoginDataException(Label.IncorrectLoginDataMessage);
     }
 
     List<Loan__c> newLoans = UserUtils.createLoans(

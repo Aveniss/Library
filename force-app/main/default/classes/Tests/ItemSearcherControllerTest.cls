@@ -1,6 +1,3 @@
-/**
- * Created by kamil on 05.08.2023.
- */
 @IsTest
 public with sharing class ItemSearcherControllerTest {
   private static final Integer NUMBER_OF_DATA = 5;
@@ -58,7 +55,10 @@ public with sharing class ItemSearcherControllerTest {
   @IsTest
   public static void searchSpecificTypeTest() {
     Map<String, String> arguments = new Map<String, String>();
-    arguments.put('Type__c', Consts.ITEMS.TYPE.AUDIOBOOK);
+    arguments.put(
+      Item__c.Type__c.getDescribe().getName(),
+      Consts.ITEMS.TYPE.AUDIOBOOK
+    );
     Test.startTest();
     List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
@@ -72,7 +72,10 @@ public with sharing class ItemSearcherControllerTest {
   @IsTest
   public static void searchSpecificGenreTest() {
     Map<String, String> arguments = new Map<String, String>();
-    arguments.put('Genre__c', Consts.ITEMS.GENRE.NOVEL);
+    arguments.put(
+      Item__c.Genre__c.getDescribe().getName(),
+      Consts.ITEMS.GENRE.NOVEL
+    );
     Test.startTest();
     List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
@@ -87,7 +90,7 @@ public with sharing class ItemSearcherControllerTest {
   public static void searchSpecificNameTest() {
     String namePart = 'Exa';
     Map<String, String> arguments = new Map<String, String>();
-    arguments.put('Name', namePart);
+    arguments.put(Item__c.Name.getDescribe().getName(), namePart);
     Test.startTest();
     List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
@@ -101,8 +104,14 @@ public with sharing class ItemSearcherControllerTest {
   @IsTest
   public static void searchSpecificTypeAndGenreTest() {
     Map<String, String> arguments = new Map<String, String>();
-    arguments.put('Type__c', Consts.ITEMS.TYPE.PAPER_BOOK);
-    arguments.put('Genre__c', Consts.ITEMS.GENRE.NOVEL);
+    arguments.put(
+      Item__c.Type__c.getDescribe().getName(),
+      Consts.ITEMS.TYPE.PAPER_BOOK
+    );
+    arguments.put(
+      Item__c.Genre__c.getDescribe().getName(),
+      Consts.ITEMS.GENRE.NOVEL
+    );
     Test.startTest();
     List<Item__c> items = ItemSearcherController.searchItems(arguments);
     Test.stopTest();
@@ -175,7 +184,7 @@ public with sharing class ItemSearcherControllerTest {
       );
       Assert.isTrue(false, 'The method should throw an error');
     } catch (IncorrectLoginDataException e) {
-      Assert.areEqual(ItemSearcherController.ERROR_MESSAGE, e.getMessage());
+      Assert.areEqual(Label.IncorrectLoginDataMessage, e.getMessage());
     }
   }
 
@@ -200,7 +209,7 @@ public with sharing class ItemSearcherControllerTest {
       );
       Assert.isTrue(false, 'The method should throw an error');
     } catch (IncorrectLoginDataException e) {
-      Assert.areEqual(ItemSearcherController.ERROR_MESSAGE, e.getMessage());
+      Assert.areEqual(Label.IncorrectLoginDataMessage, e.getMessage());
     }
   }
 

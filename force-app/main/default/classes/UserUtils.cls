@@ -1,7 +1,3 @@
-/**
- * Created by kamil on 04.08.2023.
- */
-
 public with sharing class UserUtils {
   @TestVisible
   private static final String NEW_PIN_SUBJECT = 'New PIN';
