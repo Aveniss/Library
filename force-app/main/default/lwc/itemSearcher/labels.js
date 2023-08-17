@@ -3,6 +3,12 @@ import DefaultRecordTypeId from "@salesforce/label/c.DefaultRecordTypeId";
 import DataProcessingSucceededMessage from "@salesforce/label/c.DataProcessingSucceededMessage";
 
 import SearchButtonLabel from "@salesforce/label/c.SearchButtonLabel";
+import EnterIDLabel from "@salesforce/label/c.EnterIDLabel";
+import EnterPINLabel from "@salesforce/label/c.EnterPINLabel";
+import LoginDataPatternMessage from "@salesforce/label/c.LoginDataPatternMessage";
+import RentButtonLabel from "@salesforce/label/c.RentButtonLabel";
+import CancelButtonLabel from "@salesforce/label/c.CancelButtonLabel";
+import SaveButtonLabel from "@salesforce/label/c.SaveButtonLabel";
 
 import ITEM_FIELD_NAME from "@salesforce/schema/Item__c.Name";
 import ITEM_FIELD_GENRE from "@salesforce/schema/Item__c.Genre__c";
@@ -26,6 +32,12 @@ import ItemLabelLector from "@salesforce/label/c.ItemLabelLector";
 import ItemLabelPublishingHouse from "@salesforce/label/c.ItemLabelPublishingHouse";
 
 const labels = {
+  SaveButtonLabel: SaveButtonLabel,
+  CancelButtonLabel: CancelButtonLabel,
+  RentButtonLabel: RentButtonLabel,
+  LoginDataPatternMessage: LoginDataPatternMessage,
+  EnterPINLabel: EnterPINLabel,
+  EnterIDLabel: EnterIDLabel,
   DataProcessingSucceededMessage: DataProcessingSucceededMessage,
   PaperBookItemType: PaperBookItemType,
   MagazineItemType: MagazineItemType,

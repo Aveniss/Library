@@ -46,17 +46,17 @@ export default class itemSearcher extends LightningElement {
     );
   }
 
-  get isMagazine() {
-    return (
-      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
-      labels.MagazineItemType
-    );
-  }
-
   get isAudiobook() {
     return (
       this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
       labels.AudiobookItemType
+    );
+  }
+
+  get isMagazine() {
+    return (
+      this.searchProperties[labels.ITEM_FIELD_TYPE.fieldApiName] ===
+      labels.MagazineItemType
     );
   }
 
@@ -170,15 +170,16 @@ export default class itemSearcher extends LightningElement {
   filteredItems() {
     return this.items.filter((element) => element.Selected);
   }
+
   createLoans() {
     this.changeModalStatus();
+    this.items = [];
     createNewLoans({
       items: this.filteredItems(),
       userPIN: this.userPIN,
       userID: this.userID
     })
       .then(() => {
-        this.items = [];
         const event = new CustomEvent("myEvent", {
           detail: labels.DataProcessingSucceededMessage
         });

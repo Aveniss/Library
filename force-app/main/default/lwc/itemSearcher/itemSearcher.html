@@ -8,17 +8,17 @@
         <div class="slds-modal__content slds-p-around_medium">
           <div class="slds-m-around_medium">
             <lightning-input
-              label="Enter your ID"
+              label={myLabel.EnterIDLabel}
               type="text"
               pattern="[0-9]{10}"
-              message-when-pattern-mismatch="You must enter 10 numbers"
+              message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
               onchange={enterUserID}
             ></lightning-input>
             <lightning-input
-              label="Enter your PIN"
+              label={myLabel.EnterPINLabel}
               type="password"
               pattern="[0-9]{10}"
-              message-when-pattern-mismatch="You must enter 10 numbers"
+              message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
               onchange={enterUserPIN}
             ></lightning-input>
           </div>
@@ -29,10 +29,10 @@
             onclick={changeModalStatus}
             aria-label="Cancel and close"
           >
-            Cancel
+            {myLabel.CancelButtonLabel}
           </button>
           <button class="slds-button slds-button_brand" onclick={createLoans}>
-            Save
+            {myLabel.SaveButtonLabel}
           </button>
         </div>
       </div>
@@ -122,7 +122,7 @@
         class="slds-button customButton"
         variant="brand"
         disabled={newRentAvailability}
-        label="RENT"
+        label={myLabel.RentButtonLabel}
         onclick={changeModalStatus}
       ></lightning-button>
     </lightning-modal-footer>
