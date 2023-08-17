@@ -29,4 +29,40 @@ public with sharing class ItemSearcherController {
     }
     return Database.query(baseQuery);
   }
+
+  @AuraEnabled
+  public static void createNewLoans(
+    List<Item__c> items,
+    String userPIN,
+    String userID
+  ) {
+    ItemSearcherControllerWithoutSharing withoutSharingController = new ItemSearcherControllerWithoutSharing();
+    List<Person__c> borrowers = [
+      SELECT Id, Encrypted_PIN__c
+      FROM Person__c
+      WHERE Person_ID__c = :userID
+    ];
+
+    if (
+      borrowers.size() == 0 ||
+      !userPIN.equals(UserUtils.decryptUserPin(borrowers.get(0)))
+    ) {
+      throw new IncorrectLoginDataException(Label.IncorrectLoginDataMessage);
+    }
+
+    List<Loan__c> newLoans = UserUtils.createLoans(
+      borrowers.get(0).Id,
+      items,
+      Date.today().addDays(30),
+      Consts.LOANS.STATUS.BORROWED
+    );
+
+    withoutSharingController.insertLoans(newLoans);
+  }
+
+  private without sharing class ItemSearcherControllerWithoutSharing {
+    public void insertLoans(List<Loan__c> loans) {
+      insert loans;
+    }
+  }
 }

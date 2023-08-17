@@ -40,63 +40,6 @@ public class MultiLoanCreatorControllerTest {
       );
     }
   }
-  @IsTest
-  public static void testCreateLoans() {
-    Person__c borrower = [SELECT Id FROM Person__c];
-    List<Item__c> items = [SELECT Name, Id FROM Item__c];
-
-    Date endOfRental = Date.today().addDays(7);
-    String status = Consts.LOANS.STATUS.BORROWED;
-
-    Test.startTest();
-    MultiLoanCreatorController.createLoans(
-      borrower.Id,
-      items,
-      endOfRental,
-      status
-    );
-    Test.stopTest();
-
-    List<Loan__c> loans = [
-      SELECT
-        Id,
-        Borrower__c,
-        Item__c,
-        Item__r.Name,
-        Rental_Date__c,
-        End_Of_Rental__c,
-        Status__c
-      FROM Loan__c
-    ];
-    Assert.areEqual(
-      NUMBER_OF_DATA,
-      loans.size(),
-      'Incorrect number of inserted items'
-    );
-
-    for (Integer i = 0; i < loans.size(); i++) {
-      Assert.areEqual(
-        items.get(i).Name,
-        loans.get(i).Item__r.Name,
-        'Incorrect item name'
-      );
-      Assert.areEqual(
-        borrower.Id,
-        loans.get(i).Borrower__c,
-        'Incorrect borrower id'
-      );
-      Assert.areEqual(
-        Consts.LOANS.STATUS.BORROWED,
-        loans.get(i).Status__c,
-        'Incorrect status'
-      );
-      Assert.areEqual(
-        endOfRental,
-        loans.get(i).End_Of_Rental__c,
-        'Incorrect end of rental date'
-      );
-    }
-  }
 
   @IsTest
   public static void testCreateLoansWithException() {

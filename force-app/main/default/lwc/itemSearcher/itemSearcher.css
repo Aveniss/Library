@@ -4,10 +4,30 @@
   height: 12rem;
   border-radius: 1rem;
   overflow-y: auto;
+  cursor: pointer;
 }
 
-.buttonDiv {
+.customButton {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.selectedDiv {
+  background-color: rgb(40, 128, 247);
+}
+
+.unselectedDiv {
+  background-color: rgb(244, 246, 249);
+}
+
+.my-modal-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.blurry-background {
+  background-size: cover;
+  filter: blur(6px);
 }

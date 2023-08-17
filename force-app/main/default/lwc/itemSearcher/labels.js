@@ -1,8 +1,14 @@
-import ItemNameLabel from "@salesforce/label/c.ItemNameLabel";
 import SelectTypeLabel from "@salesforce/label/c.SelectTypeLabel";
 import DefaultRecordTypeId from "@salesforce/label/c.DefaultRecordTypeId";
+import DataProcessingSucceededMessage from "@salesforce/label/c.DataProcessingSucceededMessage";
 
 import SearchButtonLabel from "@salesforce/label/c.SearchButtonLabel";
+import EnterIDLabel from "@salesforce/label/c.EnterIDLabel";
+import EnterPINLabel from "@salesforce/label/c.EnterPINLabel";
+import LoginDataPatternMessage from "@salesforce/label/c.LoginDataPatternMessage";
+import RentButtonLabel from "@salesforce/label/c.RentButtonLabel";
+import CancelButtonLabel from "@salesforce/label/c.CancelButtonLabel";
+import SaveButtonLabel from "@salesforce/label/c.SaveButtonLabel";
 
 import ITEM_FIELD_NAME from "@salesforce/schema/Item__c.Name";
 import ITEM_FIELD_GENRE from "@salesforce/schema/Item__c.Genre__c";
@@ -26,6 +32,13 @@ import ItemLabelLector from "@salesforce/label/c.ItemLabelLector";
 import ItemLabelPublishingHouse from "@salesforce/label/c.ItemLabelPublishingHouse";
 
 const labels = {
+  SaveButtonLabel: SaveButtonLabel,
+  CancelButtonLabel: CancelButtonLabel,
+  RentButtonLabel: RentButtonLabel,
+  LoginDataPatternMessage: LoginDataPatternMessage,
+  EnterPINLabel: EnterPINLabel,
+  EnterIDLabel: EnterIDLabel,
+  DataProcessingSucceededMessage: DataProcessingSucceededMessage,
   PaperBookItemType: PaperBookItemType,
   MagazineItemType: MagazineItemType,
   AudiobookItemType: AudiobookItemType,
@@ -36,13 +49,12 @@ const labels = {
   ITEM_FIELD_LECTOR: ITEM_FIELD_LECTOR,
   ITEM_FIELD_VERSION: ITEM_FIELD_VERSION,
   SelectTypeLabel: SelectTypeLabel,
-  ItemNameLabel: ItemNameLabel,
+  ItemLabelName: ItemLabelName,
   DefaultRecordTypeId: DefaultRecordTypeId,
   SearchButtonLabel: SearchButtonLabel,
   ITEM_FIELD_NAME: ITEM_FIELD_NAME,
   ITEM_FIELD_GENRE: ITEM_FIELD_GENRE,
   ITEM_FIELD_TYPE: ITEM_FIELD_TYPE,
-  ItemLabelName: ItemLabelName,
   ItemLabelType: ItemLabelType,
   ItemLabelGenre: ItemLabelGenre,
   ItemTypeErrorTitle: ItemTypeErrorTitle

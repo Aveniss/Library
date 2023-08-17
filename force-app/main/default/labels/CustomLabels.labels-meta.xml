@@ -8,6 +8,13 @@
         <value>Audiobook</value>
     </labels>
     <labels>
+        <fullName>CancelButtonLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CancelButtonLabel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
         <fullName>CreateButtonLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -55,7 +62,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>DataProcessingSucceededMessage</shortDescription>
-        <value>New Loans have been created</value>
+        <value>New Loan(s) have been created</value>
     </labels>
     <labels>
         <fullName>DateFieldLabel</fullName>
@@ -86,6 +93,20 @@
         <value>Type Here...</value>
     </labels>
     <labels>
+        <fullName>EnterIdLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EnterIDLabel</shortDescription>
+        <value>Enter your ID</value>
+    </labels>
+    <labels>
+        <fullName>EnterPINLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EnterPINLabel</shortDescription>
+        <value>Enter your PIN</value>
+    </labels>
+    <labels>
         <fullName>GenerateNewPinError</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -98,6 +119,13 @@
         <protected>true</protected>
         <shortDescription>GenerateNewPinLabel</shortDescription>
         <value>Generate New PIN</value>
+    </labels>
+    <labels>
+        <fullName>IncorrectLoginDataMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>IncorrectLoginDataMessage</shortDescription>
+        <value>Incorrect PIN or user ID</value>
     </labels>
     <labels>
         <fullName>ItemLabelGenre</fullName>
@@ -198,6 +226,13 @@
         <value>Loan Status Download Failed</value>
     </labels>
     <labels>
+        <fullName>LoginDataPatternMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LoginDataPatternMessage</shortDescription>
+        <value>You must enter 10 numbers</value>
+    </labels>
+    <labels>
         <fullName>MagazineItemType</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -237,6 +272,13 @@ this is your new PIN: {0}</value>
         <value>Paper Book</value>
     </labels>
     <labels>
+        <fullName>RentButtonLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RentButtonLabel</shortDescription>
+        <value>RENT</value>
+    </labels>
+    <labels>
         <fullName>ReturnReminder</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -254,6 +296,13 @@ must be returned by {1}</value>
         <value
     >On {0} class ReturnReminder failed to send reminders to addresses: 
 {1}</value>
+    </labels>
+    <labels>
+        <fullName>SaveButtonLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SaveButtonLabel</shortDescription>
+        <value>Save</value>
     </labels>
     <labels>
         <fullName>SearchButtonLabel</fullName>
