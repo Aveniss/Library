@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Punished_Customers</fullName>
+    <columns>NAME</columns>
+    <columns>Last_Name__c</columns>
+    <columns>Email__c</columns>
+    <columns>Person_ID__c</columns>
+    <columns>Total_Unpaid_Penalty__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Total_Unpaid_Penalty__c</field>
+        <operation>notEqual</operation>
+        <value>0</value>
+    </filters>
+    <label>People with active penalty</label>
+</ListView>
