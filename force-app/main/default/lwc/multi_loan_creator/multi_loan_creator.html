@@ -1,16 +1,14 @@
 <template>
   <lightning-card>
     <div>
-      <div class="slds-p-around_medium lgc-bg">
-        <lightning-input
-          class="bigInputWidth"
-          type="text"
-          onchange={handleChangeName}
-          label={myLabel.ItemNameLabel}
-        ></lightning-input>
-      </div>
+      <lightning-input
+        class="slds-m-left_large slds-m-right_large"
+        type="text"
+        onchange={handleChangeName}
+        label={myLabel.ItemNameLabel}
+      ></lightning-input>
       <lightning-combobox
-        class="bigInputWidth"
+        class="slds-m-left_large slds-m-right_large"
         name="progress"
         label={myLabel.SelectTypeLabel}
         options={itemTypes}

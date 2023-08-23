@@ -25,11 +25,6 @@
 .divSize {
   width: 25rem;
 }
-
-.bigInputWidth {
-  width: 100%;
-}
-
 .smallInputWidth {
-  width: 6.25rem;
+  width: 80%;
 }
