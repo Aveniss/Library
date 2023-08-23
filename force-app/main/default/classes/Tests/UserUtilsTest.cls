@@ -31,9 +31,16 @@ public with sharing class UserUtilsTest {
   @IsTest
   public static void sendLoginDataForChangePINTest() {
     List<Person__c> people = [
-      SELECT Person_ID__c, Email__c, Encrypted_PIN__c
+      SELECT Person_ID__c, Email__c, Encrypted_PIN__c, LastModifiedBy.Name, Name
       FROM Person__c
+      LIMIT 1
     ];
+    EmailTemplate emailTemplate = [
+      SELECT Subject, HtmlValue, Body
+      FROM EmailTemplate
+      WHERE Name = :UserUtils.NEW_PIN_TEMPLATE
+    ];
+
     Map<String, EmailMessage> emails = new Map<String, EmailMessage>();
 
     Test.startTest();
@@ -43,24 +50,28 @@ public with sharing class UserUtilsTest {
     for (EmailMessage message : [
       SELECT TextBody, Subject, ToAddress, Id
       FROM EmailMessage
-      WHERE Subject = :UserUtils.NEW_PIN_SUBJECT
+      WHERE Subject = :emailTemplate.Subject
     ]) {
       emails.put(message.ToAddress, message);
     }
 
-    Assert.areEqual(NUMBER_OF_DATA, emails.size());
+    Assert.areEqual(1, emails.size());
 
     for (Person__c person : people) {
       Assert.isTrue(emails.containsKey(person.Email__c.toLowerCase()));
       Assert.areEqual(
         String.format(
-          Label.NewPinMessage,
-          new List<String>{ person.Encrypted_PIN__c }
+          emailTemplate.Body,
+          new List<String>{
+            person.Name,
+            person.Encrypted_PIN__c,
+            person.LastModifiedBy.Name
+          }
         ),
         emails.get(person.Email__c.toLowerCase()).TextBody
       );
       Assert.areEqual(
-        UserUtils.NEW_PIN_SUBJECT,
+        emailTemplate.Subject,
         emails.get(person.Email__c.toLowerCase()).Subject
       );
     }

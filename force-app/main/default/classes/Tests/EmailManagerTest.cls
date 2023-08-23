@@ -7,6 +7,7 @@ public class EmailManagerTest {
       Consts.BATCHES.EMAILS.ADMIN,
       'kamilst934@gmail.com'
     );
+    TestDataFactory.createPeopleList(1, true, 'Test', 'testemail', 3);
   }
 
   @IsTest
@@ -61,9 +62,10 @@ public class EmailManagerTest {
 
   @IsTest
   public static void testSendErrorMessage() {
+    String errorEmailSubject = 'Test Error Subject';
     Test.startTest();
     EmailManager.sendErrorMessage(
-      'Test Error Subject',
+      errorEmailSubject,
       'This is the error message content.'
     );
     Test.stopTest();
@@ -71,6 +73,7 @@ public class EmailManagerTest {
     List<EmailMessage> sentEmails = [
       SELECT Id, ToAddress, Subject, TextBody
       FROM EmailMessage
+      WHERE Subject = :errorEmailSubject
     ];
     System.assertEquals(1, sentEmails.size());
     EmailMessage email = sentEmails[0];
@@ -81,5 +84,43 @@ public class EmailManagerTest {
     );
     System.assertEquals('Test Error Subject', email.Subject);
     System.assertEquals('This is the error message content.', email.TextBody);
+  }
+
+  @IsTest
+  public static void createSingleEmailFromTemplateTest() {
+    Person__c person = [
+      SELECT Person_ID__c, Email__c, Encrypted_PIN__c, LastModifiedBy.Name, Name
+      FROM Person__c
+      LIMIT 1
+    ];
+    EmailTemplate emailTemplate = [
+      SELECT Subject, HtmlValue, Body
+      FROM EmailTemplate
+      WHERE Name = :UserUtils.NEW_PIN_TEMPLATE
+    ];
+
+    Messaging.SingleEmailMessage mail = EmailManager.createSingleEmailFromTemplate(
+      person.Email__c,
+      emailTemplate,
+      new List<String>{
+        person.Name,
+        UserUtils.decryptUserPin(person),
+        person.LastModifiedBy.Name
+      }
+    );
+
+    Assert.areEqual(emailTemplate.Subject, mail.subject);
+    Assert.areEqual(person.Email__c, mail.toAddresses.get(0));
+    Assert.areEqual(
+      String.format(
+        emailTemplate.HtmlValue,
+        new List<String>{
+          person.Name,
+          person.Encrypted_PIN__c,
+          person.LastModifiedBy.Name
+        }
+      ),
+      mail.htmlBody
+    );
   }
 }

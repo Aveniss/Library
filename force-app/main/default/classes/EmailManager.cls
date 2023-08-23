@@ -19,6 +19,22 @@ public with sharing class EmailManager {
     return mail;
   }
 
+  public static Messaging.SingleEmailMessage createSingleEmailFromTemplate(
+    String emailAddress,
+    EmailTemplate emailTemplate,
+    List<String> emailTemplateData
+  ) {
+    Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+    String[] toAddresses = new List<String>{ emailAddress };
+
+    mail.setToAddresses(toAddresses);
+    mail.setSenderDisplayName(EMAIL_SENDER_NAME);
+    mail.setSubject(emailTemplate.Subject);
+    mail.setHtmlBody(String.format(emailTemplate.HtmlValue, emailTemplateData));
+
+    return mail;
+  }
+
   public static String createEmailContent(Map<String, List<String>> errorsMap) {
     List<String> records = new List<String>();
 

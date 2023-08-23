@@ -5,43 +5,37 @@
 @IsTest
 public with sharing class PersonTriggerHandlerTest {
   private static final Integer NUMBER_OF_DATA = 5;
-
-  @TestSetup
-  public static void generateBasicDat() {
-    TestDataFactory.createPeopleList(
-      NUMBER_OF_DATA,
-      true,
-      'Test',
-      'testemail',
-      3
-    );
-  }
+  private static final String EMAIL_PREFIX = 'testemail';
 
   @IsTest
   public static void sendLoginDataForNewUserTest() {
-    String emailPrefix = 'newUser';
     Map<String, EmailMessage> emails = new Map<String, EmailMessage>();
+    EmailTemplate emailTemplate = [
+      SELECT Subject, Body
+      FROM EmailTemplate
+      WHERE Name = :PersonTriggerHandler.NEW_USER_EMAIL_TEMPLATE
+    ];
 
     TestDataFactory.createPeopleList(
       NUMBER_OF_DATA,
       true,
       'user',
-      emailPrefix,
+      EMAIL_PREFIX,
       3
     );
 
     List<Person__c> people = [
-      SELECT Email__c, Encrypted_PIN__c, Person_ID__c
+      SELECT Email__c, Name, Encrypted_PIN__c, Person_ID__c, LastModifiedBy.Name
       FROM Person__c
-      WHERE Email__c LIKE :emailPrefix + '%'
+      WHERE Email__c LIKE :EMAIL_PREFIX + '%'
     ];
 
     for (EmailMessage message : [
       SELECT TextBody, Subject, ToAddress, Id
       FROM EmailMessage
       WHERE
-        Subject = :PersonTriggerHandler.NEW_USER_SUBJECT
-        AND ToAddress LIKE :emailPrefix + '%'
+        Subject = :emailTemplate.Subject
+        AND ToAddress LIKE :EMAIL_PREFIX + '%'
     ]) {
       emails.put(message.ToAddress, message);
     }
@@ -52,14 +46,15 @@ public with sharing class PersonTriggerHandlerTest {
       Assert.isTrue(emails.containsKey(person.Email__c.toLowerCase()));
       Assert.areEqual(
         String.format(
-          Label.NewPersonMessage,
-          new List<String>{ person.Person_ID__c, person.Encrypted_PIN__c }
+          emailTemplate.Body,
+          new List<String>{
+            person.Name,
+            person.Person_ID__c,
+            person.Encrypted_PIN__c,
+            person.LastModifiedBy.Name
+          }
         ),
         emails.get(person.Email__c.toLowerCase()).TextBody
-      );
-      Assert.areEqual(
-        PersonTriggerHandler.NEW_USER_SUBJECT,
-        emails.get(person.Email__c.toLowerCase()).Subject
       );
     }
   }

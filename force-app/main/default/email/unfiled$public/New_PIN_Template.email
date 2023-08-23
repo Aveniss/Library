@@ -1,0 +1,10 @@
+<html>
+<head>
+</head>
+<body>
+    <img style='width:100px;' 
+  src="https://assets.stickpng.com/images/61f7cd1767553f0004c53e6e.png" alt="Logo" /></br>Good morning, {0}</br>
+this is your new PIN: {1}</br>
+Regards, {2} 
+</body>
+</html>

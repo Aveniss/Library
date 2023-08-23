@@ -1,0 +1,13 @@
+<html>
+<head>
+</head>
+<body>
+    <img style='width:100px;' 
+  src="https://assets.stickpng.com/images/61f7cd1767553f0004c53e6e.png" alt="Logo" />
+</br>Good morning, {0}</br>
+Your account has been successfully created. Your login details:</br>
+Client ID: {1}</br>
+PIN: {2}</br>
+Regards, {3} 
+</body>
+</html>

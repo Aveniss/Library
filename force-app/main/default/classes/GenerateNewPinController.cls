@@ -6,7 +6,13 @@ public with sharing class GenerateNewPinController {
   @AuraEnabled
   public static void generateNewPin(String personId) {
     List<Person__c> person = [
-      SELECT Email__c, Person_ID__c, Encrypted_PIN__c
+      SELECT
+        Id,
+        Email__c,
+        Name,
+        LastModifiedBy.Name,
+        Person_ID__c,
+        Encrypted_PIN__c
       FROM Person__c
       WHERE Id = :personId
     ];
