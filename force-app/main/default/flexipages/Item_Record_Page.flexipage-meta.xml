@@ -146,6 +146,26 @@
                 <identifier>RecordIs_Available_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Front_Cover_Link__c</fieldItem>
+                <identifier>RecordFront_Cover_Link_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Back_Cover_Link__c</fieldItem>
+                <identifier>RecordBack_Cover_Link_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-cd6accdf-2e38-456a-bdcd-9362cccee086</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -158,6 +178,38 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.OwnerId</fieldItem>
                 <identifier>RecordOwnerIdField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Front_Cover_Image__c</fieldItem>
+                <identifier>RecordFront_Cover_Image_cField</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.Front_Cover_Link__c}</leftValue>
+                        <operator>NE</operator>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Back_Cover_Image__c</fieldItem>
+                <identifier>RecordBack_Cover_Image_cField</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.Back_Cover_Link__c}</leftValue>
+                        <operator>NE</operator>
+                    </criteria>
+                </visibilityRule>
             </fieldInstance>
         </itemInstances>
         <name>Facet-168abbee-ebee-4367-a892-53694ec3e09e</name>
