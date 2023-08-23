@@ -10,7 +10,7 @@
         function (cmp) {
           document
             .querySelector("c-item-searcher")
-            .addEventListener("myEvent", function (event) {
+            .addEventListener("showAlert", function (event) {
               window.alert(event.detail);
             });
         }

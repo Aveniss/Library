@@ -1,130 +1,139 @@
 <template>
-  <template if:true={openModal}>
-    <section class={dialogClass}>
-      <div class="slds-modal__container">
-        <div class="slds-modal__header">
-          <h1 class="slds-modal__title slds-hyphenate">Rent Selected Items</h1>
-        </div>
-        <div class="slds-modal__content slds-p-around_medium">
-          <div class="slds-m-around_medium">
-            <lightning-input
-              label={myLabel.EnterIDLabel}
-              type="text"
-              pattern="[0-9]{10}"
-              message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
-              onchange={enterUserID}
-            ></lightning-input>
-            <lightning-input
-              label={myLabel.EnterPINLabel}
-              type="password"
-              pattern="[0-9]{10}"
-              message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
-              onchange={enterUserPIN}
-            ></lightning-input>
-          </div>
-        </div>
-        <div class="slds-modal__footer">
-          <button
-            class="slds-button slds-button_neutral"
-            onclick={changeModalStatus}
-            aria-label="Cancel and close"
-          >
-            {myLabel.CancelButtonLabel}
-          </button>
-          <button class="slds-button slds-button_brand" onclick={createLoans}>
-            {myLabel.SaveButtonLabel}
-          </button>
-        </div>
-      </div>
-    </section>
-  </template>
+    <template if:true={spinnerVisible}>
+        <lightning-spinner alternative-text="Loading" variant="brand"></lightning-spinner>
+    </template>
 
-  <div class={backdropClass}>
-    <div class="slds-m-around_medium">
-      <lightning-input
-        name={myLabel.ITEM_FIELD_NAME.fieldApiName}
-        type="text"
-        label={myLabel.ItemLabelName}
-        onchange={handleFieldChange}
-      ></lightning-input>
-      <lightning-combobox
-        name={myLabel.ITEM_FIELD_TYPE.fieldApiName}
-        label={myLabel.SelectTypeLabel}
-        options={itemTypes}
-        onchange={handleFieldChange}
-      ></lightning-combobox>
-      <template lwc:if={isBook}>
-        <lightning-combobox
-          label={myLabel.ItemLabelGenre}
-          name={myLabel.ITEM_FIELD_GENRE.fieldApiName}
-          options={itemGenres}
-          onchange={handleFieldChange}
-        ></lightning-combobox>
-      </template>
-      <template lwc:if={isAudiobook}>
-        <lightning-input
-          type="text"
-          name={myLabel.ITEM_FIELD_LECTOR.fieldApiName}
-          label={myLabel.ItemLabelLector}
-          onchange={handleFieldChange}
-        ></lightning-input>
-        <lightning-input
-          type="number"
-          name={myLabel.ITEM_FIELD_VERSION.fieldApiName}
-          label={myLabel.ItemLabelVersion}
-          step="0.1"
-          min="0"
-          onchange={handleFieldChange}
-        ></lightning-input>
-      </template>
-      <template lwc:if={isMagazine}>
-        <lightning-input
-          class="bigInputWidth"
-          type="text"
-          label={myLabel.ItemLabelPublishingHouse}
-          name={myLabel.ITEM_FIELD_PUBLISHING_HOUSE.fieldApiName}
-          onchange={handleFieldChange}
-        ></lightning-input>
-      </template>
-    </div>
-    <lightning-button
-      variant="brand"
-      label={myLabel.SearchButtonLabel}
-      onclick={loadData}
-      class="customButton slds-m-around_medium"
-    ></lightning-button>
-
-    <div class="slds-p-around_none slds-m-around_small">
-      <lightning-layout multiple-rows>
-        <template for:each={getItems} for:item="item">
-          <lightning-layout-item key={item.Id} class="slds-p-around_small">
-            <div
-              id={item.Id}
-              onclick={selectItem}
-              data-id={item.Id}
-              class={item.Style}
-            >
-              {myLabel.ItemLabelName}:<br />
-              {item.Name}<br />
-              {myLabel.ItemLabelType}:<br />
-              {item.Type__c}<br />
-              {myLabel.ItemLabelGenre}:<br />
-              {item.Genre__c}
+    <template if:true={openModal}>
+        <section class={dialogClass}>
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 class="slds-modal__title slds-hyphenate">Rent Selected Items</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-m-around_medium">
+                        <lightning-input
+                                label={myLabel.EnterIDLabel}
+                                type="text"
+                                pattern="[0-9]{10}"
+                                message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
+                                onchange={enterUserID}
+                        ></lightning-input>
+                        <lightning-input
+                                label={myLabel.EnterPINLabel}
+                                type="password"
+                                pattern="[0-9]{10}"
+                                message-when-pattern-mismatch={myLabel.LoginDataPatternMessage}
+                                onchange={enterUserPIN}
+                        ></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button
+                            class="slds-button slds-button_neutral"
+                            onclick={changeModalStatus}
+                            aria-label="Cancel and close"
+                    >
+                        {myLabel.CancelButtonLabel}
+                    </button>
+                    <button class="slds-button slds-button_brand" onclick={createLoans}>
+                        {myLabel.SaveButtonLabel}
+                    </button>
+                    <template if:true={spinnerVisible}>
+                        <div class="spinner slds-is-relative">
+                            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                        </div>
+                    </template>
+                </div>
             </div>
-          </lightning-layout-item>
-        </template>
-      </lightning-layout>
+        </section>
+    </template>
+
+    <div class={backdropClass}>
+        <div class="slds-m-around_medium">
+            <lightning-input
+                    name={myLabel.ITEM_FIELD_NAME.fieldApiName}
+                    type="text"
+                    label={myLabel.ItemLabelName}
+                    onchange={handleFieldChange}
+            ></lightning-input>
+            <lightning-combobox
+                    name={myLabel.ITEM_FIELD_TYPE.fieldApiName}
+                    label={myLabel.SelectTypeLabel}
+                    options={itemTypes}
+                    onchange={handleFieldChange}
+            ></lightning-combobox>
+            <template lwc:if={isBook}>
+                <lightning-combobox
+                        label={myLabel.ItemLabelGenre}
+                        name={myLabel.ITEM_FIELD_GENRE.fieldApiName}
+                        options={itemGenres}
+                        onchange={handleFieldChange}
+                ></lightning-combobox>
+            </template>
+            <template lwc:if={isAudiobook}>
+                <lightning-input
+                        type="text"
+                        name={myLabel.ITEM_FIELD_LECTOR.fieldApiName}
+                        label={myLabel.ItemLabelLector}
+                        onchange={handleFieldChange}
+                ></lightning-input>
+                <lightning-input
+                        type="number"
+                        name={myLabel.ITEM_FIELD_VERSION.fieldApiName}
+                        label={myLabel.ItemLabelVersion}
+                        step="0.1"
+                        min="0"
+                        onchange={handleFieldChange}
+                ></lightning-input>
+            </template>
+            <template lwc:if={isMagazine}>
+                <lightning-input
+                        class="bigInputWidth"
+                        type="text"
+                        label={myLabel.ItemLabelPublishingHouse}
+                        name={myLabel.ITEM_FIELD_PUBLISHING_HOUSE.fieldApiName}
+                        onchange={handleFieldChange}
+                ></lightning-input>
+            </template>
+        </div>
+        <lightning-button
+                variant="brand"
+                label={myLabel.SearchButtonLabel}
+                onclick={loadData}
+                class="customButton slds-m-around_medium"
+        ></lightning-button>
+
+        <div class="slds-p-around_none slds-m-around_small">
+            <lightning-layout multiple-rows>
+                <template for:each={getItems} for:item="item">
+                    <lightning-layout-item key={item.Id} class="slds-p-around_small">
+                        <div
+                                id={item.Id}
+                                onclick={selectItem}
+                                data-id={item.Id}
+                                class={item.Style}
+                        >
+                            {myLabel.ItemLabelName}:<br/>
+                            {item.Name}<br/>
+                            {myLabel.ItemLabelType}:<br/>
+                            {item.Type__c}<br/>
+                            {myLabel.ItemLabelGenre}:<br/>
+                            {item.Genre__c}
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+        <lightning-modal-footer
+                class="my-modal-footer --slds-c-modal-footer-color-background: #f4f6f9"
+        >
+            <lightning-button
+                    class="slds-button customButton"
+                    variant="brand"
+                    disabled={newRentAvailability}
+                    label={myLabel.RentButtonLabel}
+                    onclick={changeModalStatus}
+            ></lightning-button>
+        </lightning-modal-footer>
     </div>
-    <lightning-modal-footer
-      class="my-modal-footer --slds-c-modal-footer-color-background: #f4f6f9"
-    >
-      <lightning-button
-        class="slds-button customButton"
-        variant="brand"
-        disabled={newRentAvailability}
-        label={myLabel.RentButtonLabel}
-        onclick={changeModalStatus}
-      ></lightning-button>
-    </lightning-modal-footer>
-  </div>
 </template>
